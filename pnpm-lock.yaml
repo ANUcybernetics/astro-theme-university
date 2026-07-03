@@ -5,7 +5,7 @@ settings:
   excludeLinksFromLockfile: false
 
 overrides:
-  astromotion: github:benswift/astromotion
+  astromotion: github:ANUcybernetics/astromotion
 
 importers:
 
@@ -39,8 +39,8 @@ importers:
         specifier: ^1.1.5
         version: 1.1.5
       astromotion:
-        specifier: github:benswift/astromotion
-        version: https://codeload.github.com/benswift/astromotion/tar.gz/775c7cb1b01420ba674bf52eca89768f580ae192(@astrojs/mdx@7.0.2(@astrojs/markdown-satteri@0.3.3)(astro@7.0.6(@astrojs/markdown-remark@7.2.1)(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.1)(@types/node@26.1.0)(yaml@2.9.0)))(astro@7.0.6(@astrojs/markdown-remark@7.2.1)(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.1)(@types/node@26.1.0)(yaml@2.9.0))
+        specifier: github:ANUcybernetics/astromotion
+        version: https://codeload.github.com/ANUcybernetics/astromotion/tar.gz/775c7cb1b01420ba674bf52eca89768f580ae192(@astrojs/mdx@7.0.2(@astrojs/markdown-satteri@0.3.3)(astro@7.0.6(@astrojs/markdown-remark@7.2.1)(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.1)(@types/node@26.1.0)(yaml@2.9.0)))(astro@7.0.6(@astrojs/markdown-remark@7.2.1)(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.1)(@types/node@26.1.0)(yaml@2.9.0))
       axe-core:
         specifier: ^4.11.4
         version: 4.12.1
@@ -157,8 +157,8 @@ importers:
         specifier: workspace:*
         version: link:..
       astromotion:
-        specifier: github:benswift/astromotion
-        version: https://codeload.github.com/benswift/astromotion/tar.gz/775c7cb1b01420ba674bf52eca89768f580ae192(@astrojs/mdx@7.0.2(@astrojs/markdown-satteri@0.3.3)(astro@7.0.6(@astrojs/markdown-remark@7.2.1)(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.1)(@types/node@26.1.0)(yaml@2.9.0)))(astro@7.0.6(@astrojs/markdown-remark@7.2.1)(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.1)(@types/node@26.1.0)(yaml@2.9.0))
+        specifier: github:ANUcybernetics/astromotion
+        version: https://codeload.github.com/ANUcybernetics/astromotion/tar.gz/775c7cb1b01420ba674bf52eca89768f580ae192(@astrojs/mdx@7.0.2(@astrojs/markdown-satteri@0.3.3)(astro@7.0.6(@astrojs/markdown-remark@7.2.1)(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.1)(@types/node@26.1.0)(yaml@2.9.0)))(astro@7.0.6(@astrojs/markdown-remark@7.2.1)(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.1)(@types/node@26.1.0)(yaml@2.9.0))
       sharp:
         specifier: ^0.34.5
         version: 0.34.5
@@ -1555,8 +1555,8 @@ packages:
       '@astrojs/markdown-remark':
         optional: true
 
-  astromotion@https://codeload.github.com/benswift/astromotion/tar.gz/775c7cb1b01420ba674bf52eca89768f580ae192:
-    resolution: {gitHosted: true, tarball: https://codeload.github.com/benswift/astromotion/tar.gz/775c7cb1b01420ba674bf52eca89768f580ae192}
+  astromotion@https://codeload.github.com/ANUcybernetics/astromotion/tar.gz/775c7cb1b01420ba674bf52eca89768f580ae192:
+    resolution: {gitHosted: true, integrity: sha512-JfzUK6RIcxXXkf5a0NL76pqS/DGIMbxwd0TMuxE9Jb+FKuRFUSjw1/FEl6Z+EynC2z0GRZfip/0svodhCIuuig==, tarball: https://codeload.github.com/ANUcybernetics/astromotion/tar.gz/775c7cb1b01420ba674bf52eca89768f580ae192}
     version: 0.9.1
     engines: {node: '>=24'}
     peerDependencies:
@@ -4915,7 +4915,7 @@ snapshots:
       - uploadthing
       - yaml
 
-  astromotion@https://codeload.github.com/benswift/astromotion/tar.gz/775c7cb1b01420ba674bf52eca89768f580ae192(@astrojs/mdx@7.0.2(@astrojs/markdown-satteri@0.3.3)(astro@7.0.6(@astrojs/markdown-remark@7.2.1)(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.1)(@types/node@26.1.0)(yaml@2.9.0)))(astro@7.0.6(@astrojs/markdown-remark@7.2.1)(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.1)(@types/node@26.1.0)(yaml@2.9.0)):
+  astromotion@https://codeload.github.com/ANUcybernetics/astromotion/tar.gz/775c7cb1b01420ba674bf52eca89768f580ae192(@astrojs/mdx@7.0.2(@astrojs/markdown-satteri@0.3.3)(astro@7.0.6(@astrojs/markdown-remark@7.2.1)(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.1)(@types/node@26.1.0)(yaml@2.9.0)))(astro@7.0.6(@astrojs/markdown-remark@7.2.1)(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.1)(@types/node@26.1.0)(yaml@2.9.0)):
     dependencies:
       '@astrojs/mdx': 7.0.2(@astrojs/markdown-satteri@0.3.3)(astro@7.0.6(@astrojs/markdown-remark@7.2.1)(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.1)(@types/node@26.1.0)(yaml@2.9.0))
       '@qrgrid/core': 0.2.4

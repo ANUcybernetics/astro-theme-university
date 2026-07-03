@@ -24,4 +24,4 @@ minimumReleaseAgeExclude:
 
 # Pin astromotion to the GitHub repo (no npm release).
 overrides:
-  astromotion: github:benswift/astromotion
+  astromotion: github:ANUcybernetics/astromotion

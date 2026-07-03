@@ -1,7 +1,7 @@
 # Example university site
 
 This is a university-style website built with [Astro](https://astro.build) and the
-[astro-theme-university](https://github.com/benswift/astro-theme-university) theme.
+[astro-theme-university](https://github.com/ANUcybernetics/astro-theme-university) theme.
 
 ## Commands
 

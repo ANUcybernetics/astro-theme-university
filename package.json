@@ -9,15 +9,15 @@
     "university",
     "withastro"
   ],
-  "homepage": "https://github.com/benswift/astro-theme-university",
+  "homepage": "https://github.com/ANUcybernetics/astro-theme-university",
   "bugs": {
-    "url": "https://github.com/benswift/astro-theme-university/issues"
+    "url": "https://github.com/ANUcybernetics/astro-theme-university/issues"
   },
   "license": "MIT",
   "author": "Ben Swift <ben@benswift.me>",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/benswift/astro-theme-university.git"
+    "url": "git+https://github.com/ANUcybernetics/astro-theme-university.git"
   },
   "files": [
     "CHANGELOG.md",

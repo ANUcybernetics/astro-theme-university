@@ -3,7 +3,7 @@
 An Astro 7 + Svelte 5 theme package for university-style static sites — layouts,
 components, content-collection helpers, post-build checks (accessibility, broken
 links, deck structure), Pagefind search, and a Reveal.js deck theme for
-[astromotion](https://github.com/benswift/astromotion) slide decks.
+[astromotion](https://github.com/ANUcybernetics/astromotion) slide decks.
 
 The theme is deliberately institutional in feel — sticky nav with logo or text
 wordmark, hero banners, a footer with legal links, partnership band, and
@@ -21,7 +21,7 @@ acknowledgement section — but ships no institution's branding. Brands are data
 ## Usage
 
 ```bash
-pnpm add "git+https://github.com/benswift/astro-theme-university.git#v0.1.0"
+pnpm add "git+https://github.com/ANUcybernetics/astro-theme-university.git#v0.1.0"
 ```
 
 ```ts

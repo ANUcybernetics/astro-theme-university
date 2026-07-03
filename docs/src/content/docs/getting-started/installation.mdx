@@ -32,7 +32,7 @@ allowBuilds:
 
 :::warning
 
-**Git-deps caching quirk.** While the theme is still distributed from the git repo (i.e. you've pinned it as `git+https://github.com/benswift/astro-theme-university.git#main` rather than an npm version), pnpm caches its resolution of `#main` to a specific commit and **does not re-fetch on subsequent `pnpm install` runs**. If you run an install after the upstream has moved forward and your site seems to be stuck on an older theme version, the escape hatch is:
+**Git-deps caching quirk.** While the theme is still distributed from the git repo (i.e. you've pinned it as `git+https://github.com/ANUcybernetics/astro-theme-university.git#main` rather than an npm version), pnpm caches its resolution of `#main` to a specific commit and **does not re-fetch on subsequent `pnpm install` runs**. If you run an install after the upstream has moved forward and your site seems to be stuck on an older theme version, the escape hatch is:
 
 ```bash
 rm -rf node_modules pnpm-lock.yaml

@@ -14,7 +14,7 @@
     "@astrojs/svelte": "^9.0.0",
     "@iconify-json/iconoir": "^1.2.11",
     "astro": "^7.0.0",
-    "astro-theme-university": "git+https://github.com/benswift/astro-theme-university.git#main",
+    "astro-theme-university": "git+https://github.com/ANUcybernetics/astro-theme-university.git#main",
     "sharp": "^0.34.5",
     "svelte": "^5.55.10"
   },

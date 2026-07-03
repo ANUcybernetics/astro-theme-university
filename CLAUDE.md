@@ -40,7 +40,7 @@ TEQSA/CRICOS identifiers. Branding is data supplied by consumers.
 
 - semver on 0.x: breaking change = minor bump, fix = patch
 - consumers pin
-  `git+https://github.com/benswift/astro-theme-university.git#vX.Y.Z` (npm
+  `git+https://github.com/ANUcybernetics/astro-theme-university.git#vX.Y.Z` (npm
   publishing may come later; the name is reserved-by-availability)
 - CSS in `@layer at.tokens / at.base / at.components`; `--at-` prefix for all
   custom properties
