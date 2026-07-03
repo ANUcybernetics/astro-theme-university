@@ -1,6 +1,6 @@
 {
   "name": "astro-theme-university",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Astro 7 + Svelte 5 theme package for university-style sites — layouts, components, content-collection helpers, post-build checks, and a Reveal.js deck theme. Re-brandable via CSS custom properties and data-only branding props.",
   "keywords": [
     "astro-component",
@@ -100,9 +100,9 @@
     "mdast-util-directive": "^3.1.0",
     "oxfmt": "^0.52.0",
     "oxlint": "^1.67.0",
+    "rehype-stringify": "^10.0.1",
     "remark": "^15.0.1",
     "remark-rehype": "^11.1.2",
-    "rehype-stringify": "^10.0.1",
     "stylelint": "^17.12.0",
     "stylelint-config-standard": "^40.0.0",
     "ts-morph": "^28.0.0",
