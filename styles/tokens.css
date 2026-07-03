@@ -1,0 +1,137 @@
+@layer at.tokens {
+  :root {
+    /* Brand palette — the theme's re-branding API. Override these from a
+       brand CSS file imported after the theme styles and every semantic
+       token below (plus the deck.css tint scales) follows. Hover/active
+       derive from the base colour via relative colour syntax; brands with
+       hand-tuned variants can override the derived values directly. Black
+       and white are fixed — the theme is always dark-ink-on-light (and the
+       inverse in dark mode). */
+    --at-primary: #0f766e;
+    --at-primary-hover: oklch(from var(--at-primary) calc(l + 0.06) c h);
+    --at-primary-active: oklch(from var(--at-primary) calc(l - 0.06) c h);
+    --at-secondary: #c2410c;
+    --at-tertiary: #4f46e5;
+    --at-black: #000;
+    --at-white: #fff;
+
+    /* Typography */
+    --at-font-body:
+      var(--font-public-sans, "Public Sans"), -apple-system, blinkmacsystemfont, "Segoe UI", roboto,
+      oxygen, ubuntu, cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+    --at-font-mono:
+      var(--font-roboto-mono, "Roboto Mono"), "SFMono-Regular", "JetBrains Mono", "Fira Code",
+      menlo, monaco, consolas, "Liberation Mono", monospace;
+    --at-font-size-base: 1.125rem;
+    --at-font-size-sm: 0.875rem;
+    --at-font-size-xs: 0.75rem;
+    --at-font-size-h1: 2.5rem;
+    --at-font-size-h2: 1.875rem;
+    --at-font-size-h3: 1.375rem;
+    --at-font-size-h4: 1.0625rem;
+    --at-font-size-h5: 0.9375rem;
+    --at-font-size-h6: 0.8125rem;
+    --at-line-height: 1.6;
+    --at-line-height-heading: 1.25;
+
+    /* Layout */
+    --at-content-width: 48rem;
+    --at-sidebar-inset: 0px;
+    --at-content-inset: var(--at-spacing-xl);
+    --at-gutter: var(--at-spacing-lg);
+    --at-nav-height: 6.5rem;
+    --at-spacing-xs: 0.25rem;
+    --at-spacing-sm: 0.5rem;
+    --at-spacing-md: 1rem;
+    --at-spacing-lg: 1.5rem;
+    --at-spacing-xl: 2rem;
+    --at-spacing-2xl: 4rem;
+    --at-border-radius: 0.375rem;
+
+    /* Elevation / shadows — themed so they're visible in dark mode */
+    --at-shadow-sm: light-dark(0 1px 2px rgb(0 0 0 / 6%), 0 1px 2px rgb(0 0 0 / 60%));
+    --at-shadow-md: light-dark(0 2px 8px rgb(0 0 0 / 10%), 0 2px 8px rgb(0 0 0 / 65%));
+    --at-shadow-lg: light-dark(0 8px 32px rgb(0 0 0 / 20%), 0 12px 40px rgb(0 0 0 / 70%));
+
+    /* Nav brand logo visual offset — for logo artwork with built-in
+       whitespace on its left edge, a negative offset pulls the visible
+       mark back into line with the rest of the nav contents. Brands set
+       this to suit their logo file; 0 suits a tight bounding box. */
+    --at-logo-offset-x: 0px;
+
+    /* Surfaces — neutrals tinted toward the primary hue so brand and UI
+       surfaces cohere subconsciously; they re-derive automatically when a
+       brand overrides --at-primary. Light/dark resolved via `light-dark()`,
+       which keys off the active `color-scheme`. */
+    --at-bg: light-dark(
+      oklch(from var(--at-primary) 99.4% 0.004 h),
+      oklch(from var(--at-primary) 12% 0.008 h)
+    );
+    --at-bg-alt: light-dark(
+      oklch(from var(--at-primary) 96.5% 0.006 h),
+      oklch(from var(--at-primary) 15% 0.01 h)
+    );
+    --at-bg-elevated: light-dark(
+      oklch(from var(--at-primary) 99.4% 0.004 h),
+      oklch(from var(--at-primary) 19% 0.012 h)
+    );
+    --at-text: light-dark(
+      oklch(from var(--at-primary) 20% 0.01 h),
+      oklch(from var(--at-primary) 95% 0.005 h)
+    );
+    --at-text-secondary: light-dark(
+      oklch(from var(--at-primary) 20% 0.01 h / 78%),
+      oklch(from var(--at-primary) 95% 0.005 h / 78%)
+    );
+    --at-text-muted: light-dark(
+      oklch(from var(--at-primary) 20% 0.01 h / 56%),
+      oklch(from var(--at-primary) 95% 0.005 h / 56%)
+    );
+    --at-heading: var(--at-primary);
+    --at-accent: var(--at-primary);
+    --at-accent-hover: var(--at-primary-hover);
+    --at-accent-soft: light-dark(
+      rgb(from var(--at-primary) r g b / 10%),
+      rgb(from var(--at-primary) r g b / 14%)
+    );
+    --at-link: light-dark(oklch(from var(--at-primary) calc(l - 0.1) c h), var(--at-primary));
+    --at-link-hover: light-dark(var(--at-primary), var(--at-primary-hover));
+    --at-border: light-dark(
+      rgb(from var(--at-primary) r g b / 30%),
+      rgb(from var(--at-primary) r g b / 40%)
+    );
+    --at-divider: light-dark(
+      oklch(from var(--at-primary) 20% 0.01 h / 12%),
+      oklch(from var(--at-primary) 95% 0.005 h / 12%)
+    );
+    --at-code-bg: light-dark(
+      oklch(from var(--at-primary) 20% 0.01 h / 6%),
+      oklch(from var(--at-primary) 95% 0.005 h / 12%)
+    );
+    --at-table-header-bg: var(--at-primary);
+    --at-table-header-text: var(--at-white);
+    --at-table-stripe: light-dark(
+      rgb(from var(--at-primary) r g b / 6%),
+      rgb(from var(--at-primary) r g b / 8%)
+    );
+
+    /* Semantic status colours (for callouts, form validation, etc.) */
+    --at-info: light-dark(var(--at-tertiary), #38bdf8);
+    --at-info-soft: light-dark(
+      rgb(from var(--at-tertiary) r g b / 10%),
+      rgb(56 189 248 / 14%)
+    );
+    --at-success: light-dark(#16a34a, #4ade80);
+    --at-success-soft: light-dark(rgb(22 163 74 / 10%), rgb(74 222 128 / 14%));
+    --at-warning: light-dark(#b45309, #fbbf24);
+    --at-warning-soft: light-dark(rgb(180 83 9 / 10%), rgb(251 191 36 / 14%));
+    --at-error: light-dark(#dc2626, #f87171);
+    --at-error-soft: light-dark(rgb(220 38 38 / 10%), rgb(248 113 113 / 14%));
+
+    color-scheme: light;
+  }
+
+  [data-theme="dark"] {
+    color-scheme: dark;
+  }
+}

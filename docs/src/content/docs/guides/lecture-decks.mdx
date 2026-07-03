@@ -1,0 +1,81 @@
+---
+title: Lecture decks
+description: Build Reveal.js slide decks with astromotion and compose them from reusable fragments with @include.
+section: guides
+order: 5
+heroImage: ../../../assets/images/hero/CYBERNETICS_A_083.avif
+---
+
+Slide decks are powered by [astromotion](https://github.com/benswift/astromotion), a thin Astro integration over Reveal.js with a Marp-inspired markdown syntax. The theme registers astromotion for you when you opt in, and ships a deck stylesheet that matches the rest of the theme --- it derives its palette from the same brand tokens, so a re-branded site gets re-branded decks for free.
+
+A deck is a `.deck.mdx` file under `src/decks/`. Each file becomes a route at `/decks/<name>`, and slides are separated by `---` thematic breaks. There's a complete, live example at [`/decks/astromotion`](/decks/astromotion) — the source for it lives at `docs/src/decks/astromotion.deck.mdx`.
+
+## Setup
+
+Add astromotion alongside the theme in `astro.config.ts` and point it at a deck stylesheet that imports the theme's deck styles:
+
+```ts
+import { defineConfig } from "astro/config";
+import universityTheme from "astro-theme-university";
+import { astromotion } from "astromotion";
+
+export default defineConfig({
+  integrations: [
+    universityTheme(),
+    astromotion({ theme: "./src/decks/theme.css" }),
+  ],
+});
+```
+
+```css
+/* src/decks/theme.css */
+@import url("astro-theme-university/styles/deck.css");
+```
+
+The deck stylesheet carries the brand tint scales and the slide classes below, plus a full-bleed `logo-slide` class and reveal animations for closing logo slides.
+
+## Composing decks with `@include`
+
+There is a single mechanism for pulling shared content into a deck: the `@include` directive, written as a JSX comment.
+
+```mdx
+{/* @include ./partials/intro.mdx */}
+```
+
+`@include` runs before slides are split, so a `---` inside an included file starts a new slide. The included file's YAML frontmatter is stripped automatically, which means the same file can render both as a standalone page and as deck slides. Paths can be relative to the deck, or bare module specifiers resolved from your `node_modules` --- so a package (a branding package, say) can ship shared partials that any deck includes without a relative path. Only `.mdx` files can be included.
+
+## Two ways to organise reusable content
+
+The include mechanism is the same either way; what differs is where the fragment lives and whether it has a life of its own outside the deck.
+
+### Content-collection topics
+
+On a course site, a _topic_ is a content-collection entry that doubles as a deck slide. It's browsable on its own at `/topics/<slug>/`, participates in the content graph via its `related` edges, and is pulled into a lecture by including it from the collection directory:
+
+```mdx
+{/* @include ../content/topics/variables.mdx */}
+```
+
+Reach for this when the fragment is genuinely course content — something a student might read standalone as well as see on a slide.
+
+### Deck partials
+
+When a fragment is pure slide furniture — an acknowledgement of country, a presenter roster, a closing logo — it doesn't belong in a content collection. Keep it as a deck-only partial under `src/decks/partials/` and include it by relative path:
+
+```mdx
+{/* @include ./partials/ack-country.mdx */}
+```
+
+This is the pattern for "master" decks that share a common opening and closing across several variants of a talk: each master deck includes the same handful of partials and adds its own middle.
+
+## Slide features
+
+A quick reference — the [example deck](/decks/astromotion) demonstrates each one:
+
+- **slide classes**: `{/* _class: impact */}` (available: `impact`, `hero`, `quote`, `centered`)
+- **backgrounds**: `![bg](./assets/photo.avif)`, `![bg right:40%](./assets/side.avif)`, `![bg brightness:0.5 blur:2px](./assets/dark.avif)`
+- **speaker notes**: `{/* notes: Remember to explain this slowly */}` (press **S** in the deck)
+- **code blocks**: fenced code blocks get syntax highlighting automatically
+- **QR codes**: `![qr](https://example.com)`
+
+Co-locate background and other deck images under `src/decks/assets/` and reference them with a relative path. astromotion copies everything under `src/decks/` (except the deck and CSS files) into the build output, so co-located assets resolve in production; images elsewhere in `src/` won't be copied.

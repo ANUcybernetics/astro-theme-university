@@ -1,0 +1,140 @@
+---
+title: Configuration
+description: Configure theme options, create a site config file, and pass settings to the BaseLayout.
+section: getting-started
+order: 2
+heroImage: ../../../assets/images/hero/CYBERNETICS_A_006.avif
+---
+
+import PropsTable from "../../../components/PropsTable.astro";
+
+## Theme options
+
+The `universityTheme()` integration accepts an optional configuration object.
+
+```js
+// astro.config.ts
+import { defineConfig } from "astro/config";
+import universityTheme from "astro-theme-university";
+
+export default defineConfig({
+  integrations: [
+    universityTheme({
+      name: "My Research Group",
+      checkLinks: true,
+      checkA11y: true,
+    }),
+  ],
+});
+```
+
+<PropsTable component="ThemeOptions" />
+
+Both `checkLinks` and `checkA11y` default to `true`, so you get post-build validation out of the box. Set either to `false` if you need to skip them temporarily. When the site is deployed under a `base` sub-path, `checkLinks` also verifies that every rendered internal link carries the base prefix (see [base-path-aware links](/docs/guides/markdown-extensions#base-links)).
+
+### Default layout
+
+The `defaultLayout` option injects a layout into MDX pages that don't specify one in frontmatter. This means individual pages don't need a `layout:` field or a wrapping layout component --- just frontmatter and content:
+
+```js
+// astro.config.ts
+universityTheme({ defaultLayout: "src/layouts/PageLayout.astro" });
+```
+
+```mdx
+---
+title: My page
+heroTitle: Welcome
+heroImage: /src/assets/images/hero.avif
+---
+
+Content here --- no layout import needed.
+```
+
+### Frontmatter hero images
+
+When using `defaultLayout`, MDX pages can specify hero images as paths in frontmatter instead of importing them. Pass a path starting with `/src/assets/` and BaseLayout resolves it to `ImageMetadata` via `import.meta.glob`, so the image goes through Astro's optimisation pipeline automatically:
+
+```mdx
+---
+heroImage: /src/assets/images/hero/campus.avif
+heroTitle: About us
+---
+```
+
+This avoids the need for explicit `import` statements in every MDX file. The path must start with `/src/assets/` and point to an image file within the `src/assets/` directory tree.
+
+### LLM content
+
+When `llmsTxt: true` is set, the theme generates `/llms.txt` and `/llms-full.txt` at build time. The page index is auto-generated from your content collections, but the preamble at the top of `llms.txt` is hand-written.
+
+Create `src/llms.md` with a title, description, and any context you want LLMs to have about your site:
+
+```markdown
+# My Research Group
+
+> Interdisciplinary research at Example University.
+
+This site documents our projects, publications, and team members.
+Key areas include quantum computing, climate modelling, and policy analysis.
+```
+
+The theme appends an auto-generated `## Pages` section listing all published content pages with their titles and descriptions. If `src/llms.md` doesn't exist, the theme falls back to a minimal header using the site name from your theme options.
+
+## Site config {#site-config}
+
+Rather than repeating the same props on every page, create a central config file that exports your site's identity and navigation. Use the `defineSiteConfig` helper from `astro-theme-university/types` — it's an identity-typed function that gives you autocomplete and type-checking on the full `SiteConfig` shape:
+
+```ts
+// src/site-config.ts
+import { defineSiteConfig } from "astro-theme-university/types";
+
+export const siteConfig = defineSiteConfig({
+  name: "My Research Group",
+  links: [
+    { text: "Home", href: "/" },
+    { text: "About", href: "/about/" },
+    { text: "Publications", href: "/publications/" },
+  ],
+  contact: {
+    description: "School of Something, Example University",
+    address: "Building 123, Example Road, Canberra ACT 2601",
+    email: "enquiries@example.edu",
+    phone: "+61 2 6100 0000",
+  },
+  socials: [
+    { platform: "linkedin", url: "https://linkedin.com/company/example" },
+  ],
+  licence: "CC-BY-4.0",
+});
+```
+
+:::info
+Import `defineSiteConfig` from `astro-theme-university/types` (the types-only subpath), **not** from `astro-theme-university` directly. The subpath keeps your site-config module lightweight and avoids pulling the theme's integration code into your page bundles.
+:::
+
+The theme ships no default logo. With no `logo` prop, the site `name` renders in the navigation bar as a text wordmark. To show a logo instead, pass an imported image as `logo` (and optionally `logoDark` for dark mode) --- see the [Nav docs](/docs/components/nav/).
+
+The `socials` array supports `"facebook"`, `"instagram"`, `"youtube"`, and `"linkedin"` as platform values.
+
+## Passing config to BaseLayout
+
+Spread the site config into `BaseLayout` on each page, then override anything page-specific:
+
+```astro
+---
+// src/pages/index.astro
+import BaseLayout from "astro-theme-university/layouts/BaseLayout.astro";
+import { siteConfig } from "../site-config";
+---
+
+<BaseLayout title="Home" {...siteConfig}>
+  <h1>Welcome</h1>
+</BaseLayout>
+```
+
+This pattern means adding a new nav link or changing the site name is a single edit in `site-config.ts`.
+
+### BaseLayout props
+
+<PropsTable component="layouts/BaseLayout" />

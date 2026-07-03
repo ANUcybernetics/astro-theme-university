@@ -1,0 +1,55 @@
+---
+title: Card
+description: A versatile card component for displaying titled content blocks, optionally linked and with images.
+section: components
+order: 2
+heroImage: ../../../assets/images/hero/CYBERNETICS_A_032.avif
+---
+
+import PropsTable from "../../../components/PropsTable.astro";
+import Example from "../../../components/Example.astro";
+import Card from "astro-theme-university/components/Card.astro";
+
+The Card component displays content in a contained, titled block. When an `href` is provided the entire card renders as an `<a>` element, making the whole surface clickable. Without `href`, it renders as a `<div>`.
+
+```astro
+---
+import Card from "astro-theme-university/components/Card.astro";
+---
+```
+
+## Props
+
+<PropsTable component="components/Card" />
+
+The component also accepts a default slot for body content below the title.
+
+## Examples
+
+<Example label="Basic card">
+  <Card title="Getting started">
+    <p>Learn how to install and configure the theme for your project.</p>
+  </Card>
+</Example>
+
+<Example label="Linked card">
+  <Card title="View the source" href="https://github.com">
+    <p>Cards with an href prop become fully clickable links.</p>
+  </Card>
+</Example>
+
+<Example label="Card with description">
+  <Card title="Accessibility">
+    <p>
+      All components are built with semantic HTML and tested against WCAG
+      guidelines. Colour contrast ratios meet AA standards in both light and
+      dark modes.
+    </p>
+  </Card>
+</Example>
+
+## Notes
+
+When using the `image` prop, provide meaningful `imageAlt` text if the image conveys information. The default empty string marks the image as decorative, which is appropriate for purely visual imagery but not for informational graphics.
+
+When cards are placed inside a [CardGrid](/docs/components/card-grid/), they use [CSS subgrid](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_grid_layout/Subgrid) to align their image, title, and body rows across all cards in the same grid row. This keeps cards visually aligned even when titles or body text vary in length.

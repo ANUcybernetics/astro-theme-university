@@ -1,0 +1,55 @@
+---
+title: FillInTheBlank
+description: An interactive code exercise component with inline input validation, built with Svelte 5.
+section: components
+order: 10
+heroImage: ../../../assets/images/hero/CYBERNETICS_A_093.avif
+---
+
+import PropsTable from "../../../components/PropsTable.astro";
+import Example from "../../../components/Example.astro";
+import FillInTheBlank from "astro-theme-university/components/FillInTheBlank.svelte";
+
+The FillInTheBlank component, built with [Svelte 5](https://svelte.dev/), renders a code template with interactive input fields. Students fill in the blanks and get instant feedback --- correct answers turn green and lock in place.
+
+```astro
+---
+import FillInTheBlank from "astro-theme-university/components/FillInTheBlank.svelte";
+---
+
+<FillInTheBlank client:load template={'let greeting = "<name:hello>";'} />
+```
+
+## Props
+
+<PropsTable component="components/FillInTheBlank" />
+
+## Template syntax
+
+Placeholders use `<name:answer>` format within the template string:
+
+- `<name:answer>` --- `name` is shown as placeholder text, `answer` is the expected value
+- Multiple blanks per template are supported
+- The input field auto-sizes to the answer length
+
+## Examples
+
+<Example label="Simple variable exercise">
+  <FillInTheBlank
+    client:load
+    template={
+      'let coffee = {\n  <beans:type>: "arabica",\n  <milk:style>: "oat"\n};'
+    }
+  />
+</Example>
+
+<Example label="Function exercise">
+  <FillInTheBlank
+    client:load
+    template={'function <fn:greet>(name) {\n  return "Hello " + <arg:name>;\n}'}
+  />
+</Example>
+
+## Notes
+
+Unlike P5Sketch, this component works with `client:load` (no browser-only APIs needed). Correct answers are marked read-only to prevent accidental changes. The completion counter updates live as students work through the exercise.

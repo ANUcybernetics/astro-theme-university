@@ -1,0 +1,19 @@
+{
+  // Type-checks the integration entry point and its (astro-free) import
+  // closure: the remark plugins, a11y/deck checkers, llms-txt and types. This
+  // is the pure-TypeScript surface that consumers (e.g. llms-unplugged) compile
+  // directly from source, so a regression here breaks them downstream.
+  //
+  // It deliberately does NOT cover the .astro components or `schemas/page.ts`
+  // (astro:content) — those need Astro's virtual module types and are the job
+  // of the docs `astro check`. (`url.ts` reads import.meta.env through a safe
+  // cast, so it stays in the closure.)
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "declaration": false,
+    "declarationMap": false,
+    "sourceMap": false
+  },
+  "include": ["index.ts", "types-shim.d.ts"]
+}

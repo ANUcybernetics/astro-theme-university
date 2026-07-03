@@ -1,0 +1,75 @@
+---
+title: BaseLayout
+description: The main page wrapper that provides navigation, footer, and theme support.
+section: layouts
+order: 1
+heroImage: ../../../assets/images/hero/CYBERNETICS_A_111.avif
+---
+
+import PropsTable from "../../../components/PropsTable.astro";
+
+BaseLayout is the primary layout component for every page. It renders the full HTML document including the `Nav` and `Footer` components, imports the theme's base and component stylesheets, and handles dark mode initialisation.
+
+```astro
+---
+import BaseLayout from "astro-theme-university/layouts/BaseLayout.astro";
+---
+
+<BaseLayout title="My page">
+  <h1>Hello</h1>
+  <p>Page content goes in the default slot.</p>
+</BaseLayout>
+```
+
+## Props
+
+<PropsTable component="layouts/BaseLayout" />
+
+## Hero banner
+
+There are two ways to add a hero banner to a page. In `.astro` files you can use the named `hero` slot with the Hero component directly:
+
+```astro
+---
+import bannerImage from "../assets/images/banner.avif";
+---
+
+<BaseLayout title="Home">
+  <Hero slot="hero" title="Welcome" image={bannerImage} />
+  <p>Page content.</p>
+</BaseLayout>
+```
+
+The `image` prop accepts an imported image (`ImageMetadata`), which is processed through Astro's image pipeline for optimisation.
+
+For MDX pages, wrap content in the layout component directly to pass imported images:
+
+```mdx
+import PageLayout from "../layouts/PageLayout.astro";
+import heroImage from "../assets/images/campus.avif";
+
+<PageLayout title="About" heroTitle="About us" heroImage={heroImage}>
+
+Page content here as markdown.
+
+</PageLayout>
+```
+
+If both `heroTitle` and a `slot="hero"` are provided, both will render --- so pick one approach per page.
+
+## What it includes
+
+BaseLayout renders the complete HTML document. Inside, it provides:
+
+- a skip-to-main-content link for keyboard navigation
+- the `Nav` component with your site name (as a text wordmark, or a logo if you pass one) and links
+- a `<main>` element that receives the default slot content
+- the `Footer` component with contact info, social links, acknowledgement, and licence
+- a favicon link, but only when you pass a `favicon` image --- there's no default
+- an inline script that reads the user's theme preference from [`localStorage`](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) and applies it before first paint, preventing a flash of the wrong theme
+
+The layout also imports `base.css` and `components.css` from the theme, so you don't need to add those yourself.
+
+## Site config pattern
+
+Most props on BaseLayout are the same across every page --- site name, navigation links, footer details. Rather than repeating them, define a shared config object and spread it. See [configuration](/docs/getting-started/configuration/#site-config) for the full pattern.

@@ -1,0 +1,130 @@
+---
+import Code from "astro-theme-university/components/Code.astro";
+import BaseLayout from "astro-theme-university/layouts/BaseLayout.astro";
+import Hero from "astro-theme-university/components/Hero.astro";
+import Callout from "astro-theme-university/components/Callout.astro";
+import Card from "astro-theme-university/components/Card.astro";
+import CardGrid from "astro-theme-university/components/CardGrid.astro";
+import { siteConfig } from "../site-config";
+import heroMain from "../assets/images/hero/CYBERNETICS_B_045.avif";
+import heroTokens from "../assets/images/hero/CYBERNETICS_B_020.avif";
+import heroDark from "../assets/images/hero/CYBERNETICS_B_055.avif";
+import heroA11y from "../assets/images/hero/CYBERNETICS_A_016.avif";
+import heroChecks from "../assets/images/hero/CYBERNETICS_A_006.avif";
+import heroCss from "../assets/images/hero/CYBERNETICS_C_020.avif";
+import heroComponents from "../assets/images/hero/CYBERNETICS_A_051.avif";
+---
+
+<BaseLayout
+  title="astro-theme-university"
+  description="An Astro 7 + Svelte 5 theme for university-style static sites."
+  {...siteConfig}
+>
+  <Hero
+    title="astro-theme-university"
+    image={heroMain}
+    imageAlt="Glider sculptures on a university campus"
+    slot="hero"
+  />
+  <p>
+    A modern <a href="https://astro.build">Astro 7</a> + <a
+      href="https://svelte.dev">Svelte 5</a
+    > theme for university-style sites: neutral defaults out of the box, re-brandable
+    with a handful of CSS custom properties and data-only branding props.
+  </p>
+
+  <Callout>
+    <p>
+      This theme is in early development. The API may change between minor
+      versions.
+    </p>
+  </Callout>
+
+  <h2>Quick start</h2>
+
+  <p>Install the theme and its peer dependencies:</p>
+  <Code
+    code="pnpm add astro astro-theme-university @astrojs/mdx @astrojs/svelte svelte sharp pagefind lightningcss @iconify-json/iconoir"
+    lang="sh"
+  />
+
+  <p>Add the integration to your Astro config:</p>
+  <Code
+    code={`import { defineConfig } from "astro/config";
+import universityTheme from "astro-theme-university";
+
+export default defineConfig({
+  integrations: [universityTheme()],
+});`}
+    lang="js"
+  />
+
+  <h2>Features</h2>
+  <CardGrid>
+    <Card
+      title="Re-brandable"
+      href="/docs/styling/design-tokens/"
+      image={heroTokens}
+    >
+      <p>
+        Teal-accented defaults, Public Sans typography, and a palette-driven
+        token system — override three custom properties to re-brand the whole
+        theme.
+      </p>
+    </Card>
+    <Card
+      title="Dark mode"
+      href="/docs/styling/dark-mode/"
+      image={heroDark}
+    >
+      <p>
+        Light and dark themes with <code>localStorage</code> persistence and system
+        preference detection.
+      </p>
+    </Card>
+    <Card
+      title="Accessible"
+      href="/docs/components/callout/"
+      image={heroA11y}
+    >
+      <p>
+        Skip links, focus indicators, reduced motion support, and WCAG AA
+        contrast throughout.
+      </p>
+    </Card>
+    <Card
+      title="Build checks"
+      href="/docs/getting-started/configuration/"
+      image={heroChecks}
+    >
+      <p>
+        Automatic broken link detection and accessibility auditing at build time
+        via axe-core.
+      </p>
+    </Card>
+    <Card
+      title="Modern CSS"
+      href="/docs/styling/css-layers/"
+      image={heroCss}
+    >
+      <p>
+        CSS layers, grid, subgrid, custom properties — no Tailwind, no
+        preprocessors.
+      </p>
+    </Card>
+    <Card
+      title="Components"
+      href="/docs/components/callout/"
+      image={heroComponents}
+    >
+      <p>
+        Callouts, cards, video embeds, navigation, and footer — all themed and
+        accessible.
+      </p>
+    </Card>
+  </CardGrid>
+
+  <p style="margin-block-start: var(--at-spacing-xl);">
+    <a href="/docs/" class="at-button">Browse the full documentation &rarr;</a>
+  </p>
+</BaseLayout>

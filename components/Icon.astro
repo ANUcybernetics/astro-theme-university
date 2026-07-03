@@ -1,0 +1,42 @@
+---
+import { Icon as IconifyIcon } from "astro-icon/components";
+
+export { IconifyIcon };
+
+export interface IconProps {
+  /** iconoir icon name (e.g. "github"). The `iconoir:` iconify prefix is added internally. */
+  name: string;
+  /** CSS length for width and height. Bare numbers are treated as px. Defaults to "1em". */
+  size?: string | number;
+  /** Class names applied to the rendered <svg>. */
+  class?: string;
+  /** Inline style applied to the rendered <svg>. */
+  style?: string;
+  /** Accessible label. When set, the icon becomes a labelled `role="img"` instead of decorative. */
+  "aria-label"?: string;
+}
+
+type Props = IconProps;
+
+const {
+  name,
+  size = "1em",
+  class: className,
+  style,
+  "aria-label": ariaLabel,
+} = Astro.props;
+
+const labelled = ariaLabel !== undefined;
+---
+
+<IconifyIcon
+  name={`iconoir:${name}`}
+  width={size}
+  height={size}
+  class={className}
+  style={style}
+  aria-hidden={labelled ? undefined : "true"}
+  aria-label={ariaLabel}
+  role={labelled ? "img" : undefined}
+  focusable="false"
+/>

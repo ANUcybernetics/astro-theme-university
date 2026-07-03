@@ -1,0 +1,62 @@
+---
+title: Nav
+description: The main site navigation bar with responsive mobile menu, theme toggle, and active link highlighting.
+section: components
+order: 4
+heroImage: ../../../assets/images/hero/CYBERNETICS_A_051.avif
+---
+
+import PropsTable from "../../../components/PropsTable.astro";
+
+The Nav component provides the primary site navigation. It displays your site's brand (a text wordmark by default, or a logo if you pass one), a list of navigation links, and a theme toggle. On viewports narrower than 640px, the links collapse behind a hamburger menu button.
+
+```astro
+---
+import Nav from "astro-theme-university/components/Nav.astro";
+---
+```
+
+## Props
+
+<PropsTable component="components/Nav" />
+
+The `NavLink` type has the following shape:
+
+```ts
+interface NavLink {
+  text: string;
+  href: string;
+}
+```
+
+## Usage
+
+Nav is typically used via `BaseLayout` rather than directly, but it can be used standalone if you need a custom layout.
+
+```astro
+---
+import Nav from "astro-theme-university/components/Nav.astro";
+---
+
+<Nav
+  name="My Site"
+  links={[
+    { text: "Home", href: "/" },
+    { text: "About", href: "/about/" },
+    { text: "Blog", href: "/blog/" },
+  ]}
+/>
+```
+
+## Behaviour
+
+The component handles several concerns automatically:
+
+- **Active link detection** --- the current page's link receives [`aria-current="page"`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-current) based on URL path matching, enabling both visual styling and assistive technology support.
+- **Mobile menu** --- below 640px, links move behind a hamburger toggle button. The button updates [`aria-expanded`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-expanded) to reflect menu state.
+- **Theme toggle** --- a `ThemeToggle.svelte` island is included automatically, giving users control over light and dark mode.
+- **Brand mark** --- with no `logo` prop, the site `name` renders as a text wordmark (`.at-nav-wordmark`). When you pass a `logo` (an imported `ImageMetadata`), it replaces the wordmark; pass `logoDark` as well and the nav switches between the two based on the active theme (`logoDark` is only used when `logo` is also given).
+
+## Notes
+
+A live example is not shown here as it would conflict with this page's own navigation. See the nav bar at the top of this site for a working instance.

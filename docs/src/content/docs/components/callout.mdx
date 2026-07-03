@@ -1,0 +1,66 @@
+---
+title: Callout
+description: Highlight important information with contextual callout boxes for tip, info, warning, and error messages.
+section: components
+order: 1
+heroImage: ../../../assets/images/hero/CYBERNETICS_A_016.avif
+---
+
+import PropsTable from "../../../components/PropsTable.astro";
+import Example from "../../../components/Example.astro";
+import Callout from "astro-theme-university/components/Callout.astro";
+
+The Callout component draws attention to important information using a styled [`<aside>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/aside) element with [`role="note"`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles/note_role). Four visual variants are available --- tip, info, warning, and error --- each with distinct styling to convey the appropriate level of urgency.
+
+## Markdown syntax
+
+In MDX and markdown files, use the `:::` container directive syntax instead of importing the component directly. See [markdown extensions](/docs/guides/markdown-extensions#callouts) for the full syntax and live examples.
+
+## Component syntax
+
+You can also use the Callout component directly:
+
+```astro
+---
+import Callout from "astro-theme-university/components/Callout.astro";
+---
+```
+
+### Props
+
+<PropsTable component="components/Callout" />
+
+The component also accepts a default slot for its content.
+
+### Examples
+
+<Example label="Tip callout">
+  <Callout type="tip">
+    This is a tip callout. Use it for helpful suggestions or best practices.
+  </Callout>
+</Example>
+
+<Example label="Info callout (default)">
+  <Callout>
+    This is an informational callout. Use it to surface helpful context or
+    supplementary details.
+  </Callout>
+</Example>
+
+<Example label="Warning callout">
+  <Callout type="warning">
+    This is a warning callout. Use it when something needs the reader's
+    attention before proceeding.
+  </Callout>
+</Example>
+
+<Example label="Error callout">
+  <Callout type="error">
+    This is an error callout. Use it to flag critical issues or breaking
+    changes.
+  </Callout>
+</Example>
+
+## Notes
+
+The callout renders as an `<aside>` with `role="note"`, which screen readers will treat as supplementary content. Keep callout text concise --- if you find yourself writing multiple paragraphs, the content probably belongs in the main body instead.

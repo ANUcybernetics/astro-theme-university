@@ -1,0 +1,71 @@
+---
+title: Search
+description: Full-text site search powered by Pagefind, with a keyboard-driven dialog and automatic index building.
+section: components
+order: 11
+heroImage: ../../../assets/images/hero/CYBERNETICS_A_051.avif
+---
+
+import PropsTable from "../../../components/PropsTable.astro";
+
+The search feature provides full-text site search powered by [Pagefind](https://pagefind.app/). It includes a search dialog triggered from the nav bar or via keyboard shortcut, and automatic search index building as a post-build step.
+
+## How it works
+
+1. After each production build, the theme runs Pagefind to index all built HTML pages.
+2. The nav bar includes a search button (magnifying glass icon).
+3. Clicking the button or pressing <kbd>Cmd+K</kbd> (<kbd>Ctrl+K</kbd> on Windows/Linux) opens a search dialog.
+4. Results are fetched from the Pagefind index and displayed with highlighted matches.
+
+## Enabling search
+
+Search is enabled by default. The theme integration builds the Pagefind index, and the nav bar shows the search button automatically.
+
+You need `pagefind` installed as a dev dependency in your project:
+
+```sh
+pnpm add -D pagefind
+```
+
+To disable search, pass `search: false` to the theme integration:
+
+```js
+// astro.config.ts
+universityTheme({ search: false });
+```
+
+You can also hide just the search button in the nav by passing `search={false}` to `BaseLayout` or `Nav`:
+
+```astro
+<BaseLayout title="My Page" search={false}> ... </BaseLayout>
+```
+
+## Nav props
+
+The `Nav` component accepts a `search` prop:
+
+<PropsTable component="components/Nav" />
+
+## Keyboard shortcuts
+
+- <kbd>Cmd+K</kbd> / <kbd>Ctrl+K</kbd> --- open or close the search dialog
+- <kbd>Escape</kbd> --- close the dialog
+- <kbd>Arrow Down</kbd> / <kbd>Arrow Up</kbd> --- navigate results
+- <kbd>Enter</kbd> --- follow the selected result
+
+## Development vs production
+
+Search only works against a built site. During development (`pnpm dev`), the search dialog will open but no results will be available because the Pagefind index doesn't exist yet.
+
+To test search locally, build and then preview:
+
+```sh
+pnpm build
+pnpm preview
+```
+
+## Notes
+
+- The search index is built automatically in the `astro:build:done` hook. If pagefind is not installed, the build will log a warning but continue successfully.
+- If index building fails for any reason, the site still works --- the search dialog will show a "search index not available" message.
+- Pagefind indexes all rendered HTML pages by default. Use [`data-pagefind-ignore`](https://pagefind.app/docs/indexing/#removing-individual-elements-from-the-index) on elements you want to exclude from search results.

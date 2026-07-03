@@ -1,0 +1,76 @@
+---
+title: Hero
+description: A full-width hero banner with a background image, overlaid title, and accent underline.
+section: components
+order: 0
+heroImage: ../../../assets/images/hero/CYBERNETICS_A_059.avif
+---
+
+import PropsTable from "../../../components/PropsTable.astro";
+
+The Hero component displays a full-width background image with a title overlaid on a dark gradient. A short accent-coloured underline appears below the title for visual emphasis.
+
+The hero renders outside `<main>` via a named slot in BaseLayout, so it spans the full viewport width regardless of content width settings.
+
+```astro
+---
+import BaseLayout from "astro-theme-university/layouts/BaseLayout.astro";
+import Hero from "astro-theme-university/components/Hero.astro";
+import bannerImage from "../assets/images/banner.avif";
+---
+
+<BaseLayout title="Home">
+  <Hero slot="hero" title="Research & Innovation" image={bannerImage} />
+  <p>Page content here.</p>
+</BaseLayout>
+```
+
+The `image` prop accepts an imported image (`ImageMetadata`), which is processed through Astro's image pipeline for optimisation.
+
+## Props
+
+<PropsTable component="components/Hero" />
+
+## Usage
+
+Use `slot="hero"` to place the Hero in the BaseLayout's hero slot, between the navigation and main content area.
+
+```astro
+---
+import campusImage from "../assets/images/campus.avif";
+---
+
+<BaseLayout title="News">
+  <Hero
+    slot="hero"
+    title="Latest news"
+    image={campusImage}
+    imageAlt="University campus at sunset"
+  />
+  <!-- page content -->
+</BaseLayout>
+```
+
+## Using the hero from MDX pages
+
+MDX pages can't use named slots. To pass an imported image, wrap the content in the layout component directly instead of using the `layout` frontmatter field:
+
+```mdx
+import PageLayout from "../layouts/PageLayout.astro";
+import heroImage from "../assets/images/campus.avif";
+
+<PageLayout title="News" heroTitle="Latest news" heroImage={heroImage}>
+
+Page content as markdown.
+
+</PageLayout>
+```
+
+See the [BaseLayout docs](/docs/layouts/base-layout#hero-banner) for details.
+
+## Notes
+
+- The title is always rendered in white against the dark gradient overlay, regardless of the current light/dark theme setting.
+- The accent underline uses the `--at-primary` brand colour and is not affected by theme changes.
+- For best results, use landscape images at least 1600px wide. The image is displayed with `object-fit: cover` so it will be cropped to fill the banner area.
+- The hero title text is constrained to `--at-content-width` so it aligns with the page content below.

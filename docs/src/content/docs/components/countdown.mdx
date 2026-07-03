@@ -1,0 +1,53 @@
+---
+title: Countdown
+description: A live countdown timer for deadlines, powered by Svelte 5 runes.
+section: components
+order: 8
+heroImage: ../../../assets/images/hero/CYBERNETICS_A_081.avif
+---
+
+import PropsTable from "../../../components/PropsTable.astro";
+import Example from "../../../components/Example.astro";
+import Countdown from "astro-theme-university/components/Countdown.svelte";
+
+The Countdown component displays a live countdown to a deadline, built with [Svelte 5](https://svelte.dev/) runes. It updates every second and shows "Closed" once the deadline has passed. Useful for assignment due dates, event registrations, or any time-sensitive content.
+
+```astro
+---
+import Countdown from "astro-theme-university/components/Countdown.svelte";
+---
+
+<Countdown
+  client:load
+  deadline="2026-08-15T23:59:00+10:00"
+  label="Assignment due"
+/>
+```
+
+## Props
+
+<PropsTable component="components/Countdown" />
+
+## Examples
+
+<Example label="Future deadline">
+  <Countdown
+    client:load
+    deadline="2030-12-31T23:59:00+11:00"
+    label="Assignment due"
+  />
+</Example>
+
+<Example label="Past deadline">
+  <Countdown
+    client:load
+    deadline="2020-01-01T00:00:00+11:00"
+    label="Submission closed"
+  />
+</Example>
+
+## Notes
+
+Because this is a Svelte component, you must use a [`client:*` directive](https://docs.astro.build/en/guides/framework-components/#hydrating-interactive-components) to hydrate it. `client:load` is recommended so the countdown is visible immediately. The countdown uses `setInterval` and cleans up on unmount.
+
+Always include a timezone offset in the deadline string (e.g. `+10:00` for AEST, `+11:00` for AEDT) to ensure consistent behaviour across time zones.

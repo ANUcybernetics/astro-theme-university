@@ -1,0 +1,71 @@
+---
+title: Dark mode
+description: How the theme handles dark mode, including the toggle, persistence, and custom dark styles.
+section: styling
+order: 3
+heroImage: ../../../assets/images/hero/CYBERNETICS_B_055.avif
+---
+
+The theme ships with full dark mode support. Light mode is the default, and users can toggle between modes using the ThemeToggle component in the navigation bar.
+
+## How it works
+
+Dark mode is driven by a `data-theme` attribute on the `<html>` element. When `data-theme="dark"` is set, the theme's `tokens.css` switches `color-scheme` to `dark`, and every colour token declared with [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark) resolves to its dark value --- darker backgrounds, lighter text, and adjusted accent opacities.
+
+The toggle state is persisted in [`localStorage`](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) under the key `at-theme`. On subsequent visits, the stored preference is applied before the page renders.
+
+## Flash prevention
+
+BaseLayout includes an inline script in the `<head>` that runs before any content is painted:
+
+```js
+(function () {
+  var t =
+    localStorage.getItem("at-theme") ||
+    (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+  document.documentElement.dataset.theme = t;
+})();
+```
+
+This reads the stored preference, or falls back to the system's [`prefers-color-scheme`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-color-scheme) media query, and sets `data-theme` immediately. Because the script is inline and synchronous, the browser never flashes the wrong theme.
+
+## ThemeToggle component
+
+The `ThemeToggle` component is a [Svelte 5](https://svelte.dev/) island embedded in the Nav. It renders a button that switches between light and dark modes. You don't need to add it yourself --- it's included automatically when you use BaseLayout.
+
+The component updates both the `data-theme` attribute and the `localStorage` value when clicked.
+
+## Adding custom dark mode styles
+
+If you're writing custom CSS that needs to adapt for dark mode, target the `[data-theme="dark"]` selector:
+
+```css
+.my-card {
+  background: var(--at-bg-elevated);
+  border: 1px solid var(--at-border);
+}
+
+[data-theme="dark"] .my-card {
+  box-shadow: 0 2px 8px rgba(0 0 0 / 40%);
+}
+```
+
+Where possible, use the semantic colour tokens (like `--at-bg`, `--at-text`, `--at-border`) rather than hard-coded colours. These already adapt between modes, so in many cases you won't need a separate dark mode rule at all.
+
+## Forcing a specific theme
+
+If your site should only use one mode, you can set the `data-theme` attribute directly and hide the toggle. Add this to your override CSS:
+
+```css
+/* Force light mode */
+:root {
+  color-scheme: light;
+}
+
+/* Hide the theme toggle button */
+.at-theme-toggle {
+  display: none;
+}
+```
+
+The inline script in BaseLayout will still run, but if you set `data-theme="light"` in your own inline script (placed before BaseLayout's), it will take effect. Alternatively, override the dark token values to match the light ones so the toggle has no visual effect.

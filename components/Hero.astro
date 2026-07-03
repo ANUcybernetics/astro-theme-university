@@ -1,0 +1,26 @@
+---
+import { Image } from "astro:assets";
+import type { ImageMetadata } from "astro";
+
+export interface HeroProps {
+  /** The hero heading text, rendered as an h1. */
+  title: string;
+  /** Hero background image. Pass an imported image for pipeline optimisation. */
+  image: ImageMetadata;
+  /** Alt text for the hero image. Describes the image for screen reader users. */
+  imageAlt: string;
+  /** View transition name for the heading element. */
+  transitionName?: string;
+}
+
+type Props = HeroProps;
+
+const { title, image, imageAlt, transitionName } = Astro.props;
+---
+
+<section class="at-hero" aria-label={title}>
+  <Image src={image} alt={imageAlt} class="at-hero-image" />
+  <div class="at-hero-content">
+    <h1 class="at-hero-title" transition:name={transitionName}>{title}</h1>
+  </div>
+</section>

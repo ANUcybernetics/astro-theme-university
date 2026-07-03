@@ -1,0 +1,136 @@
+---
+title: Design tokens
+description: CSS custom properties that control the theme's colours, typography, spacing, and layout.
+section: styling
+order: 1
+heroImage: ../../../assets/images/hero/CYBERNETICS_B_020.avif
+---
+
+The theme defines all visual decisions as [CSS custom properties](https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties) in `tokens.css`. These are declared inside the `at.tokens` CSS layer, so they can be overridden by your own styles without specificity battles. See [customisation](/docs/styling/customisation) for how to change them.
+
+## Brand palette
+
+The brand palette is the theme's re-branding API. Every semantic colour token below derives from these values via [relative colour syntax](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_colors/Relative_colors), so overriding `--at-primary`, `--at-secondary`, and `--at-tertiary` re-brands the whole theme --- headings, links, borders, surface tints, and the deck palette all follow.
+
+| Token                 | Value                                                       |
+| --------------------- | ----------------------------------------------------------- |
+| `--at-primary`        | `#0f766e` (teal)                                            |
+| `--at-primary-hover`  | derived: `oklch(from var(--at-primary) calc(l + 0.06) c h)` |
+| `--at-primary-active` | derived: `oklch(from var(--at-primary) calc(l - 0.06) c h)` |
+| `--at-secondary`      | `#c2410c`                                                   |
+| `--at-tertiary`       | `#4f46e5`                                                   |
+| `--at-black`          | `#000`                                                      |
+| `--at-white`          | `#fff`                                                      |
+
+The hover and active variants derive from the base colour automatically; brands with hand-tuned variants can override the derived values directly. `--at-black` and `--at-white` are fixed --- the theme is always dark-ink-on-light (and the inverse in dark mode).
+
+The deck stylesheet additionally derives tint scales from the palette: `--at-primary-tint`, `--at-primary-1`/`-3`/`-4`, `--at-secondary-1`--`4`, and `--at-tertiary-1`--`4`, plus the fixed `--at-light-grey` and `--at-dark-grey`.
+
+## Typography
+
+| Token                      | Value                            |
+| -------------------------- | -------------------------------- |
+| `--at-font-body`           | Public Sans, system fallbacks    |
+| `--at-font-mono`           | Roboto Mono, monospace fallbacks |
+| `--at-font-size-base`      | `1.125rem`                       |
+| `--at-font-size-sm`        | `0.875rem`                       |
+| `--at-font-size-xs`        | `0.75rem`                        |
+| `--at-font-size-h1`        | `2.5rem`                         |
+| `--at-font-size-h2`        | `1.875rem`                       |
+| `--at-font-size-h3`        | `1.375rem`                       |
+| `--at-font-size-h4`        | `1.0625rem`                      |
+| `--at-font-size-h5`        | `0.9375rem`                      |
+| `--at-font-size-h6`        | `0.8125rem`                      |
+| `--at-line-height`         | `1.6`                            |
+| `--at-line-height-heading` | `1.25`                           |
+
+## Layout
+
+| Token                | Value                  |
+| -------------------- | ---------------------- |
+| `--at-content-width` | `48rem`                |
+| `--at-sidebar-inset` | `0px`                  |
+| `--at-content-inset` | `var(--at-spacing-xl)` |
+| `--at-gutter`        | `var(--at-spacing-lg)` |
+| `--at-nav-height`    | `6.5rem`               |
+
+The page layout uses a body-level CSS grid with named column lines. `--at-content-width` sets the main content column width. `--at-sidebar-inset` is `0px` by default --- set it to reserve gutter space for a sidebar (both gutters grow symmetrically to keep content centred). `--at-content-inset` controls the gap between the decorative accent rule and the content edge.
+
+## Spacing
+
+| Token              | Value     |
+| ------------------ | --------- |
+| `--at-spacing-xs`  | `0.25rem` |
+| `--at-spacing-sm`  | `0.5rem`  |
+| `--at-spacing-md`  | `1rem`    |
+| `--at-spacing-lg`  | `1.5rem`  |
+| `--at-spacing-xl`  | `2rem`    |
+| `--at-spacing-2xl` | `4rem`    |
+
+## Border
+
+| Token                | Value      |
+| -------------------- | ---------- |
+| `--at-border-radius` | `0.375rem` |
+
+## Elevation
+
+| Token            | Light                         | Dark                           |
+| ---------------- | ----------------------------- | ------------------------------ |
+| `--at-shadow-sm` | `0 1px 2px rgb(0 0 0 / 6%)`   | `0 1px 2px rgb(0 0 0 / 60%)`   |
+| `--at-shadow-md` | `0 2px 8px rgb(0 0 0 / 10%)`  | `0 2px 8px rgb(0 0 0 / 65%)`   |
+| `--at-shadow-lg` | `0 8px 32px rgb(0 0 0 / 20%)` | `0 12px 40px rgb(0 0 0 / 70%)` |
+
+Use these on hover/focus states (e.g. `var(--at-shadow-md)` for card hover) and floating panels (e.g. `var(--at-shadow-lg)` for the search dialog) rather than hardcoding shadow values.
+
+## Nav brand offset
+
+| Token                | Value |
+| -------------------- | ----- |
+| `--at-logo-offset-x` | `0px` |
+
+Some logo artwork ships with built-in whitespace on its left edge, which makes the visible mark look pushed right relative to the nav contents. Set a negative offset to pull it back into line; the `0px` default suits a tight bounding box (and the text wordmark).
+
+## Colours
+
+These semantic colour tokens adapt between light and dark mode, and every one of them derives from the brand palette --- backgrounds and text are neutrals tinted toward the primary hue, while accents, links, and borders use the primary colour directly. Use these in your own styles rather than hard-coding colour values.
+
+| Token                    | Derivation                                              |
+| ------------------------ | ------------------------------------------------------- |
+| `--at-bg`                | near-white / near-black, tinted toward the primary hue  |
+| `--at-bg-alt`            | slightly darker (light) / lighter (dark) than `--at-bg` |
+| `--at-bg-elevated`       | surface for cards and panels                            |
+| `--at-text`              | near-black / near-white, tinted toward the primary hue  |
+| `--at-text-secondary`    | `--at-text` at 78% opacity                              |
+| `--at-text-muted`        | `--at-text` at 56% opacity                              |
+| `--at-heading`           | `var(--at-primary)`                                     |
+| `--at-accent`            | `var(--at-primary)`                                     |
+| `--at-accent-hover`      | `var(--at-primary-hover)`                               |
+| `--at-accent-soft`       | `--at-primary` at 10% (light) / 14% (dark) opacity      |
+| `--at-link`              | `--at-primary`, darkened in light mode for contrast     |
+| `--at-link-hover`        | `--at-primary` (light) / `--at-primary-hover` (dark)    |
+| `--at-border`            | `--at-primary` at 30% (light) / 40% (dark) opacity      |
+| `--at-divider`           | `--at-text` hue at 12% opacity                          |
+| `--at-code-bg`           | `--at-text` hue at 6% (light) / 12% (dark) opacity      |
+| `--at-table-header-bg`   | `var(--at-primary)`                                     |
+| `--at-table-header-text` | `var(--at-white)`                                       |
+| `--at-table-stripe`      | `--at-primary` at 6% (light) / 8% (dark) opacity        |
+
+Light and dark values are resolved with [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark), keyed off the active `color-scheme`. Because the derivations use relative colour syntax, they re-derive automatically when a brand overrides the palette.
+
+## Status colours
+
+Semantic colour tokens for callouts, form validation, and other status indicators. These also adapt between light and dark mode — the dark variants are lifted slightly for better contrast on dark backgrounds.
+
+| Token               | Light                       | Dark                     |
+| ------------------- | --------------------------- | ------------------------ |
+| `--at-info`         | `--at-tertiary` (`#4f46e5`) | `#38bdf8`                |
+| `--at-info-soft`    | `--at-tertiary` at 10%      | `rgb(56 189 248 / 14%)`  |
+| `--at-success`      | `#16a34a`                   | `#4ade80`                |
+| `--at-success-soft` | `rgb(22 163 74 / 10%)`      | `rgb(74 222 128 / 14%)`  |
+| `--at-warning`      | `#b45309`                   | `#fbbf24`                |
+| `--at-warning-soft` | `rgb(180 83 9 / 10%)`       | `rgb(251 191 36 / 14%)`  |
+| `--at-error`        | `#dc2626`                   | `#f87171`                |
+| `--at-error-soft`   | `rgb(220 38 38 / 10%)`      | `rgb(248 113 113 / 14%)` |
+
+The four [callout](/docs/components/callout/) variants (`info`, `tip`, `warning`, `error`) are wired to these tokens — `tip` uses `--at-success`, the rest match their names.

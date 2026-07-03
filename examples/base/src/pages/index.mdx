@@ -1,0 +1,23 @@
+---
+title: Home
+heroTitle: Example University
+heroImage: /src/assets/images/hero.avif
+---
+
+import Card from "astro-theme-university/components/Card.astro";
+import CardGrid from "astro-theme-university/components/CardGrid.astro";
+import Icon from "astro-theme-university/components/Icon.astro";
+
+<Icon name="sparks" /> Welcome to your new site, built with
+[Astro](https://astro.build) and
+[astro-theme-university](https://github.com/benswift/astro-theme-university).
+Edit `src/pages/index.mdx` to customise this page.
+
+<CardGrid columns={2}>
+  <Card headingLevel="h2" title="Getting started" href="/getting-started/">
+    A short walkthrough of editing this site and adding your own content.
+  </Card>
+  <Card headingLevel="h2" title="About" href="/about/">
+    An example content page showing callouts, code blocks, and other features.
+  </Card>
+</CardGrid>

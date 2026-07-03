@@ -1,0 +1,47 @@
+---
+import { Image } from "astro:assets";
+import type { ImageMetadata } from "astro";
+import { withBase } from "../url.js";
+
+export type HeadingLevel = "h2" | "h3" | "h4";
+
+export interface CardProps {
+  /** The card heading text. */
+  title: string;
+  /** URL to link to. When provided, the card renders as an anchor element.
+   *  Internal absolute paths (starting with `/`) are automatically prefixed
+   *  with `import.meta.env.BASE_URL`. */
+  href?: string;
+  /** Optional card image displayed above the body. Pass an imported image for pipeline optimisation. */
+  image?: ImageMetadata;
+  /** Alt text for the card image. Set to a meaningful description if the image conveys information. */
+  imageAlt?: string;
+  /** HTML heading level for the card title. */
+  headingLevel?: HeadingLevel;
+}
+
+type Props = CardProps;
+
+const { title, href: rawHref, image, imageAlt, headingLevel = "h3" } = Astro.props;
+const resolvedImageAlt = imageAlt ?? (image ? title : "");
+const href = rawHref ? withBase(rawHref) : undefined;
+const Tag = href ? "a" : "div";
+const Heading = headingLevel;
+const transitionName = href
+  ? `card-title-${href.replace(/^\/|\/$/g, "").replace(/\//g, "-")}`
+  : undefined;
+---
+
+<Tag class="at-card" {...href ? { href } : {}}>
+  {
+    image && (
+      <div class="at-card-image-frame">
+        <Image src={image} alt={resolvedImageAlt} class="at-card-image" loading="lazy" />
+      </div>
+    )
+  }
+  <div class="at-card-body">
+    <Heading class="at-card-title" transition:name={transitionName}>{title}</Heading>
+    <slot />
+  </div>
+</Tag>

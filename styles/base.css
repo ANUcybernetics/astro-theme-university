@@ -1,0 +1,484 @@
+@import url("./tokens.css");
+
+@layer at.base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    font-family: var(--at-font-body);
+    font-size: var(--at-font-size-base);
+    font-weight: 300;
+    line-height: var(--at-line-height);
+    color: var(--at-text);
+    background-color: var(--at-bg);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+
+    /* Crafted-type baseline — kerning + contextual alternates on,
+       optimised text rendering everywhere. */
+    font-feature-settings: "kern", "calt";
+    text-rendering: optimizelegibility;
+
+    /* Sticky nav offsets in-page anchor jumps so targets aren't hidden
+       behind the header. Smooth scroll respects reduced-motion below. */
+    scroll-behavior: smooth;
+    scroll-padding-top: calc(var(--at-nav-height) + var(--at-spacing-md));
+  }
+
+  /* Tabular lining figures wherever numbers need to align in columns or
+     update in place without nudging their neighbours. */
+  table,
+  time,
+  code,
+  kbd,
+  .at-pagination,
+  .at-countdown,
+  [data-nums="tabular"] {
+    font-variant-numeric: tabular-nums lining-nums;
+  }
+
+  ::selection {
+    background: var(--at-primary);
+    color: var(--at-white);
+  }
+
+  /*
+   * Body is a 5-column grid with three named line pairs: `full` (viewport
+   * edges), `inset` (inset from full by one content-inset on the side that
+   * has the accent rule), and `content` (the actual text column).
+   *
+   * The content column uses min(desired-width, remaining-after-gutters) so
+   * it fluidly narrows on small viewports without ever exceeding
+   * --at-content-width, replacing what would otherwise need several media
+   * query breakpoints. Children default to `grid-column: content`; wide
+   * blocks opt into `inset` or `full` explicitly.
+   */
+  body {
+    margin: 0;
+    min-height: 100dvh;
+    position: relative;
+    display: grid;
+    grid-template-columns:
+      [full-start]
+      minmax(calc(var(--at-gutter) + var(--at-sidebar-inset)), 1fr)
+      [inset-start]
+      var(--at-content-inset)
+      [content-start]
+      min(
+        var(--at-content-width),
+        100% - 2 * var(--at-gutter) - var(--at-content-inset) - 2 * var(--at-sidebar-inset)
+      )
+      [content-end]
+      minmax(calc(var(--at-gutter) + var(--at-sidebar-inset)), 1fr)
+      [full-end];
+    grid-template-rows: auto auto 1fr auto;
+  }
+
+  body > * {
+    grid-column: content;
+  }
+
+  body::after {
+    content: "";
+    position: absolute;
+    inset-block: 0;
+    inset-inline-start: max(
+      calc(var(--at-gutter) + var(--at-sidebar-inset)),
+      calc((100% - var(--at-content-inset) - var(--at-content-width)) / 2)
+    );
+    width: 1px;
+    background: var(--at-accent);
+    pointer-events: none;
+  }
+
+  @media (width < 640px) {
+    body {
+      --at-content-inset: 0px;
+      --at-gutter: var(--at-spacing-md);
+    }
+
+    body::after {
+      display: none;
+    }
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    color: var(--at-heading);
+    line-height: var(--at-line-height-heading);
+    margin-block: 1.5em 0.5em;
+    text-wrap: balance;
+  }
+
+  /* h1 sits at regular weight, h2–h6 at bold. Set both
+     explicitly because the html element runs at 300, and CSS's "bolder"
+     would otherwise resolve headings to 400 rather than 700. */
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-weight: 700;
+  }
+
+  h1 {
+    font-size: var(--at-font-size-h1);
+    font-weight: 400;
+  }
+
+  h2 {
+    font-size: var(--at-font-size-h2);
+  }
+
+  h3 {
+    font-size: var(--at-font-size-h3);
+  }
+
+  h4 {
+    font-size: var(--at-font-size-h4);
+  }
+
+  h5 {
+    font-size: var(--at-font-size-h5);
+  }
+
+  h6 {
+    font-size: var(--at-font-size-h6);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  p {
+    margin-block: 0 1em;
+    text-wrap: pretty;
+  }
+
+  a {
+    color: var(--at-link);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.15em;
+    transition: color 0.15s;
+
+    &:hover {
+      color: var(--at-link-hover);
+    }
+  }
+
+  img,
+  picture,
+  video,
+  svg {
+    display: block;
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* Flow rhythm — every block-level element shares the paragraph's
+     `margin-block: 0 1em` convention so adjacent blocks settle on a
+     consistent 1em gap (top margins collapse against the previous
+     element's bottom margin). Headings opt out via their own rule
+     above (1.5em top / 0.5em bottom). */
+  ul,
+  ol,
+  dl,
+  pre,
+  blockquote,
+  figure,
+  img,
+  picture,
+  video,
+  svg {
+    margin-block: 0 1em;
+  }
+
+  /* Inside a figure the figure owns the rhythm; the inner image
+     shouldn't add a second bottom margin between itself and the
+     figcaption. */
+  figure > img,
+  figure > picture {
+    margin-block: 0;
+  }
+
+  /* Icon svgs inside buttons aren't flowing content: the rhythm rule's
+     leftover bottom margin pushes them ~0.5em above the label's vertical
+     centre in flex buttons (including .at-icon-button). */
+  button svg {
+    margin-block: 0;
+  }
+
+  figcaption {
+    font-size: var(--at-font-size-sm);
+    color: var(--at-text-secondary);
+    margin-block-start: var(--at-spacing-sm);
+    text-wrap: pretty;
+  }
+
+  @media (width < 640px) {
+    .at-main > img,
+    .at-main :where(p, figure) > img {
+      margin-inline: calc(-1 * var(--at-spacing-xl)) calc(-1 * var(--at-spacing-lg));
+      max-width: none;
+      width: calc(100% + var(--at-spacing-xl) + var(--at-spacing-lg));
+      border-radius: 0;
+    }
+  }
+
+  code {
+    font-family: var(--at-font-mono);
+    font-size: var(--at-font-size-sm);
+    background: var(--at-code-bg);
+    padding: 0.125em 0.375em;
+    border-radius: var(--at-border-radius);
+  }
+
+  pre {
+    overflow-x: auto;
+    padding: var(--at-spacing-md) var(--at-spacing-lg);
+    border-radius: var(--at-border-radius);
+    background: var(--at-bg-elevated);
+    border: 1px solid var(--at-divider);
+
+    & code {
+      background: none;
+      padding: 0;
+    }
+  }
+
+  :is(.astro-code, .astro-code span) {
+    color: var(--shiki-light);
+    background-color: transparent;
+    font-style: var(--shiki-light-font-style);
+    font-weight: var(--shiki-light-font-weight);
+  }
+
+  [data-theme="dark"] :is(.astro-code, .astro-code span) {
+    color: var(--shiki-dark);
+    background-color: transparent;
+    font-style: var(--shiki-dark-font-style);
+    font-weight: var(--shiki-dark-font-weight);
+  }
+
+  blockquote {
+    margin-inline: 0;
+    padding-inline-start: var(--at-spacing-md);
+    border-inline-start: 4px solid var(--at-accent);
+    color: var(--at-text-secondary);
+    font-style: italic;
+    hanging-punctuation: first last;
+    text-wrap: pretty;
+  }
+
+  table {
+    max-width: 100%;
+    border-collapse: collapse;
+    margin-block: 1em;
+    display: block;
+    overflow-x: auto;
+  }
+
+  thead {
+    background: var(--at-table-header-bg);
+    color: var(--at-table-header-text);
+  }
+
+  th,
+  td {
+    padding: var(--at-spacing-sm) var(--at-spacing-md);
+    text-align: start;
+  }
+
+  tbody tr:nth-child(even) {
+    background: var(--at-table-stripe);
+  }
+
+  hr {
+    border: none;
+    border-block-start: 1px solid var(--at-divider);
+    margin-block: var(--at-spacing-xl);
+  }
+
+  /* Forms */
+  label {
+    display: block;
+    font-weight: 600;
+    margin-block-end: var(--at-spacing-xs);
+  }
+
+  input:not([type="checkbox"], [type="radio"]),
+  select,
+  textarea {
+    display: block;
+    width: 100%;
+    padding: var(--at-spacing-sm) var(--at-spacing-md);
+    border: 1px solid var(--at-divider);
+    border-radius: var(--at-border-radius);
+    background: var(--at-bg);
+    color: var(--at-text);
+    caret-color: var(--at-accent);
+    font: inherit;
+    font-size: var(--at-font-size-base);
+    line-height: var(--at-line-height);
+    transition: border-color 0.15s;
+  }
+
+  input:not([type="checkbox"], [type="radio"]):hover,
+  select:hover,
+  textarea:hover {
+    border-color: var(--at-text-muted);
+  }
+
+  input:not([type="checkbox"], [type="radio"]):focus,
+  select:focus,
+  textarea:focus {
+    border-color: var(--at-accent);
+    outline: 2px solid var(--at-accent);
+    outline-offset: -1px;
+  }
+
+  textarea {
+    min-height: 6rem;
+    resize: vertical;
+  }
+
+  select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none'%3E%3Cpath d='M1 1.5l5 5 5-5' stroke='%231a1a1a' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right var(--at-spacing-md) center;
+    padding-inline-end: var(--at-spacing-2xl);
+  }
+
+  [data-theme="dark"] select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none'%3E%3Cpath d='M1 1.5l5 5 5-5' stroke='%23f2f2f2' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  }
+
+  input[type="checkbox"],
+  input[type="radio"] {
+    width: 1.125rem;
+    height: 1.125rem;
+    margin: 0;
+    accent-color: var(--at-accent);
+    cursor: pointer;
+  }
+
+  fieldset {
+    border: 1px solid var(--at-divider);
+    border-radius: var(--at-border-radius);
+    padding: var(--at-spacing-md);
+    margin: 0 0 var(--at-spacing-md);
+  }
+
+  legend {
+    font-weight: 600;
+    padding-inline: var(--at-spacing-xs);
+    color: var(--at-heading);
+  }
+
+  input:disabled,
+  select:disabled,
+  textarea:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  input::placeholder,
+  textarea::placeholder {
+    color: var(--at-text-muted);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--at-accent);
+    outline-offset: 2px;
+
+    /* Bg-coloured ring sits between the element and the outline, so the
+       ring stays visible even when the element's own background is the
+       accent (e.g. filled buttons). */
+    box-shadow: 0 0 0 4px var(--at-bg);
+  }
+
+  .lead {
+    font-size: 1.25rem;
+    color: var(--at-text-secondary);
+  }
+
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  /* The skip link (BaseLayout) is an <a class="visually-hidden">; without a
+     focus reveal, sighted keyboard users tab through an invisible focused
+     link on every page. z-index sits above the sticky .at-nav (100). */
+  a.visually-hidden:focus-visible {
+    position: fixed;
+    top: var(--at-spacing-sm);
+    left: var(--at-spacing-sm);
+    z-index: 101;
+    width: auto;
+    height: auto;
+    margin: 0;
+    padding: var(--at-spacing-xs) var(--at-spacing-md);
+    overflow: visible;
+    clip-path: none;
+    white-space: normal;
+    background: var(--at-bg-elevated);
+    color: var(--at-accent);
+    border: 1px solid var(--at-accent);
+    border-radius: var(--at-border-radius);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+/* Print: the theme hides its own structural chrome (nav, sidebar, footer, the
+   gold rule) and collapses the screen grid so page content flows full-width.
+   Kept unlayered so it reliably wins over the @layer at.components layout
+   rules; consumers no longer need to re-hide chrome (and can't rot when these
+   class names change) — they keep only their own print extras. */
+@media print {
+  .at-nav,
+  .at-sidebar,
+  .at-footer {
+    display: none;
+  }
+
+  body {
+    display: block;
+  }
+
+  body::after {
+    display: none;
+  }
+
+  .at-main {
+    display: block;
+    padding: 0;
+    min-height: 0;
+  }
+}

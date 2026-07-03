@@ -1,0 +1,92 @@
+---
+import { ClientRouter } from "astro:transitions";
+import Icon from "../components/Icon.astro";
+import SearchDialog from "../components/SearchDialog.svelte";
+import "astro-theme-university/styles/base.css";
+import "astro-theme-university/styles/components.css";
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Page not found</title>
+    <ClientRouter />
+    <script is:inline data-astro-rerun>
+      (function () {
+        var t =
+          localStorage.getItem("at-theme") ||
+          (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+        document.documentElement.dataset.theme = t;
+      })();
+    </script>
+  </head>
+  <body>
+    <main class="at-404">
+      <h1>Page not found</h1>
+      <p>The page you're looking for doesn't exist or has been moved.</p>
+      <div class="at-404-actions">
+        <a href={import.meta.env.BASE_URL || "/"} class="at-404-home">Back to home</a>
+        <button
+          class="at-icon-button at-search-trigger"
+          aria-label="Search (Cmd+K)"
+          data-search-trigger
+        >
+          <Icon name="search" size={20} />
+          Search
+        </button>
+      </div>
+      <SearchDialog basePath={import.meta.env.BASE_URL} client:idle />
+    </main>
+
+    <script>
+      for (const trigger of document.querySelectorAll("[data-search-trigger]")) {
+        trigger.addEventListener("click", function () {
+          document.dispatchEvent(new CustomEvent("at-search-open"));
+        });
+      }
+    </script>
+
+    <style>
+      .at-404 {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 100dvh;
+        text-align: center;
+        padding: var(--at-spacing-lg);
+      }
+
+      .at-404 h1 {
+        font-size: var(--at-font-size-h1);
+        margin-block-end: var(--at-spacing-sm);
+      }
+
+      .at-404 p {
+        color: var(--at-text-muted);
+        margin-block-end: var(--at-spacing-lg);
+      }
+
+      .at-404-actions {
+        display: flex;
+        gap: var(--at-spacing-md);
+        align-items: center;
+      }
+
+      .at-404-home {
+        color: var(--at-link);
+        text-decoration: underline;
+      }
+
+      .at-search-trigger {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35em;
+        color: var(--at-text-muted);
+        cursor: pointer;
+      }
+    </style>
+  </body>
+</html>

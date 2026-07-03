@@ -1,0 +1,111 @@
+---
+title: Footer
+description: The site footer with contact details, social links, acknowledgement, legal links, partnership logos, and optional Creative Commons licensing.
+section: components
+order: 5
+heroImage: ../../../assets/images/hero/CYBERNETICS_A_052.avif
+---
+
+import PropsTable from "../../../components/PropsTable.astro";
+
+The Footer component provides a comprehensive site footer. Everything in it is data-driven: contact information, social media links, an institutional acknowledgement, partnership logos, legal links, regulatory metadata, and a Creative Commons licence statement all render only when you pass them as props. The theme ships no institutional defaults.
+
+```astro
+---
+import Footer from "astro-theme-university/components/Footer.astro";
+---
+```
+
+## Props
+
+<PropsTable component="components/Footer" />
+
+### ContactInfo
+
+```ts
+interface ContactInfo {
+  description?: string;
+  address?: string;
+  email?: string;
+  phone?: string;
+}
+```
+
+### SocialLink
+
+```ts
+interface SocialLink {
+  platform: "facebook" | "instagram" | "youtube" | "linkedin";
+  url: string;
+}
+```
+
+### AcknowledgementInfo
+
+```ts
+interface AcknowledgementInfo {
+  title?: string;
+  text: string;
+  logo?: ImageMetadata;
+  logoAlt?: string;
+}
+```
+
+## Usage
+
+Footer is typically used via `BaseLayout` rather than directly, but it can be used standalone in custom layouts.
+
+```astro
+---
+import Footer from "astro-theme-university/components/Footer.astro";
+---
+
+<Footer
+  name="School of Examples"
+  contact={{
+    description: "School of Examples, Example University",
+    address: "Building 1, Example Road, Canberra ACT 2601",
+    email: "enquiries@example.edu",
+    phone: "+61 2 6100 0000",
+  }}
+  socials={[
+    { platform: "linkedin", url: "https://linkedin.com/company/example" },
+    { platform: "youtube", url: "https://youtube.com/@example" },
+  ]}
+  licence="CC-BY-4.0"
+/>
+```
+
+## Institutional content
+
+Institutional elements are supplied as data --- typically from a shared site config, or from a branding package that exports them as a props object:
+
+- **`acknowledgement`** --- an institutional acknowledgement (for example, an Acknowledgement of Country) with an optional `title`, the `text`, and an optional `logo` for the footer's dark band
+- **`partnerships`** --- partnership logo links, shown in the dark band
+- **`legalLinks`** --- copyright, privacy, accessibility, and similar links
+- **`meta`** --- regulatory metadata lines (provider IDs, ABN, and the like); each line is rendered as HTML so it can carry inline links, so only pass trusted values
+
+```astro
+<Footer
+  name="Example University"
+  acknowledgement={{
+    title: "Acknowledgement",
+    text: "Example University acknowledges the traditional custodians of the lands on which it stands.",
+  }}
+  legalLinks={[
+    { text: "Copyright", href: "https://example.edu/copyright" },
+    { text: "Privacy", href: "https://example.edu/privacy" },
+  ]}
+  meta={["Example University, ABN 00 000 000 000"]}
+/>
+```
+
+The dark band above the acknowledgement renders when there's something to put in it --- an `acknowledgement.logo` or at least one `partnerships` entry. All of these props default to empty, so a footer with none of them shows only the name, contact, socials, and licence you've provided.
+
+## Supported licences
+
+The `licence` prop accepts the following [Creative Commons](https://creativecommons.org/) identifiers: `CC-BY-4.0`, `CC-BY-SA-4.0`, `CC-BY-NC-4.0`, `CC-BY-NC-SA-4.0`, `CC-BY-ND-4.0`, and `CC-BY-NC-ND-4.0`. When provided, a licence statement with a link to the full licence text appears in the footer.
+
+## Notes
+
+A live example is not shown here as the footer is a large, self-contained section that would be disruptive inline. See the bottom of this page for a working instance.

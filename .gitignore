@@ -1,0 +1,14 @@
+node_modules/
+dist/
+.astro/
+.DS_Store
+*.log
+docs/src/data/props.json
+
+.worktrees/
+
+# Include .claude/skills in the repo
+!.claude/
+!.claude/skills/
+!.claude/skills/**
+.claude/settings.local.json

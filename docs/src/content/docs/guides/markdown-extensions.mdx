@@ -1,0 +1,154 @@
+---
+title: Markdown extensions
+description: Markdown and MDX features provided by the theme, including custom heading IDs, smart typography, callouts, and MDX expressions.
+section: guides
+order: 4
+heroImage: ../../../assets/images/hero/CYBERNETICS_A_056.avif
+---
+
+export const year = new Date().getFullYear();
+
+The theme configures several remark and rehype plugins that extend standard Markdown. These work automatically in all `.md` and `.mdx` content files.
+
+## Custom heading IDs {#heading-ids}
+
+Headings automatically get an `id` derived from their text, but sometimes you need a shorter or more stable anchor. Append `{#your-id}` to the end of a heading to set it manually:
+
+```md
+## My heading {#my-id}
+```
+
+The `{#my-id}` is stripped from the rendered text and the heading's `id` attribute is set to `my-id`. You can then deep-link to it with a standard fragment link:
+
+```md
+[jump to My heading](#my-id)
+
+[link from another page](/docs/guides/markdown-extensions#my-id)
+```
+
+For example, here are some deep links to sections on this page: [smart typography](#smart-typography), [callouts](#callouts), [MDX expressions](#expressions).
+
+A custom ID is useful when the heading text is long, might change over time, or you want a readable URL fragment for cross-page links. If you don't specify one, the ID is auto-generated from the heading text --- spaces become hyphens and everything is lowercased.
+
+## Autolinked headings
+
+Every heading gets a `#` anchor link prepended that appears on hover. Clicking it (or copying the link) gives you a permalink to that section. This works with both custom and auto-generated IDs.
+
+## Smart typography {#smart-typography}
+
+The theme uses [remark-smartypants](https://github.com/silvenon/remark-smartypants) to convert plain-text punctuation into typographic equivalents:
+
+| You write  | You get     |
+| ---------- | ----------- |
+| `"quotes"` | "quotes"    |
+| `'single'` | 'single'    |
+| `---`      | em dash --- |
+| `--`       | en dash --  |
+| `...`      | ellipsis... |
+
+Dashes use "oldschool" mode: `---` produces an em dash and `--` produces an en dash.
+
+## Base-path-aware links {#base-links}
+
+Root-absolute links and image sources in markdown (`[crits](/crits/)`, `![photo](/images/photo.avif)`) are automatically prefixed with the site's configured `base` at render time, so a site deployed under a sub-path (e.g. GitLab Pages at `/courses/comp4020`) doesn't ship 404s for every internal prose link. When `base` is `/` (the default) this is a no-op.
+
+The convention this enforces: **a root-absolute path is always site-internal**. To link to a page on the same domain but outside your base (say, another course site), use a full URL. A post-build check (part of `checkLinks`) fails the build if any rendered `href` or `src` escapes the base, since such a link would 404 in production while resolving fine locally.
+
+Links in raw markdown consumed by machines (the `/llms.txt` outputs and any content APIs built from collection bodies) are unaffected --- the rewrite happens at the HTML layer only.
+
+## Callouts {#callouts}
+
+Container directives (`:::`) create styled callout boxes. Four types are available:
+
+```md
+:::tip
+
+A helpful suggestion.
+
+:::
+
+:::info
+
+Additional context.
+
+:::
+
+:::warning
+
+Something to watch out for.
+
+:::
+
+:::error
+
+A critical issue.
+
+:::
+```
+
+Always include blank lines around the `:::` markers and the content inside them. Without these blank lines, the formatter may reflow the text into the directive markers.
+
+:::tip
+This is a live callout rendered with the `:::tip` directive.
+:::
+
+See the [Callout component docs](/docs/components/callout) for the full API and component syntax.
+
+## Syntax highlighting
+
+Fenced code blocks get syntax highlighting via [Shiki](https://shiki.style/) with the theme's custom light and dark colour schemes that match the site's colour scheme. Just specify the language after the opening fence:
+
+````md
+```ts
+const message: string = "highlighted";
+```
+````
+
+## MDX expressions {#expressions}
+
+In `.mdx` files, you can embed JavaScript expressions using single curly braces. This is standard [MDX](https://mdxjs.com/) syntax, not a plugin, but it's worth knowing about.
+
+### Inline variables
+
+Define variables with `export const` and reference them in the body:
+
+```mdx
+export const courseName = "COMP1234";
+
+Welcome to {courseName}. This page was built in {new Date().getFullYear()}.
+```
+
+This page was built in {year}.
+
+### Frontmatter in the body
+
+To use frontmatter values in the body of an MDX file, re-export them:
+
+```mdx
+---
+title: My page
+code: COMP1234
+---
+
+export const code = frontmatter.code;
+
+Welcome to {code}.
+```
+
+### Site-wide variables
+
+For values shared across multiple pages, define them in a plain TypeScript module and import where needed:
+
+```ts
+// src/site-data.ts
+export const courseCode = "COMP1234";
+export const convenor = "Dr Smith";
+```
+
+```mdx
+import { courseCode, convenor } from "../../site-data";
+
+This site is for {courseCode}, convened by {convenor}.
+```
+
+Keep this separate from `src/site-config.ts` — that file should use `defineSiteConfig` from `astro-theme-university/types` and only hold fields that match the theme's `SiteConfig` type (see [configuration](/docs/getting-started/configuration/#site-config)).

@@ -1,0 +1,183 @@
+---
+import { ClientRouter } from "astro:transitions";
+import Nav from "../components/Nav.astro";
+import Hero from "../components/Hero.astro";
+import Footer from "../components/Footer.astro";
+import "astro-theme-university/styles/base.css";
+import "astro-theme-university/styles/components.css";
+import type {
+  NavLink,
+  SocialLink,
+  ContactInfo,
+  AcknowledgementInfo,
+} from "../types.js";
+
+export interface BaseLayoutProps {
+  /** Page title, used in the HTML `<title>` element. */
+  title: string;
+  /** Page meta description for SEO. */
+  description?: string;
+  /** Site name displayed in the nav and footer. */
+  name?: string;
+  /** Navigation links displayed in the top bar. */
+  links?: NavLink[];
+  /** Whether to show the search button and dialog. */
+  search?: boolean;
+  /** Enable Astro's `<ClientRouter>` for view transitions between pages. */
+  clientRouter?: boolean;
+
+  /** Hero section heading text. When provided, renders a Hero component. */
+  heroTitle?: string;
+  /** Hero background image (URL string or imported ImageMetadata). */
+  heroImage?: string | ImageMetadata;
+  /** Alt text for the hero image. Required when heroImage is set. */
+  heroImageAlt?: string;
+
+  /** Favicon. When omitted, no favicon link is emitted. */
+  favicon?: ImageMetadata;
+  /** Logo image (light mode), passed through to Nav. When omitted, the
+   *  site name renders as a text wordmark. */
+  logo?: ImageMetadata;
+  /** Logo image (dark mode), passed through to Nav. */
+  logoDark?: ImageMetadata;
+
+  /** Force a specific colour scheme. 'auto' (default) lets users toggle. */
+  colorScheme?: "auto" | "light" | "dark";
+
+  /** Contact details displayed in the footer. */
+  contact?: ContactInfo;
+  /** Social media links displayed as icons in the footer. */
+  socials?: SocialLink[];
+  /** SPDX licence identifier for the site content (e.g. "CC-BY-4.0"). */
+  licence?: string;
+  /** Institutional acknowledgement (e.g. an Acknowledgement of Country)
+   *  with an optional logo for the footer's dark band. The theme ships no
+   *  institutional defaults — branding packages supply this as data. */
+  acknowledgement?: AcknowledgementInfo;
+  /** Footer legal links. */
+  legalLinks?: { text: string; href: string }[];
+  /** Footer partnership logo links, shown in the dark band. */
+  partnerships?: { text: string; href: string; logo: string }[];
+  /** Footer regulatory metadata lines (e.g. provider IDs, ABN). Each line
+   *  is rendered via `set:html`, so callers can embed inline `<a>` markup;
+   *  values must come from a trusted source. */
+  meta?: string[];
+}
+
+type Props = BaseLayoutProps;
+
+const {
+  title,
+  description,
+  name = "Site",
+  links = [],
+  search,
+  clientRouter = true,
+
+  heroTitle,
+  heroImage,
+  heroImageAlt,
+
+  favicon,
+  logo,
+  logoDark,
+
+  colorScheme = "auto",
+
+  contact,
+  socials,
+  licence,
+  acknowledgement,
+  legalLinks,
+  partnerships,
+  meta,
+} = Astro.props;
+
+const imageModules = import.meta.glob<{ default: ImageMetadata }>(
+  '/src/assets/**/*.{avif,png,jpg,jpeg,webp,gif,svg}',
+  { eager: true }
+);
+
+let resolvedHeroImage: ImageMetadata | undefined;
+if (typeof heroImage === 'string') {
+  if (heroImage.startsWith('/src/')) {
+    const mod = imageModules[heroImage];
+    if (mod) {
+      resolvedHeroImage = mod.default;
+    } else {
+      console.warn(
+        `[astro-theme-university] heroImage "${heroImage}" could not be resolved. ` +
+          `String paths must start with "/src/assets/" and point to an existing image file.`,
+      );
+    }
+  } else {
+    console.warn(
+      `[astro-theme-university] heroImage "${heroImage}" is not a supported string path. ` +
+        `Use an imported ImageMetadata or a "/src/assets/..." path.`,
+    );
+  }
+} else if (heroImage) {
+  resolvedHeroImage = heroImage;
+}
+---
+
+<!doctype html>
+<html lang="en" data-theme={colorScheme === "auto" ? undefined : colorScheme}>
+  <head>
+    <meta charset="utf-8" />
+    {/* Declare the cascade-layer order up front, before any stylesheet. The
+        theme's styles live in @layer at.tokens / at.base / at.components, but
+        none of the CSS files declares their order, so precedence falls back to
+        first-appearance. On a SidebarLayout page Astro can emit sidebar.css
+        (which opens @layer at.components) ahead of base.css, registering
+        at.components as the lowest layer — the at.base reset then overrides
+        component styles (duplicated nav logo, misplaced sidebar). This inline
+        statement pins the canonical order so rendering no longer depends on
+        emission order. Keep in sync if new at.* layers are added. */}
+    <style is:inline>@layer at.tokens, at.base, at.components;</style>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    {description && <meta name="description" content={description} />}
+    <meta name="generator" content={Astro.generator} />
+    {favicon && <link rel="icon" type="image/svg+xml" href={favicon.src} />}
+    {clientRouter && <ClientRouter />}
+    {colorScheme === "auto" && (
+      <script is:inline data-astro-rerun>
+        (function () {
+          var t =
+            localStorage.getItem("at-theme") ||
+            (matchMedia("(prefers-color-scheme: dark)").matches
+              ? "dark"
+              : "light");
+          document.documentElement.dataset.theme = t;
+          var label = t === "dark" ? "Switch to light theme" : "Switch to dark theme";
+          document.querySelectorAll(".at-footer-theme-toggle").forEach(function (btn) {
+            btn.setAttribute("aria-label", label);
+            btn.setAttribute("title", label);
+          });
+        })();
+      </script>
+    )}
+    <slot name="head" />
+  </head>
+  <body>
+    <a href="#main" class="visually-hidden">Skip to main content</a>
+    <Nav
+      name={name}
+      links={links}
+      search={search}
+      logo={logo}
+      logoDark={logoDark}
+    />
+    {heroTitle && resolvedHeroImage && (
+      <Hero title={heroTitle} image={resolvedHeroImage} imageAlt={heroImageAlt ?? ""} />
+    )}
+    <slot name="hero" />
+    <main id="main" class="at-main">
+      <slot />
+    </main>
+    <Footer name={name} contact={contact} socials={socials} licence={licence} colorScheme={colorScheme} acknowledgement={acknowledgement} legalLinks={legalLinks} partnerships={partnerships} meta={meta}>
+      <slot name="footer-legal" slot="footer-legal" />
+    </Footer>
+  </body>
+</html>

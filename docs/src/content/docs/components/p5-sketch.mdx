@@ -1,0 +1,61 @@
+---
+title: P5Sketch
+description: A Svelte 5 wrapper for embedding p5.js sketches using instance mode.
+section: components
+order: 9
+heroImage: ../../../assets/images/hero/CYBERNETICS_A_083.avif
+---
+
+import PropsTable from "../../../components/PropsTable.astro";
+
+The P5Sketch component provides a thin wrapper around [p5.js](https://p5js.org/) [instance mode](https://p5js.org/tutorials/organizing-code/#instance-mode). Define your sketch as a function and the component handles lifecycle, cleanup, and container management.
+
+```astro
+---
+import P5Sketch from "astro-theme-university/components/P5Sketch.svelte";
+import { mySketch } from "../sketches/my-sketch";
+---
+
+<P5Sketch client:only="svelte" sketch={mySketch} />
+```
+
+## Props
+
+<PropsTable component="components/P5Sketch" />
+
+## Writing a sketch
+
+Define sketch functions in separate `.ts` files to avoid island serialisation issues:
+
+```ts
+// src/sketches/circles.ts
+import type p5 from "p5";
+
+export function circlesSketch(p: p5) {
+  p.setup = () => {
+    p.createCanvas(400, 400);
+  };
+
+  p.draw = () => {
+    p.background(220);
+    p.circle(p.mouseX, p.mouseY, 50);
+  };
+}
+```
+
+Then use it in an Astro page:
+
+```astro
+---
+import P5Sketch from "astro-theme-university/components/P5Sketch.svelte";
+import { circlesSketch } from "../sketches/circles";
+---
+
+<P5Sketch client:only="svelte" sketch={circlesSketch} />
+```
+
+## Notes
+
+You **must** use `client:only="svelte"` (not `client:load` or `client:visible`) because p5.js requires browser globals (`window`, `document`, `canvas`) that aren't available during server-side rendering.
+
+The component uses `onMount` for one-time initialisation and properly cleans up the p5 instance on unmount. The sketch function receives the p5 instance, so use `p.createCanvas()`, `p.background()`, etc. rather than global mode.

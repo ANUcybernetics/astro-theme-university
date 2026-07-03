@@ -1,0 +1,108 @@
+---
+title: SidebarLayout
+description: A layout with an optional sidebar navigation and article column, built on top of BaseLayout.
+section: layouts
+order: 3
+heroImage: ../../../assets/images/hero/CYBERNETICS_C_020.avif
+---
+
+import PropsTable from "../../../components/PropsTable.astro";
+
+SidebarLayout wraps `BaseLayout` with a sticky sidebar navigation and an article column for long-form content. The sidebar is optional — omit the `sidebar` prop and SidebarLayout collapses to "BaseLayout with a content column".
+
+```astro
+---
+import SidebarLayout from "astro-theme-university/layouts/SidebarLayout.astro";
+import type { SidebarSection } from "astro-theme-university/components/Sidebar.astro";
+import { siteConfig } from "../site-config";
+
+const sidebar: SidebarSection[] = [
+  {
+    title: "Getting started",
+    items: [
+      { label: "Installation", href: "/docs/installation/" },
+      { label: "Configuration", href: "/docs/configuration/" },
+    ],
+  },
+  {
+    title: "Guides",
+    items: [
+      { label: "Deploying", href: "/docs/guides/deploying/" },
+    ],
+  },
+];
+---
+
+<SidebarLayout
+  title="Installation"
+  description="Install the theme and configure your project."
+  sidebar={sidebar}
+  {...siteConfig}
+>
+  <p>Page content goes here.</p>
+</SidebarLayout>
+```
+
+## Props
+
+SidebarLayout accepts the same site-wide props as [BaseLayout](/docs/layouts/base-layout/) (`name`, `links`, `contact`, `socials`, `licence`) plus the following:
+
+<PropsTable component="layouts/SidebarLayout" />
+
+The Sidebar section shape (`SidebarSection` / `SidebarItem`) lives in the [Sidebar component docs](/docs/components/sidebar/).
+
+## Generating the sidebar from a content collection
+
+The docs site you're reading derives its sidebar from the `docs` content collection. The pattern is: read the collection with `getCollection`, group entries by a `section` field, sort by an `order` field, and pass the resulting `SidebarSection[]` to SidebarLayout.
+
+```astro
+---
+import { getCollection, render } from "astro:content";
+import SidebarLayout from "astro-theme-university/layouts/SidebarLayout.astro";
+import type { SidebarSection } from "astro-theme-university/components/Sidebar.astro";
+import { siteConfig } from "../../site-config";
+
+export async function getStaticPaths() {
+  const docs = await getCollection("docs");
+  return docs.map((entry) => ({
+    params: { slug: entry.id },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+
+const allDocs = await getCollection("docs");
+const SECTION_LABELS: Record<string, string> = {
+  "getting-started": "Getting started",
+  guides: "Guides",
+};
+const SECTION_ORDER = Object.keys(SECTION_LABELS);
+
+const sidebar: SidebarSection[] = SECTION_ORDER.flatMap((section) => {
+  const items = allDocs
+    .filter((e) => e.data.section === section)
+    .sort((a, b) => a.data.order - b.data.order)
+    .map((e) => ({ label: e.data.title, href: `/docs/${e.id}/` }));
+  return items.length > 0 ? [{ title: SECTION_LABELS[section], items }] : [];
+});
+---
+
+<SidebarLayout
+  title={entry.data.title}
+  description={entry.data.description}
+  sidebar={sidebar}
+  {...siteConfig}
+>
+  <Content />
+</SidebarLayout>
+```
+
+## Responsive behaviour
+
+The sidebar is rendered as a 16rem sticky column on viewports wider than 768px. Below that breakpoint the sidebar is hidden entirely — consumers who want mobile navigation should provide a separate summary/details expander in their page scripts.
+
+## Why the sidebar is optional
+
+SidebarLayout's sidebar CSS is gated on `body:has(.at-sidebar)`, so pages that don't pass a `sidebar` prop inherit the default BaseLayout grid with centred content. This lets you use SidebarLayout as a single layout for your whole docs tree, toggling the sidebar on a per-page basis if some pages should render full-width.

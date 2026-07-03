@@ -1,0 +1,40 @@
+---
+import BaseLayout, { type BaseLayoutProps } from "./BaseLayout.astro";
+import Hero from "../components/Hero.astro";
+import Sidebar, { type SidebarSection } from "../components/Sidebar.astro";
+import "astro-theme-university/styles/sidebar.css";
+
+export interface SidebarLayoutProps extends BaseLayoutProps {
+  /** Sidebar navigation sections. When omitted, the sidebar is hidden. */
+  sidebar?: SidebarSection[];
+  /** Current page path, used to highlight the active sidebar item. Defaults to `Astro.url.pathname`. */
+  currentPath?: string;
+  /** Accessible label for the sidebar nav landmark. */
+  sidebarLabel?: string;
+}
+
+type Props = SidebarLayoutProps;
+
+const {
+  title,
+  description,
+  heroImage,
+  heroImageAlt,
+  sidebar,
+  currentPath = Astro.url.pathname,
+  sidebarLabel,
+  ...baseProps
+} = Astro.props;
+
+const hasSidebar = sidebar && sidebar.length > 0;
+---
+
+<BaseLayout title={title} description={description} {...baseProps}>
+  <slot name="head" slot="head" />
+  {heroImage && <Hero slot="hero" title={title} image={heroImage} imageAlt={heroImageAlt ?? ""} />}
+  {hasSidebar && <Sidebar sections={sidebar} currentPath={currentPath} label={sidebarLabel} />}
+  <article class="at-sidebar-content">
+    {!heroImage && <h1>{title}</h1>}
+    <slot />
+  </article>
+</BaseLayout>

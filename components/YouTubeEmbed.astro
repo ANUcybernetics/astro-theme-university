@@ -1,0 +1,16 @@
+---
+import { YouTube } from "@astro-community/astro-embed-youtube";
+
+export interface YouTubeEmbedProps {
+  /** YouTube video ID. */
+  id: string;
+  /** Accessible title for the embedded iframe. */
+  title?: string;
+}
+
+type Props = YouTubeEmbedProps;
+
+const { id, title } = Astro.props;
+---
+
+<YouTube {id} {title} />

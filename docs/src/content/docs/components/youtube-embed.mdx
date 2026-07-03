@@ -1,0 +1,42 @@
+---
+title: YouTubeEmbed
+description: A performant YouTube video embed using lite-youtube-embed, powered by astro-embed.
+section: components
+order: 6
+heroImage: ../../../assets/images/hero/CYBERNETICS_A_056.avif
+---
+
+import PropsTable from "../../../components/PropsTable.astro";
+import Example from "../../../components/Example.astro";
+import YouTubeEmbed from "astro-theme-university/components/YouTubeEmbed.astro";
+
+The YouTubeEmbed component provides a performant way to embed YouTube videos. It wraps the community [`@astro-community/astro-embed-youtube`](https://astro-embed.netlify.app/components/youtube/) package, which uses `lite-youtube-embed` under the hood --- rendering a static poster image and only loading the YouTube iframe when the user clicks play.
+
+```astro
+---
+import YouTubeEmbed from "astro-theme-university/components/YouTubeEmbed.astro";
+---
+```
+
+## Props
+
+<PropsTable component="components/YouTubeEmbed" />
+
+## Examples
+
+<Example label="Basic embed">
+  <YouTubeEmbed id="dQw4w9WgXcQ" />
+</Example>
+
+<Example label="Embed with custom title">
+  <YouTubeEmbed
+    id="dQw4w9WgXcQ"
+    title="Rick Astley - Never Gonna Give You Up"
+  />
+</Example>
+
+## Notes
+
+Always provide a descriptive `title` prop for accessibility. The title should describe the video content so users can decide whether to interact with it.
+
+The embed renders a clickable poster image on initial load, with zero JavaScript until the user interacts. This dramatically improves page performance compared to eager-loading iframes, especially when multiple videos appear on a single page.

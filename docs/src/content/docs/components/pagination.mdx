@@ -1,0 +1,49 @@
+---
+title: Pagination
+description: Navigation controls for paginated content collections.
+section: components
+order: 7
+heroImage: ../../../assets/images/hero/CYBERNETICS_A_060.avif
+---
+
+import PropsTable from "../../../components/PropsTable.astro";
+
+The Pagination component renders previous/next links and a page status indicator. It's designed to work with Astro's built-in [`paginate()` function](https://docs.astro.build/en/guides/routing/#pagination).
+
+```astro
+---
+import Pagination from "astro-theme-university/components/Pagination.astro";
+---
+```
+
+## Props
+
+<PropsTable component="components/Pagination" />
+
+## Usage with paginate()
+
+The typical pattern is a `[...page].astro` dynamic route:
+
+```astro
+---
+import { getCollection } from "astro:content";
+import Pagination from "astro-theme-university/components/Pagination.astro";
+
+export async function getStaticPaths({ paginate }) {
+  const posts = await getCollection("news");
+  const sorted = posts.sort(
+    (a, b) => b.data.date.getTime() - a.data.date.getTime(),
+  );
+  return paginate(sorted, { pageSize: 12 });
+}
+
+const { page } = Astro.props;
+---
+
+<ul>
+  {page.data.map((post) => <li>{post.data.title}</li>)}
+</ul>
+<Pagination page={page} />
+```
+
+The component shows "Previous" and "Next" links only when the corresponding page exists, with a "Page X of Y" status in between.

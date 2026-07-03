@@ -1,0 +1,14 @@
+---
+export interface CalloutProps {
+  /** The visual style and semantic meaning of the callout. */
+  type?: "info" | "tip" | "warning" | "error";
+}
+
+type Props = CalloutProps;
+
+const { type = "info" } = Astro.props;
+---
+
+<aside class:list={["at-callout", `at-callout--${type}`]} role="note">
+  <slot />
+</aside>

@@ -1,0 +1,167 @@
+---
+title: Forms
+description: Base styles for form elements including inputs, selects, textareas, checkboxes, and fieldsets.
+section: styling
+order: 6
+heroImage: ../../../assets/images/hero/CYBERNETICS_C_020.avif
+---
+
+import Example from "../../../components/Example.astro";
+
+The theme provides base styles for standard HTML form elements. No special classes are needed --- just use semantic HTML and the styles apply automatically.
+
+## Text inputs
+
+```html
+<label for="name">Full name</label>
+<input type="text" id="name" placeholder="Jane Smith" />
+```
+
+<Example label="Text input">
+  <label for="demo-name">Full name</label>
+  <input type="text" id="demo-name" placeholder="Jane Smith" />
+</Example>
+
+Other input types (`email`, `url`, `password`, `number`, `search`, `tel`, `date`) are styled identically.
+
+## Textarea
+
+```html
+<label for="message">Message</label>
+<textarea id="message" placeholder="Your message here..."></textarea>
+```
+
+<Example label="Textarea">
+  <label for="demo-message">Message</label>
+  <textarea id="demo-message" placeholder="Your message here..."></textarea>
+</Example>
+
+## Select
+
+Selects use a custom chevron indicator and `appearance: none` for cross-browser consistency.
+
+```html
+<label for="campus">Campus</label>
+<select id="campus">
+  <option>Acton</option>
+  <option>Kioloa</option>
+  <option>North Australia</option>
+</select>
+```
+
+<Example label="Select">
+  <label for="demo-campus">Campus</label>
+  <select id="demo-campus">
+    <option>Acton</option>
+    <option>Kioloa</option>
+    <option>North Australia</option>
+  </select>
+</Example>
+
+:::info
+Browsers are beginning to ship `appearance: base-select`, a CSS property that makes `<select>` elements fully styleable without JavaScript. It's stable in Chrome/Edge 135+ but not yet available in Firefox or Safari. Worth watching --- once support is broader it will replace the `appearance: none` workaround used here.
+:::
+
+## Checkboxes and radios
+
+Checkboxes and radio buttons use the browser's native rendering with [`accent-color`](https://developer.mozilla.org/en-US/docs/Web/CSS/accent-color) set to the theme accent.
+
+```html
+<label> <input type="checkbox" /> I agree to the terms </label>
+```
+
+<Example label="Checkbox and radio">
+  <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+    <label style="display: flex; align-items: center; gap: 0.5rem; font-weight: normal;">
+      <input type="checkbox" /> I agree to the terms
+    </label>
+    <label style="display: flex; align-items: center; gap: 0.5rem; font-weight: normal;">
+      <input type="checkbox" checked /> Receive updates
+    </label>
+  </div>
+</Example>
+
+<Example label="Radio buttons">
+  <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+    <label style="display: flex; align-items: center; gap: 0.5rem; font-weight: normal;">
+      <input type="radio" name="demo-level" checked /> Undergraduate
+    </label>
+    <label style="display: flex; align-items: center; gap: 0.5rem; font-weight: normal;">
+      <input type="radio" name="demo-level" /> Postgraduate
+    </label>
+  </div>
+</Example>
+
+## Fieldset and legend
+
+Group related fields with `<fieldset>` and `<legend>`.
+
+```html
+<fieldset>
+  <legend>Contact details</legend>
+  <label for="email">Email</label>
+  <input type="email" id="email" />
+  <label for="phone">Phone</label>
+  <input type="tel" id="phone" />
+</fieldset>
+```
+
+<Example label="Fieldset">
+  <fieldset>
+    <legend>Contact details</legend>
+    <label for="demo-email">Email</label>
+    <input type="email" id="demo-email" placeholder="jane@example.edu" />
+    <div style="margin-block-start: var(--at-spacing-md);">
+      <label for="demo-phone">Phone</label>
+      <input type="tel" id="demo-phone" placeholder="+61 2 6125 5111" />
+    </div>
+  </fieldset>
+</Example>
+
+## Disabled state
+
+Add the `disabled` attribute to any form element.
+
+<Example label="Disabled input">
+  <label for="demo-disabled">Disabled field</label>
+  <input type="text" id="demo-disabled" value="Cannot edit" disabled />
+</Example>
+
+## Full form example
+
+<Example label="Complete form">
+  <form onsubmit="event.preventDefault()">
+    <label for="demo-full-name">Name</label>
+    <input type="text" id="demo-full-name" placeholder="Jane Smith" />
+    <div style="margin-block-start: var(--at-spacing-md);">
+      <label for="demo-full-email">Email</label>
+      <input type="email" id="demo-full-email" placeholder="jane@example.edu" />
+    </div>
+    <div style="margin-block-start: var(--at-spacing-md);">
+      <label for="demo-full-topic">Topic</label>
+      <select id="demo-full-topic">
+        <option>General enquiry</option>
+        <option>Admissions</option>
+        <option>Research</option>
+      </select>
+    </div>
+    <div style="margin-block-start: var(--at-spacing-md);">
+      <label for="demo-full-message">Message</label>
+      <textarea id="demo-full-message" placeholder="Your message..."></textarea>
+    </div>
+    <div style="margin-block-start: var(--at-spacing-md); display: flex; gap: 1rem;">
+      <button class="at-button" type="submit">
+        Submit
+      </button>
+      <button class="at-button at-button--outline" type="reset">
+        Reset
+      </button>
+    </div>
+  </form>
+</Example>
+
+## Notes
+
+Form styles live in the `at.base` CSS layer, so they apply to all form elements automatically. The styles are intentionally minimal --- they provide a consistent, accessible foundation that you can extend with your own CSS in a higher-priority layer.
+
+Labels are `display: block` and bold by default. For inline labels (e.g. next to checkboxes), override with `display: flex` and `font-weight: normal` as shown in the checkbox examples above.

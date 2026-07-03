@@ -1,0 +1,181 @@
+---
+title: Content collections
+description: How to set up and use Astro content collections with the theme.
+section: guides
+order: 3
+heroImage: ../../../assets/images/hero/CYBERNETICS_A_014.avif
+---
+
+[Astro's content collections](https://docs.astro.build/en/guides/content-collections/) give you type-safe access to your Markdown and [MDX](https://mdxjs.com/) content. They're the recommended way to manage structured content like blog posts, news items, or project pages.
+
+## Defining a collection
+
+### The fast path: `definePageCollection`
+
+For a standard page-style collection (`title`, optional `description`, optional `heroImage`, `published` flag) the theme ships a helper:
+
+```ts
+// src/content.config.ts
+import { definePageCollection } from "astro-theme-university/schemas";
+
+// Strict schema: unknown frontmatter fields will fail the content sync.
+const pages = definePageCollection();
+
+export const collections = { pages };
+```
+
+Pass `passthrough: true` if you want to accept arbitrary additional frontmatter fields without updating the schema. That's the default in the base starter example.
+
+To extend the base schema with extra fields, import `pageSchema` instead and use it inside a regular `defineCollection` call. This lets TypeScript infer the extended data shape correctly:
+
+```ts
+import { defineCollection } from "astro:content";
+import { glob } from "astro/loaders";
+import { z } from "astro/zod";
+import { pageSchema } from "astro-theme-university/schemas";
+
+const docs = defineCollection({
+  loader: glob({ pattern: "**/*.{md,mdx}", base: "src/content/docs" }),
+  schema: (ctx) =>
+    pageSchema(ctx).extend({
+      section: z.enum(["getting-started", "guides", "reference"]),
+      order: z.number().default(0),
+    }),
+});
+```
+
+### The manual path: `defineCollection`
+
+If your collection doesn't fit the page shape, define it the usual way with Astro's own helpers:
+
+```ts
+import { defineCollection, z } from "astro:content";
+import { glob } from "astro/loaders";
+
+const posts = defineCollection({
+  loader: glob({ pattern: "**/*.md", base: "src/content/posts" }),
+  schema: z.object({
+    title: z.string(),
+    description: z.string().optional(),
+    date: z.coerce.date(),
+    author: z.string().optional(),
+    tags: z.array(z.string()).default([]),
+    draft: z.boolean().default(false),
+  }),
+});
+
+export const collections = { posts };
+```
+
+Then create your content files in `src/content/posts/`:
+
+```
+src/content/posts/
+  first-post.md
+  second-post.md
+  announcing-something.md
+```
+
+Each file's frontmatter must match the schema. TypeScript will flag any mismatches during the build.
+
+## Creating a dynamic route
+
+To render each post as a page, create a dynamic route file. For a blog at `/posts/[slug]`, create `src/pages/posts/[...slug].astro`:
+
+```astro
+---
+import { getCollection, render } from "astro:content";
+import BaseLayout from "astro-theme-university/layouts/BaseLayout.astro";
+import { siteConfig } from "../../site-config";
+
+export async function getStaticPaths() {
+  const posts = await getCollection("posts", ({ data }) => !data.draft);
+  return posts.map((post) => ({
+    params: { slug: post.id },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+---
+
+<BaseLayout
+  {...siteConfig}
+  title={post.data.title}
+  description={post.data.description}
+>
+  <article>
+    <h1>{post.data.title}</h1>
+    <time datetime={post.data.date.toISOString()}>
+      {
+        post.data.date.toLocaleDateString("en-AU", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        })
+      }
+    </time>
+    <Content />
+  </article>
+</BaseLayout>
+```
+
+The `getStaticPaths` function tells Astro which pages to generate at build time. Each post becomes its own HTML page with a URL based on the filename.
+
+## Listing posts
+
+To create an index page that lists all posts, query the collection and render them however you like:
+
+```astro
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "astro-theme-university/layouts/BaseLayout.astro";
+import { siteConfig } from "../site-config";
+
+const posts = await getCollection("posts", ({ data }) => !data.draft);
+const sorted = posts.sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
+);
+---
+
+<BaseLayout {...siteConfig} title="Posts">
+  <h1>Posts</h1>
+  <ul>
+    {
+      sorted.map((post) => (
+        <li>
+          <a href={`/posts/${post.id}`}>{post.data.title}</a>
+          <time datetime={post.data.date.toISOString()}>
+            {post.data.date.toLocaleDateString("en-AU")}
+          </time>
+        </li>
+      ))
+    }
+  </ul>
+</BaseLayout>
+```
+
+## Filtering and querying
+
+The `getCollection` function accepts an optional filter callback. Use it to exclude drafts, filter by tag, or limit to recent posts:
+
+```ts
+// Published posts only
+const published = await getCollection("posts", ({ data }) => !data.draft);
+
+// Posts with a specific tag
+const tagged = await getCollection("posts", ({ data }) =>
+  data.tags.includes("research"),
+);
+```
+
+## Using MDX
+
+If your content files use `.mdx` instead of `.md`, you can import and use Astro or framework components directly within the content. Update the glob pattern accordingly:
+
+```ts
+loader: glob({ pattern: "**/*.{md,mdx}", base: "src/content/posts" }),
+```
+
+MDX files can then import components at the top of the file and use them alongside Markdown content.

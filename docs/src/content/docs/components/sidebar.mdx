@@ -1,0 +1,82 @@
+---
+title: Sidebar
+description: Sticky sidebar navigation grouped into sections with active-link highlighting.
+section: components
+order: 12
+heroImage: ../../../assets/images/hero/CYBERNETICS_B_055.avif
+---
+
+import PropsTable from "../../../components/PropsTable.astro";
+
+The Sidebar component renders a sticky navigation column grouped into sections, with automatic `aria-current="page"` highlighting for the active link. It's used under the hood by [SidebarLayout](/docs/layouts/sidebar-layout/), but you can also use it directly inside any BaseLayout-wrapped page that needs a sidebar.
+
+## Usage
+
+```astro
+---
+import BaseLayout from "astro-theme-university/layouts/BaseLayout.astro";
+import Sidebar, { type SidebarSection } from "astro-theme-university/components/Sidebar.astro";
+
+const sections: SidebarSection[] = [
+  {
+    title: "Getting started",
+    items: [
+      { label: "Installation", href: "/docs/installation/" },
+      { label: "Configuration", href: "/docs/configuration/" },
+    ],
+  },
+  {
+    title: "Guides",
+    items: [
+      { label: "Deploying", href: "/docs/guides/deploying/" },
+    ],
+  },
+];
+---
+
+<BaseLayout title="My docs site">
+  <Sidebar sections={sections} currentPath={Astro.url.pathname} />
+  <article class="at-sidebar-content">
+    <h1>Installation</h1>
+    <p>Page content.</p>
+  </article>
+</BaseLayout>
+```
+
+## Props
+
+<PropsTable component="components/Sidebar" />
+
+### SidebarSection and SidebarItem
+
+```ts
+interface SidebarItem {
+  label: string;
+  href: string;
+}
+
+interface SidebarSection {
+  title: string;
+  items: SidebarItem[];
+}
+```
+
+Both interfaces are exported from `astro-theme-university/components/Sidebar.astro`, so consumers who wrap or extend the Sidebar can reuse the types.
+
+## Active link highlighting
+
+The Sidebar sets `aria-current="page"` on any link whose `href` exactly matches the `currentPath` prop. CSS then styles that link with `--at-accent` colour and background. Pass `Astro.url.pathname` as `currentPath` in most cases — for collection detail pages you may want to strip or rewrite the path to match the sidebar entry.
+
+## Responsive behaviour
+
+The Sidebar renders as a 16rem sticky column on viewports wider than 768px. Below that breakpoint the `at-sidebar` rules in `styles/sidebar.css` hide it entirely via `display: none` — there's currently no built-in mobile equivalent. If you need a mobile navigation experience, render a `<details>`-based summary inside the main column, or reach for your own drawer component.
+
+## Notes
+
+The sidebar and its accompanying styles in `styles/sidebar.css` are imported automatically by `SidebarLayout`. If you use `Sidebar` without `SidebarLayout`, import the sidebar stylesheet yourself:
+
+```astro
+---
+import "astro-theme-university/styles/sidebar.css";
+---
+```

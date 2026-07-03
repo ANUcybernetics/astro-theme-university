@@ -1,0 +1,53 @@
+---
+title: ContentLayout
+description: A convenience layout that wraps BaseLayout with a page title, optional summary, and optional hero image.
+section: layouts
+order: 2
+heroImage: ../../../assets/images/hero/CYBERNETICS_A_123.avif
+---
+
+import PropsTable from "../../../components/PropsTable.astro";
+
+ContentLayout extends BaseLayout with a common content page pattern --- an `<h1>` title, an optional lead paragraph, and an optional hero banner image. It accepts all the same props as BaseLayout, plus a few extras.
+
+```astro
+---
+import ContentLayout from "astro-theme-university/layouts/ContentLayout.astro";
+---
+
+<ContentLayout
+  title="About the project"
+  summary="A brief introduction to what we do."
+>
+  <p>Page content goes here.</p>
+</ContentLayout>
+```
+
+## Props
+
+ContentLayout accepts all [BaseLayout props](/docs/layouts/base-layout/) plus:
+
+<PropsTable component="layouts/ContentLayout" />
+
+## With a hero image
+
+When the `heroImage` prop is provided, ContentLayout renders the Hero component with the title overlaid on the image, replacing the plain `<h1>`:
+
+```astro
+---
+import bannerImage from "../assets/images/banner.avif";
+---
+
+<ContentLayout
+  title="Research & Innovation"
+  summary="Exploring the frontiers of computing."
+  heroImage={bannerImage}
+  heroImageAlt="Aerial view of campus"
+>
+  <p>Content below the hero.</p>
+</ContentLayout>
+```
+
+## Site config pattern
+
+Like BaseLayout, use a shared config object to avoid repeating site-wide props. See [configuration](/docs/getting-started/configuration/#site-config) for the full pattern.

@@ -1,0 +1,239 @@
+---
+import type {
+  SocialLink,
+  ContactInfo,
+  PartnershipLink,
+  AcknowledgementInfo,
+} from "../types.js";
+
+export type { PartnershipLink, AcknowledgementInfo };
+
+export interface FooterProps {
+  /** Site or organisational unit name. */
+  name: string;
+  /** Contact details displayed in the footer. */
+  contact?: ContactInfo;
+  /** Social media links displayed as icons. */
+  socials?: SocialLink[];
+  /** SPDX licence identifier for the site content (e.g. "CC-BY-4.0"). */
+  licence?: string;
+  /** Legal links displayed at the bottom. */
+  legalLinks?: { text: string; href: string }[];
+  /** Partnership logo links in the dark footer band. */
+  partnerships?: PartnershipLink[];
+  /** Regulatory metadata lines (e.g. provider IDs, ABN). Each line is
+   *  rendered as HTML so callers can embed inline links (`<a>`) or other
+   *  simple markup. Strings are inserted via `set:html`, so values must
+   *  come from a trusted source — don't pass user input. */
+  meta?: string[];
+  /** Forwarded from BaseLayout. When not 'auto', the theme toggle button is hidden. */
+  colorScheme?: "auto" | "light" | "dark";
+  /** Institutional acknowledgement (e.g. an Acknowledgement of Country)
+   *  with an optional logo for the dark band. The theme ships no
+   *  institutional defaults — branding packages supply this as data. */
+  acknowledgement?: AcknowledgementInfo;
+}
+
+type Props = FooterProps;
+
+const {
+  name,
+  contact,
+  socials,
+  licence,
+  legalLinks = [],
+  partnerships: partnershipLinks = [],
+  meta: metaLines = [],
+  colorScheme = "auto",
+  acknowledgement,
+} = Astro.props;
+
+// The dark band renders when there's anything to put in it.
+const showBand = !!acknowledgement?.logo || partnershipLinks.length > 0;
+
+const licenceMap: Record<string, { name: string; url: string }> = {
+  "CC-BY-4.0": {
+    name: "Creative Commons Attribution 4.0 International",
+    url: "https://creativecommons.org/licenses/by/4.0/",
+  },
+  "CC-BY-SA-4.0": {
+    name: "Creative Commons Attribution-ShareAlike 4.0 International",
+    url: "https://creativecommons.org/licenses/by-sa/4.0/",
+  },
+  "CC-BY-NC-4.0": {
+    name: "Creative Commons Attribution-NonCommercial 4.0 International",
+    url: "https://creativecommons.org/licenses/by-nc/4.0/",
+  },
+  "CC-BY-NC-SA-4.0": {
+    name: "Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International",
+    url: "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+  },
+  "CC-BY-ND-4.0": {
+    name: "Creative Commons Attribution-NoDerivatives 4.0 International",
+    url: "https://creativecommons.org/licenses/by-nd/4.0/",
+  },
+  "CC-BY-NC-ND-4.0": {
+    name: "Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International",
+    url: "https://creativecommons.org/licenses/by-nc-nd/4.0/",
+  },
+};
+
+const licenceInfo = licence ? licenceMap[licence] : undefined;
+
+// Show the legal-links row (and its preceding rule) only when something
+// inside it would render — links, theme toggle, or a consumer slot.
+// Render the slot here rather than checking `Astro.slots.has`, because the
+// slot is forwarded through BaseLayout and `has` returns true even when no
+// content was passed at the top level. Astro 6.2 returns `undefined` for
+// absent slots, so coalesce before trimming.
+const legalSlotHtml = ((await Astro.slots.render("footer-legal")) ?? "").trim();
+const hasLegalRow =
+  legalLinks.length > 0 || colorScheme === "auto" || legalSlotHtml.length > 0;
+
+import Icon from "./Icon.astro";
+---
+
+<footer class="at-footer">
+  {
+    (contact || (socials && socials.length > 0)) && (
+      <div class="at-footer-inner">
+        {contact && (
+          <section class="at-footer-contact">
+            <h2>Contact us</h2>
+            {contact.description && <p>{contact.description}</p>}
+            <dl class="at-footer-contact-details">
+              {contact.address && (
+                <>
+                  <dt>Mailing address</dt>
+                  <dd>{contact.address}</dd>
+                </>
+              )}
+              {contact.email && (
+                <>
+                  <dt>Email</dt>
+                  <dd>
+                    <a href={`mailto:${contact.email}`}>{contact.email}</a>
+                  </dd>
+                </>
+              )}
+              {contact.phone && (
+                <>
+                  <dt>Phone</dt>
+                  <dd>
+                    <a href={`tel:${contact.phone.replace(/\s/g, "")}`}>
+                      {contact.phone}
+                    </a>
+                  </dd>
+                </>
+              )}
+            </dl>
+          </section>
+        )}
+
+        {socials && socials.length > 0 && (
+          <nav aria-label="Social links" class="at-footer-socials">
+            {socials.map((s) => (
+              <a href={s.url} aria-label={s.platform}>
+                <Icon name={s.platform} />
+              </a>
+            ))}
+          </nav>
+        )}
+      </div>
+    )
+  }
+
+  {showBand && (
+    <div class="at-footer-band">
+      <div class="at-footer-band-inner">
+        {acknowledgement?.logo && (
+          <img
+            src={acknowledgement.logo.src}
+            alt={acknowledgement.logoAlt ?? ""}
+            class="at-footer-band-logo"
+          />
+        )}
+        <div class="at-footer-partners">
+          {
+            partnershipLinks.map((p) => (
+              <a href={p.href} aria-label={p.text}>
+                <img src={p.logo} alt="" />
+              </a>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+  )}
+
+  <div class="at-footer-inner at-footer-bottom">
+    {acknowledgement && (
+      <div class="at-footer-acknowledgement">
+        <h2>{acknowledgement.title ?? "Acknowledgement"}</h2>
+        <p>{acknowledgement.text}</p>
+      </div>
+    )}
+
+    {
+      licenceInfo && (
+        <>
+          <hr />
+          <p class="at-footer-licence">
+            Unless otherwise indicated, this site is licensed under a{" "}
+            <a href={licenceInfo.url} rel="license">{licenceInfo.name}</a>{" "}
+            licence.
+          </p>
+        </>
+      )
+    }
+
+    {hasLegalRow && <hr />}
+
+    {hasLegalRow && (
+    <nav aria-label="Legal" class="at-footer-legal">
+      {
+        legalLinks.map((link, i) => (
+          <>
+            {i > 0 && <span aria-hidden="true">|</span>}
+            <a href={link.href}>{link.text}</a>
+          </>
+        ))
+      }
+      <Fragment set:html={legalSlotHtml} />
+      {colorScheme === "auto" && (
+        <>
+          <span aria-hidden="true">|</span>
+          <button
+            class="at-footer-theme-toggle"
+            aria-label="Switch to dark theme"
+            title="Switch to dark theme"
+          >
+            <Icon name="sun-light" size={16} class="at-theme-icon-sun" />
+            <Icon name="half-moon" size={16} class="at-theme-icon-moon" />
+          </button>
+        </>
+      )}
+    </nav>
+    )}
+
+    {metaLines.map((line) => (
+      <p class="at-footer-meta" set:html={line} />
+    ))}
+  </div>
+</footer>
+
+<script>
+  function setupFooterThemeToggle() {
+    for (const btn of document.querySelectorAll(".at-footer-theme-toggle")) {
+      btn.addEventListener("click", () => {
+        const dark = document.documentElement.dataset.theme !== "dark";
+        document.documentElement.dataset.theme = dark ? "dark" : "light";
+        localStorage.setItem("at-theme", dark ? "dark" : "light");
+        const label = dark ? "Switch to light theme" : "Switch to dark theme";
+        btn.setAttribute("aria-label", label);
+        btn.setAttribute("title", label);
+      });
+    }
+  }
+  document.addEventListener("astro:page-load", setupFooterThemeToggle);
+</script>

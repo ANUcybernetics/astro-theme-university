@@ -1,0 +1,108 @@
+---
+title: Buttons
+description: Styled button classes for primary actions, outline variants, and link-styled buttons.
+section: styling
+order: 5
+heroImage: ../../../assets/images/hero/CYBERNETICS_B_045.avif
+---
+
+import Example from "../../../components/Example.astro";
+
+The theme provides `.at-button` classes for styling buttons and link elements as actionable controls. These are CSS classes rather than Astro components, so they work on any `<button>` or `<a>` element.
+
+## Usage
+
+Add the `at-button` class to any button or anchor element:
+
+```html
+<button class="at-button">Save changes</button>
+<a href="/docs/" class="at-button">Browse docs</a>
+```
+
+<Example label="Primary button">
+  <button class="at-button">Save changes</button>
+</Example>
+
+## Variants
+
+### Outline
+
+A bordered button with a transparent background, useful for secondary actions.
+
+```html
+<button class="at-button at-button--outline">Cancel</button>
+```
+
+<Example label="Outline button">
+  <button class="at-button at-button--outline">Cancel</button>
+</Example>
+
+### Ghost
+
+A minimal button with no border, useful for tertiary actions or navigation.
+
+```html
+<button class="at-button at-button--ghost">Learn more</button>
+```
+
+<Example label="Ghost button">
+  <button class="at-button at-button--ghost">Learn more</button>
+</Example>
+
+## Sizes
+
+Two size modifiers are available alongside the default size.
+
+```html
+<button class="at-button at-button--small">Small</button>
+<button class="at-button">Default</button>
+<button class="at-button at-button--large">Large</button>
+```
+
+<Example label="Button sizes">
+  <div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+    <button class="at-button at-button--small">Small</button>
+    <button class="at-button">Default</button>
+    <button class="at-button at-button--large">Large</button>
+  </div>
+</Example>
+
+## Disabled state
+
+Add the `disabled` attribute to a `<button>`, or `aria-disabled="true"` to an `<a>`.
+
+```html
+<button class="at-button" disabled>Disabled</button>
+<a href="/docs/" class="at-button" aria-disabled="true">Disabled link</a>
+```
+
+<Example label="Disabled buttons">
+  <div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+    <button class="at-button" disabled>
+      Disabled
+    </button>
+    <button class="at-button at-button--outline" disabled>
+      Disabled
+    </button>
+  </div>
+</Example>
+
+## Combining variants
+
+Size and style modifiers combine freely:
+
+<Example label="Combined variants">
+  <div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+    <button class="at-button at-button--small">Primary small</button>
+    <button class="at-button at-button--outline at-button--large">
+      Outline large
+    </button>
+    <button class="at-button at-button--ghost at-button--small">
+      Ghost small
+    </button>
+  </div>
+</Example>
+
+## Notes
+
+All button styles live in the `at.components` CSS layer, so they can be overridden in higher-priority layers. The `.at-button` class works on both `<button>` and `<a>` elements --- use `<a>` for navigation and `<button>` for actions.

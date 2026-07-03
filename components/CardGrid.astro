@@ -1,0 +1,14 @@
+---
+export interface CardGridProps {
+  /** Number of columns in the grid. */
+  columns?: 2 | 3;
+}
+
+type Props = CardGridProps;
+
+const { columns = 3 } = Astro.props;
+---
+
+<div class:list={["at-card-grid", `at-card-grid--${columns}`]}>
+  <slot />
+</div>

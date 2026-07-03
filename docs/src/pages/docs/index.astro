@@ -1,0 +1,65 @@
+---
+import BaseLayout from "astro-theme-university/layouts/BaseLayout.astro";
+import Hero from "astro-theme-university/components/Hero.astro";
+import Card from "astro-theme-university/components/Card.astro";
+import CardGrid from "astro-theme-university/components/CardGrid.astro";
+import { siteConfig } from "../../site-config";
+import heroMain from "../../assets/images/hero/CYBERNETICS_A_045.avif";
+import heroGettingStarted from "../../assets/images/hero/CYBERNETICS_A_005.avif";
+import heroComponents from "../../assets/images/hero/CYBERNETICS_A_016.avif";
+import heroLayouts from "../../assets/images/hero/CYBERNETICS_A_111.avif";
+import heroStyling from "../../assets/images/hero/CYBERNETICS_B_020.avif";
+---
+
+<BaseLayout
+  title="Documentation"
+  description="astro-theme-university documentation"
+  {...siteConfig}
+>
+  <Hero
+    title="Documentation"
+    image={heroMain}
+    imageAlt="Glider sculptures on a university campus"
+    slot="hero"
+  />
+  <p>Everything you need to build sites with astro-theme-university.</p>
+
+  <h2>Sections</h2>
+  <CardGrid columns={2}>
+    <Card
+      title="Getting started"
+      href="/docs/getting-started/installation/"
+      image={heroGettingStarted}
+    >
+      <p>Install the theme, configure your project, and start building.</p>
+    </Card>
+    <Card
+      title="Components"
+      href="/docs/components/callout/"
+      image={heroComponents}
+    >
+      <p>Callouts, cards, video embeds, and more — ready to use.</p>
+    </Card>
+    <Card
+      title="Layouts"
+      href="/docs/layouts/base-layout/"
+      image={heroLayouts}
+    >
+      <p>The BaseLayout and how to structure your pages.</p>
+    </Card>
+    <Card
+      title="Styling"
+      href="/docs/styling/design-tokens/"
+      image={heroStyling}
+    >
+      <p>Design tokens, dark mode, customisation, and CSS layers.</p>
+    </Card>
+    <Card
+      title="Guides"
+      href="/docs/guides/migrating-from-jekyll/"
+      image={heroGettingStarted}
+    >
+      <p>Migration from Jekyll, deploying, and content collections.</p>
+    </Card>
+  </CardGrid>
+</BaseLayout>

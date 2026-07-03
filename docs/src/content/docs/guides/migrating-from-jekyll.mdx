@@ -1,0 +1,96 @@
+---
+title: Migrating from Jekyll
+description: A guide to moving your site from Jekyll to astro-theme-university.
+section: guides
+order: 1
+heroImage: ../../../assets/images/hero/CYBERNETICS_A_005.avif
+---
+
+If you're coming from a [Jekyll](https://jekyllrb.com/) site, this guide covers the key steps and differences. The content structure is similar enough that the migration is mostly mechanical, but there are some concepts that map differently.
+
+## High-level steps
+
+1. Create a new Astro project and install `astro-theme-university`
+2. Move your Markdown content into Astro content collections
+3. Convert any kramdown-specific syntax to standard Markdown
+4. Replace Liquid tags and includes with Astro components
+5. Move images into `src/assets/` or `public/`
+6. Update frontmatter to match the new schema
+
+## Content collections replace \_posts
+
+In Jekyll, posts live in `_posts/` with date-prefixed filenames. In Astro, you define a content collection with a schema and put your files in `src/content/<collection>/`.
+
+```
+# Jekyll
+_posts/2024-03-15-my-post.md
+
+# Astro
+src/content/posts/my-post.md
+```
+
+The date and slug are handled through frontmatter rather than the filename. See [content collections](/docs/guides/content-collections) for the full setup.
+
+## Frontmatter changes
+
+Jekyll uses a `layout` field in frontmatter to select a layout. In Astro, layouts are applied in the page template that renders the collection, not in the content file itself. Remove the `layout` field from your frontmatter.
+
+```yaml
+# Jekyll
+---
+layout: post
+title: My post
+date: 2024-03-15
+---
+# Astro
+---
+title: My post
+date: 2024-03-15
+---
+```
+
+## Kramdown to standard Markdown
+
+Jekyll's default Markdown processor, [kramdown](https://kramdown.gettalong.org/), supports some non-standard syntax. Common things to update:
+
+- **Attribute lists** like `{: .my-class}` --- these have no Markdown equivalent. Use an MDX component or raw HTML instead.
+- **Table of contents** with `{:toc}` --- use an Astro component or a remark plugin.
+- **Footnote syntax** --- standard Markdown footnotes (`[^1]`) work, but check the exact syntax matches.
+
+## Liquid tags become Astro components
+
+Jekyll uses [Liquid](https://shopify.github.io/liquid/) template tags like `{% include %}` and `{% for %}`. In Astro, these are replaced by component imports and standard JavaScript:
+
+```
+# Jekyll
+{% include figure.html src="photo.jpg" alt="A photo" %}
+
+# Astro (in an .astro file)
+import Figure from "../components/Figure.astro";
+<Figure src="photo.jpg" alt="A photo" />
+```
+
+For content in Markdown/[MDX](https://mdxjs.com/) files, you can import components at the top of an MDX file and use them inline.
+
+## Data files
+
+Jekyll's `_data/` directory (YAML/JSON files accessed via `site.data`) has no direct equivalent. Instead, create TypeScript modules and import them:
+
+```ts
+// src/data/team.ts
+export const team = [
+  { name: "Alice", role: "Researcher" },
+  { name: "Bob", role: "Developer" },
+];
+```
+
+## Images
+
+In Jekyll, images typically live in an `assets/` or `images/` directory and are referenced with site-relative paths. In Astro, you have two options:
+
+- **`src/assets/`** --- images here are processed and optimised by Astro's built-in image pipeline. Import them in your components.
+- **`public/`** --- files here are copied as-is to the build output. Use this for files that shouldn't be processed.
+
+## No Gemfile
+
+Dependencies are managed through `package.json` with npm or pnpm instead of a `Gemfile`. The theme is installed as a regular npm package.

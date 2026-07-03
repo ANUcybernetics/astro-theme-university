@@ -1,0 +1,91 @@
+---
+title: Installation
+description: Install astro-theme-university and its peer dependencies, configure the integration, and create your first page.
+section: getting-started
+order: 1
+heroImage: ../../../assets/images/hero/CYBERNETICS_A_005.avif
+---
+
+## Install the package
+
+The theme is distributed as an [npm](https://www.npmjs.com/) package. Install it alongside the required peer dependencies using [pnpm](https://pnpm.io/):
+
+```bash
+pnpm add astro astro-theme-university @astrojs/mdx @astrojs/svelte svelte sharp pagefind lightningcss @iconify-json/iconoir
+```
+
+The theme requires [Astro](https://astro.build/) ^7.0.0 and [Svelte](https://svelte.dev/) ^5.0.0 as peer dependencies. `@astrojs/mdx` and `@astrojs/svelte` are needed so Astro can resolve the renderer entry points from your project root — the theme auto-registers both integrations at build time, but the packages have to be installed locally for Vite to bundle them. `lightningcss` is required because the theme configures Vite's CSS transformer to use it; Vite resolves that package from your project root, not from inside the theme. `@iconify-json/iconoir` ships the iconoir icon set; `astro-icon` resolves iconify-set packages from the consumer's `package.json` (not the theme's), so the set has to live as a direct dep.
+
+:::tip
+
+**Build-script approvals.** pnpm 11 asks for explicit approval before running build scripts on installed packages. Add a `pnpm-workspace.yaml` at your project root with:
+
+```yaml
+allowBuilds:
+  esbuild: true
+  sharp: false
+```
+
+`esbuild` needs its postinstall to fetch the platform-specific binary; `sharp` is set to `false` because its install script falls through to a from-source build when a system `libvips` is present (e.g. on macOS with Homebrew), and the prebuilt `@img/sharp-*` platform binary works at runtime regardless. Without these entries, every `pnpm install` warns "Ignored build scripts" and `sharp` may fail to load at build time.
+
+:::
+
+:::warning
+
+**Git-deps caching quirk.** While the theme is still distributed from the git repo (i.e. you've pinned it as `git+https://github.com/benswift/astro-theme-university.git#main` rather than an npm version), pnpm caches its resolution of `#main` to a specific commit and **does not re-fetch on subsequent `pnpm install` runs**. If you run an install after the upstream has moved forward and your site seems to be stuck on an older theme version, the escape hatch is:
+
+```bash
+rm -rf node_modules pnpm-lock.yaml
+pnpm store prune
+pnpm install
+```
+
+That forces pnpm to re-resolve `#main` to the current HEAD. Pinning a specific commit hash (`#<sha>&path:…`) avoids the issue entirely and gives you reproducible builds. This is a git-dep-only quirk — once the packages are published to npm, `pnpm update` handles version bumps cleanly and this note goes away.
+
+:::
+
+## Add the integration
+
+Register the theme integration in your Astro config. That's all:
+
+```js
+// astro.config.ts
+import { defineConfig } from "astro/config";
+import universityTheme from "astro-theme-university";
+
+export default defineConfig({
+  site: process.env.SITE_URL,
+  base: process.env.BASE_PATH,
+  integrations: [universityTheme()],
+});
+```
+
+The theme integration automatically:
+
+- registers `@astrojs/svelte` and `@astrojs/mdx` (set `svelte: false` / `mdx: false` to opt out)
+- adds Google font providers for Public Sans and Roboto Mono with the theme's CSS variable names (set `fonts: false` to opt out)
+- configures [Lightning CSS](https://lightningcss.dev/) as the CSS transformer
+- wires up remark/rehype plugins for callouts, heading IDs, autolinked headings, and smart typography
+- runs a suite of post-build checks: broken-link checker, axe-core accessibility audit, deck structure check, and an optional `/llms.txt` generator
+
+If you're coming from an older template that listed `svelte()` / `mdx()` / the font config inline, you can delete all of that — `universityTheme()` handles it now.
+
+## Create your first page
+
+With the integration in place, you can use the theme's `BaseLayout` in any Astro page:
+
+```astro
+---
+// src/pages/index.astro
+import BaseLayout from "astro-theme-university/layouts/BaseLayout.astro";
+---
+
+<BaseLayout title="My site">
+  <h1>Welcome</h1>
+  <p>This page uses the theme's BaseLayout.</p>
+</BaseLayout>
+```
+
+Run `pnpm dev` and open the page in your browser. You should see the themed layout with a navigation bar and footer.
+
+The next step is to [configure your site](/docs/getting-started/configuration/) with a name and navigation links.

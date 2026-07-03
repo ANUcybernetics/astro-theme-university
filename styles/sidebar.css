@@ -1,0 +1,89 @@
+@layer at.components {
+  body:has(.at-sidebar) {
+    --at-sidebar-inset: calc(16rem + var(--at-spacing-2xl));
+  }
+
+  body:has(.at-sidebar) .at-main {
+    grid-column: full-start / content-end;
+  }
+
+  /* Qualified with `.at-main >` so this beats the generic
+     `.at-main > * { grid-column: content }` placement in components.css: the
+     bare `.at-sidebar` selector ties it on specificity (both 0,1,0), so source
+     order would otherwise decide and the sidebar could land in the content
+     column on a cold page load. */
+  .at-main > .at-sidebar {
+    grid-column: 1;
+    place-self: start end;
+    width: 16rem;
+    margin-inline-end: var(--at-spacing-2xl);
+    position: sticky;
+    inset-block-start: calc(var(--at-nav-height) + var(--at-spacing-lg));
+    padding-block: var(--at-spacing-md);
+    font-size: var(--at-font-size-sm);
+  }
+
+  .at-sidebar nav > ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .at-sidebar-section + .at-sidebar-section {
+    margin-block-start: var(--at-spacing-lg);
+  }
+
+  .at-sidebar-section-title {
+    font-size: var(--at-font-size-xs);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--at-text-muted);
+    margin-block-end: var(--at-spacing-xs);
+  }
+
+  .at-sidebar-section ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .at-sidebar-section a {
+    display: block;
+    padding: var(--at-spacing-xs) var(--at-spacing-sm);
+    border-radius: var(--at-border-radius);
+    color: var(--at-text-secondary);
+    text-decoration: none;
+    transition:
+      color 0.15s,
+      background-color 0.15s;
+  }
+
+  .at-sidebar-section a:hover {
+    color: var(--at-text);
+    background-color: var(--at-accent-soft);
+  }
+
+  .at-sidebar-section a[aria-current="page"] {
+    color: var(--at-accent);
+    background-color: var(--at-accent-soft);
+  }
+
+  .at-sidebar-content {
+    min-width: 0;
+  }
+
+  @media (width <= 768px) {
+    body:has(.at-sidebar) {
+      --at-sidebar-inset: 0px;
+    }
+
+    body:has(.at-sidebar) .at-main {
+      grid-column: inset-start / content-end;
+    }
+
+    .at-sidebar {
+      display: none;
+    }
+  }
+}

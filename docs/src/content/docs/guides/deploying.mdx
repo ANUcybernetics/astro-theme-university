@@ -1,0 +1,103 @@
+---
+title: Deploying
+description: How to deploy your astro-theme-university site to common hosting platforms.
+section: guides
+order: 2
+heroImage: ../../../assets/images/hero/CYBERNETICS_A_006.avif
+---
+
+Astro builds your site to static HTML, CSS, and JavaScript by default. The output goes into a `dist/` directory, which you can deploy to any static hosting provider.
+
+## [GitHub Pages](https://pages.github.com/)
+
+The simplest approach is the official [Astro GitHub Action](https://github.com/withastro/action). Add a workflow file:
+
+```yaml
+# .github/workflows/deploy.yml
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: withastro/action@v3
+        with:
+          package-manager: pnpm@latest
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
+```
+
+Set the `site` field in your `astro.config.ts`:
+
+```js
+export default defineConfig({
+  site: "https://your-username.github.io",
+});
+```
+
+If your repository isn't deployed at the root (e.g. it's at `your-username.github.io/my-repo`), also set the `base` path:
+
+```js
+export default defineConfig({
+  site: "https://your-username.github.io",
+  base: "/my-repo",
+});
+```
+
+## [Cloudflare Pages](https://pages.cloudflare.com/)
+
+Connect your repository in the Cloudflare Pages dashboard, then configure:
+
+- **Build command**: `pnpm build`
+- **Build output directory**: `dist`
+- **Node.js version**: set the `NODE_VERSION` environment variable to `22` or later
+
+Cloudflare will build and deploy on every push to your main branch.
+
+## [Netlify](https://www.netlify.com/)
+
+Netlify works in a similar way. Connect the repository and set:
+
+- **Build command**: `pnpm build`
+- **Publish directory**: `dist`
+
+You can also add a `netlify.toml` to your repository:
+
+```toml
+[build]
+  command = "pnpm build"
+  publish = "dist"
+```
+
+## Base path configuration
+
+If your site isn't served from the root of the domain, the `base` option in `astro.config.ts` ensures all internal links and asset paths include the correct prefix. This applies to all deployment targets, not just GitHub Pages.
+
+```js
+import { defineConfig } from "astro/config";
+
+export default defineConfig({
+  site: "https://example.com",
+  base: "/docs",
+});
+```
+
+When `base` is set, use Astro's built-in URL handling rather than hard-coding paths. For example, `import.meta.env.BASE_URL` gives you the base path at runtime.

@@ -1,0 +1,27 @@
+---
+import BaseLayout, { type BaseLayoutProps } from "./BaseLayout.astro";
+import Hero from "../components/Hero.astro";
+
+export interface ContentLayoutProps extends BaseLayoutProps {
+  /** Lead text displayed below the title. */
+  summary?: string | null;
+  /** Use a wider content column. */
+  wide?: boolean;
+}
+
+type Props = ContentLayoutProps;
+
+const { title, summary, heroImage, heroImageAlt, ...baseProps } = Astro.props;
+const transitionName = `card-title-${Astro.url.pathname.replace(/^\/|\/$/g, "").replace(/\//g, "-")}`;
+---
+
+<BaseLayout title={title} {...baseProps}>
+  {
+    heroImage && (
+      <Hero slot="hero" title={title} image={heroImage} imageAlt={heroImageAlt ?? ""} transitionName={transitionName} />
+    )
+  }
+  {!heroImage && <h1 transition:name={transitionName}>{title}</h1>}
+  {summary && <p class="lead">{summary}</p>}
+  <slot />
+</BaseLayout>

@@ -1,0 +1,121 @@
+---
+title: Project setup
+description: Recommended directory structure, TypeScript configuration, tooling, and creating pages with the theme.
+section: getting-started
+order: 3
+heroImage: ../../../assets/images/hero/CYBERNETICS_A_014.avif
+---
+
+## Directory structure
+
+A typical site using the theme looks like this:
+
+```
+my-site/
+├── astro.config.ts
+├── package.json
+├── tsconfig.json
+├── public/
+│   └── favicon.svg
+└── src/
+    ├── site-config.ts
+    ├── pages/
+    │   ├── index.astro
+    │   └── about.astro
+    ├── content/        # if using content collections
+    │   └── posts/
+    │       └── first-post.md
+    └── styles/
+        └── custom.css  # any project-specific overrides
+```
+
+The theme provides layouts, components, base styles, and assets --- your project supplies the pages and content that use them.
+
+## TypeScript configuration
+
+Astro projects should extend the framework's built-in [TypeScript](https://www.typescriptlang.org/) config. A minimal `tsconfig.json`:
+
+```json
+{
+  "extends": "astro/tsconfigs/strict"
+}
+```
+
+This gives you path resolution for theme imports like `astro-theme-university/components/Callout.astro` without any extra aliases.
+
+## CSS and lightningcss
+
+The theme integration registers [Lightning CSS](https://lightningcss.dev/) as the [Vite](https://vite.dev/) CSS transformer automatically, so you don't need to configure it. This enables modern CSS features --- [nesting](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_nesting), custom media queries, and colour functions --- with broad browser support.
+
+If you add your own stylesheets, import them in your pages or layouts as usual. The theme's styles use [`@layer`](https://developer.mozilla.org/en-US/docs/Web/CSS/@layer) to keep specificity predictable, so your overrides will take effect without fighting the cascade.
+
+```astro
+---
+// src/pages/index.astro
+import BaseLayout from "astro-theme-university/layouts/BaseLayout.astro";
+import { siteConfig } from "../site-config";
+import "../styles/custom.css";
+---
+
+<BaseLayout title="Home" {...siteConfig}>
+  <h1>Welcome</h1>
+</BaseLayout>
+```
+
+## Creating pages
+
+Each `.astro` file in `src/pages/` becomes a route. Import `BaseLayout` and your site config, then write your content in the slot.
+
+```astro
+---
+// src/pages/about.astro
+import BaseLayout from "astro-theme-university/layouts/BaseLayout.astro";
+import { siteConfig } from "../site-config";
+---
+
+<BaseLayout title="About" {...siteConfig}>
+  <h1>About us</h1>
+  <p>We are a research group at Example University.</p>
+</BaseLayout>
+```
+
+You can also use theme components within your pages:
+
+```astro
+---
+import BaseLayout from "astro-theme-university/layouts/BaseLayout.astro";
+import Callout from "astro-theme-university/components/Callout.astro";
+import { siteConfig } from "../site-config";
+---
+
+<BaseLayout title="Research" {...siteConfig}>
+  <h1>Our research</h1>
+  <Callout type="info">
+    Applications for the 2026 intake are now open.
+  </Callout>
+</BaseLayout>
+```
+
+## Content collections
+
+For blog posts, docs pages, or other structured content, use Astro's [content collections](https://docs.astro.build/en/guides/content-collections/). The theme ships a `definePageCollection` helper that wraps `defineCollection` + `glob` + a page-style Zod schema (`title`, `description`, `heroImage`, `published`), so a typical `src/content.config.ts` is a few lines:
+
+```ts
+// src/content.config.ts
+import { definePageCollection } from "astro-theme-university/schemas";
+
+const pages = definePageCollection();
+export const collections = { pages };
+```
+
+See [content collections](/docs/guides/content-collections/) for extending the base schema with custom fields, and for the `defineCollection` fallback path if you need a different shape.
+
+## Recommended tooling
+
+The theme is developed with oxlint and oxfmt for linting and formatting. You're free to use whatever tools you prefer, but if you'd like a consistent setup:
+
+- **[oxlint](https://oxc.rs/docs/guide/usage/linter)** for fast JavaScript/TypeScript linting
+- **[oxfmt](https://oxc.rs/docs/guide/usage/formatter)** for fast formatting across `.ts`, `.js`, `.json`, `.md`, and `.css` files
+- **[stylelint](https://stylelint.io/)** for CSS linting
+
+These are optional --- the theme works without any of them.

@@ -1,0 +1,133 @@
+---
+import Icon from "./Icon.astro";
+import SearchDialog from "./SearchDialog.svelte";
+import type { NavLink } from "../types.js";
+import { withBase } from "../url.js";
+
+export interface NavProps {
+  /** Site name — rendered as a text wordmark when no logo is provided,
+   *  and used as alt text for the logo when one is. */
+  name: string;
+  /** Navigation links displayed in the top bar. */
+  links?: NavLink[];
+  /** Whether to show the search button and dialog. */
+  search?: boolean;
+  /** Logo image (light mode). When omitted, the site name renders as a
+   *  text wordmark instead. */
+  logo?: ImageMetadata;
+  /** Logo image (dark mode). Only used when `logo` is also provided. */
+  logoDark?: ImageMetadata;
+}
+
+type Props = NavProps;
+
+const { name, links = [], search = true, logo, logoDark } = Astro.props;
+const currentPath = Astro.url.pathname;
+---
+
+<nav class="at-nav" aria-label="Main">
+  <div class="at-nav-inner">
+    <a href={import.meta.env.BASE_URL} class="at-nav-brand">
+      {logo ? (
+        <>
+          <img
+            src={logo.src}
+            width={logo.width}
+            height={logo.height}
+            alt={name}
+            class:list={["at-nav-logo", { "at-nav-logo--has-dark": !!logoDark }]}
+          />
+          {logoDark && (
+            <img
+              src={logoDark.src}
+              width={logoDark.width}
+              height={logoDark.height}
+              alt={name}
+              class="at-nav-logo at-nav-logo--dark"
+            />
+          )}
+        </>
+      ) : (
+        <span class="at-nav-wordmark">{name}</span>
+      )}
+    </a>
+    {
+      links.length > 0 && (
+        <>
+          <button
+            class="at-icon-button at-nav-toggle"
+            aria-expanded="false"
+            aria-controls="at-nav-menu"
+            aria-label="Menu"
+          >
+            <Icon name="menu" size={20} class="at-nav-icon-open" />
+            <Icon name="xmark" size={20} class="at-nav-icon-close" />
+          </button>
+          <div class="at-nav-links-wrapper" inert>
+            <ul class="at-nav-links" id="at-nav-menu" role="list">
+              {links.map((link) => {
+                const resolved = withBase(link.href);
+                const isActive = currentPath === resolved || (resolved !== "/" && currentPath.startsWith(resolved));
+                return (
+                  <li>
+                    <a
+                      href={resolved}
+                      aria-current={isActive ? "page" : undefined}
+                    >
+                      {link.text}
+                    </a>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        </>
+      )
+    }
+    {
+      search && (
+        <button
+          class="at-icon-button at-search-trigger"
+          aria-label="Search (Cmd+K)"
+          title="Search (Cmd+K)"
+          data-search-trigger
+        >
+          <Icon name="search" size={20} />
+        </button>
+      )
+    }
+  </div>
+  {search && <SearchDialog basePath={import.meta.env.BASE_URL} client:idle />}
+</nav>
+
+<script>
+  function setupNav() {
+    for (const toggle of document.querySelectorAll(".at-nav-toggle")) {
+      toggle.addEventListener("click", function () {
+        const expanded = this.getAttribute("aria-expanded") === "true";
+        this.setAttribute("aria-expanded", String(!expanded));
+        const wrapper = this.closest(".at-nav")?.querySelector(".at-nav-links-wrapper");
+        if (wrapper) wrapper.inert = expanded;
+      });
+    }
+    for (const trigger of document.querySelectorAll("[data-search-trigger]")) {
+      trigger.addEventListener("click", function () {
+        document.dispatchEvent(new CustomEvent("at-search-open"));
+      });
+    }
+    function syncNavInert() {
+      for (const wrapper of document.querySelectorAll(".at-nav-links-wrapper")) {
+        const toggle = wrapper.closest(".at-nav")?.querySelector(".at-nav-toggle");
+        if (!toggle || getComputedStyle(toggle).display === "none") {
+          wrapper.inert = false;
+        } else {
+          const expanded = toggle.getAttribute("aria-expanded") === "true";
+          wrapper.inert = !expanded;
+        }
+      }
+    }
+    syncNavInert();
+    matchMedia("(width >= 640px)").addEventListener("change", syncNavInert);
+  }
+  document.addEventListener("astro:page-load", setupNav);
+</script>

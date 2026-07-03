@@ -1,0 +1,75 @@
+---
+title: Icon
+description: Inline iconoir icons that inherit text colour and size from their context.
+section: components
+order: 14
+heroImage: ../../../assets/images/hero/CYBERNETICS_A_016.avif
+---
+
+import PropsTable from "../../../components/PropsTable.astro";
+import Example from "../../../components/Example.astro";
+import Icon from "astro-theme-university/components/Icon.astro";
+
+The Icon component renders an iconoir icon inline. Icons inherit the surrounding text colour via `currentColor` and default to `1em` square so they line up with the text they sit alongside.
+
+```astro
+---
+import Icon from "astro-theme-university/components/Icon.astro";
+---
+
+<Icon name="github" />
+```
+
+## Finding an icon name
+
+Use the `pnpm icons` script from the workspace root:
+
+```sh
+pnpm icons              # list all ~1,500 names
+pnpm icons github       # filter by substring (case-insensitive)
+```
+
+Pass the bare name (no `iconoir:` prefix) to `<Icon name="...">`.
+
+## Props
+
+<PropsTable component="components/Icon" />
+
+## Examples
+
+<Example label="Default size (1em --- matches surrounding text)">
+  This sentence has an inline <Icon name="github" /> icon.
+</Example>
+
+<Example label="Custom size">
+  <Icon name="github" size="2em" />
+  <Icon name="github" size={32} />
+</Example>
+
+<Example label="Colour inherits from the parent">
+  <p style="color: var(--at-error);">
+    Error: <Icon name="warning-triangle" /> something went wrong.
+  </p>
+</Example>
+
+<Example label="Labelled (role='img')">
+  <Icon name="warning-triangle" aria-label="Warning" />
+</Example>
+
+## Accessibility
+
+By default, the icon renders with `aria-hidden="true"` and `focusable="false"` --- appropriate for decorative icons sitting next to a text label. Pass `aria-label` to flip it to a labelled `role="img"` element when the icon is the only thing conveying meaning (e.g. an icon-only button).
+
+## Using other iconify sets
+
+The theme ships iconoir only. Consumers needing a different iconify set can use the `IconifyIcon` re-export, which is the underlying `astro-icon` `<Icon>`:
+
+```astro
+---
+import { IconifyIcon } from "astro-theme-university/components/Icon.astro";
+---
+
+<IconifyIcon name="mdi:home" />
+```
+
+Add the corresponding `@iconify-json/<set>` package to your project's `dependencies`.

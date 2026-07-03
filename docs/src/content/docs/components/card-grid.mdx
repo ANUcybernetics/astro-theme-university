@@ -1,0 +1,58 @@
+---
+title: CardGrid
+description: A responsive grid layout for arranging Card components in 2 or 3 column configurations.
+section: components
+order: 3
+heroImage: ../../../assets/images/hero/CYBERNETICS_A_045.avif
+---
+
+import PropsTable from "../../../components/PropsTable.astro";
+import Example from "../../../components/Example.astro";
+import CardGrid from "astro-theme-university/components/CardGrid.astro";
+import Card from "astro-theme-university/components/Card.astro";
+
+The CardGrid component arranges Card components in a responsive grid. It supports 2 or 3 column layouts and collapses gracefully on smaller screens.
+
+```astro
+---
+import CardGrid from "astro-theme-university/components/CardGrid.astro";
+import Card from "astro-theme-university/components/Card.astro";
+---
+```
+
+## Props
+
+<PropsTable component="components/CardGrid" />
+
+The component accepts a default slot, intended for Card components.
+
+## Examples
+
+<Example label="3-column grid (default)">
+  <CardGrid>
+    <Card title="Installation">
+      <p>Get up and running in minutes.</p>
+    </Card>
+    <Card title="Configuration">
+      <p>Customise the theme to suit your site.</p>
+    </Card>
+    <Card title="Deployment">
+      <p>Publish your site to the web.</p>
+    </Card>
+  </CardGrid>
+</Example>
+
+<Example label="2-column grid">
+  <CardGrid columns={2}>
+    <Card title="Components">
+      <p>Pre-built UI components for common patterns.</p>
+    </Card>
+    <Card title="Layouts">
+      <p>Page-level templates with nav, footer, and content areas.</p>
+    </Card>
+  </CardGrid>
+</Example>
+
+## Notes
+
+While CardGrid is designed to work with Card components, it will accept any content in its slot. The grid uses CSS to handle responsive behaviour --- cards will stack to a single column on narrow viewports regardless of the `columns` setting.

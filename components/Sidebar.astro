@@ -1,0 +1,53 @@
+---
+import { withBase } from "../url.js";
+import type { SidebarItem, SidebarSection } from "../types.js";
+export type { SidebarItem, SidebarSection };
+
+export interface SidebarProps {
+  /** Grouped navigation items. Sections render in order. */
+  sections: SidebarSection[];
+  /** Current page path, used for `aria-current="page"`. */
+  currentPath: string;
+  /** Accessible label for the nav landmark. */
+  label?: string;
+}
+
+type Props = SidebarProps;
+
+const { sections, currentPath, label = "Page sections" } = Astro.props;
+---
+
+{/* A plain div, not <aside>: the sidebar renders inside <main>, and a
+    complementary landmark there violates axe's
+    landmark-complementary-is-top-level. The landmark is the labelled
+    <nav> within — section navigation is nav semantics anyway. */}
+<div class="at-sidebar" transition:animate="none">
+  <nav aria-label={label}>
+    <ul>
+      {
+        sections
+          .filter((s) => s.items.length > 0)
+          .map((section) => (
+            <li class="at-sidebar-section">
+              <div class="at-sidebar-section-title">{section.title}</div>
+              <ul>
+                {section.items.map((item) => {
+                  const resolved = withBase(item.href);
+                  return (
+                    <li>
+                      <a
+                        href={resolved}
+                        aria-current={currentPath === resolved ? "page" : undefined}
+                      >
+                        {item.label}
+                      </a>
+                    </li>
+                  );
+                })}
+              </ul>
+            </li>
+          ))
+      }
+    </ul>
+  </nav>
+</div>
