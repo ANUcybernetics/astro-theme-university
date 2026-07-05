@@ -79,7 +79,7 @@
   }
 
   .at-nav-brand {
-    font-weight: 700;
+    font-weight: 600;
     font-size: 1.125rem;
     color: var(--at-text);
     text-decoration: none;
@@ -110,7 +110,7 @@
   /* Text wordmark — the brand fallback when no logo image is provided. */
   .at-nav-wordmark {
     font-size: 1.375rem;
-    font-weight: 700;
+    font-weight: 600;
     letter-spacing: -0.01em;
     color: var(--at-text);
   }

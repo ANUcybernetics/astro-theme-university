@@ -1,5 +1,25 @@
 # Changelog
 
+## Unreleased
+
+Typography overhaul — the theme's webfonts now actually load, and the weight
+hierarchy is rebalanced:
+
+- BaseLayout now emits `@font-face` rules (and a preload for the body font) for
+  the theme fonts via Astro's `<Font>` component and a new
+  `virtual:astro-theme-university/fonts` module. Previously the fonts were
+  registered in config but never rendered, so every visitor fell back to system
+  fonts (or a locally installed Public Sans)
+- Public Sans is loaded as a variable font (`weights: ["100 900"]`), so every
+  weight the styles use renders as designed rather than as synthetic bold
+- weight hierarchy rebalanced: body text 400 (was a silently-ignored 300), h2–h6
+  semibold 600 (was 700), h1 stays regular-weight at display size; nav
+  brand/wordmark and sidebar section titles follow at 600
+- subtle negative letter-spacing on h1 (−0.02em) and h2 (−0.01em)
+- deck theme gets the same treatment: slide body 400, headings 600
+- docs site passes `fontVariables: ["--font-public-sans"]` to astromotion so
+  deck pages load the webfont too
+
 ## 0.1.0
 
 Initial release. Extracted from the `astro-theme-anu` package (which continues

@@ -10,7 +10,7 @@
   html {
     font-family: var(--at-font-body);
     font-size: var(--at-font-size-base);
-    font-weight: 300;
+    font-weight: 400;
     line-height: var(--at-line-height);
     color: var(--at-text);
     background-color: var(--at-bg);
@@ -117,24 +117,27 @@
     text-wrap: balance;
   }
 
-  /* h1 sits at regular weight, h2–h6 at bold. Set both
-     explicitly because the html element runs at 300, and CSS's "bolder"
-     would otherwise resolve headings to 400 rather than 700. */
+  /* Weight hierarchy: h1 is large-and-light (regular weight at display
+     size), h2–h6 are semibold — enough contrast against the 400 body to
+     carry the hierarchy without the heavy jump to UA-default bold. Both
+     set explicitly to override the UA stylesheet's 700. */
   h2,
   h3,
   h4,
   h5,
   h6 {
-    font-weight: 700;
+    font-weight: 600;
   }
 
   h1 {
     font-size: var(--at-font-size-h1);
     font-weight: 400;
+    letter-spacing: -0.02em;
   }
 
   h2 {
     font-size: var(--at-font-size-h2);
+    letter-spacing: -0.01em;
   }
 
   h3 {
