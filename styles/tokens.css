@@ -53,6 +53,15 @@
     --at-shadow-md: light-dark(0 2px 8px rgb(0 0 0 / 10%), 0 2px 8px rgb(0 0 0 / 65%));
     --at-shadow-lg: light-dark(0 8px 32px rgb(0 0 0 / 20%), 0 12px 40px rgb(0 0 0 / 70%));
 
+    /* Nav brand logo offset. The theme pulls the logo left by one
+       --at-content-inset so its box-left meets the content rule; this token
+       adds a further per-brand nudge so the rule bisects the brand mark
+       rather than skimming its left edge. Set it to the negative of the
+       mark's centre as a percentage of the logo's rendered width (e.g. a
+       crest centred 14% into a wide lockup uses -14%); 0 leaves the box-left
+       on the rule. */
+    --at-logo-offset-x: 0px;
+
     /* Surfaces — neutrals tinted toward the primary hue so brand and UI
        surfaces cohere subconsciously; they re-derive automatically when a
        brand overrides --at-primary. Light/dark resolved via `light-dark()`,

@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.4.0
+
+The content rule now _bisects_ the brand mark rather than skimming its left edge
+— the intended look, correcting 0.3.0:
+
+- reinstated `--at-logo-offset-x`, now an **additive** nudge on top of the
+  structural `−--at-content-inset` pull: the theme brings the logo's box-left
+  onto the rule, and the token slides the mark a further per-brand amount so the
+  rule passes through the mark's centre
+- set it to the negative of the mark's centre as a percentage of the logo's
+  rendered width (a crest centred 14% into a wide lockup → `-14%`; a square mark
+  centred in its box → `-50%`); `0` leaves box-left on the rule
+- 0.3.0 aligned the mark's left edge flush to the rule, which put the whole mark
+  to the right of the line; this restores the bisecting overlap
+
 ## 0.3.0
 
 Nav and footer brand logos now align to the content rule (the vertical accent
