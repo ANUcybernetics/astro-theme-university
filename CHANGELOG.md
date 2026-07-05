@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.3.0
+
+Nav and footer brand logos now align to the content rule (the vertical accent
+line down the left of the content column) through grid geometry rather than a
+hand-tuned per-brand offset:
+
+- `.at-nav-brand` and `.at-footer-band-logo` are pulled left by exactly one
+  `--at-content-inset`, so a logo authored flush lands its left edge on the rule
+- **removed** the `--at-logo-offset-x` token --- the alignment is now derived,
+  not configured. **Breaking**: brands that set `--at-logo-offset-x` should
+  instead author their logo artwork flush (painted bounding box to the viewBox
+  edge, no built-in transparent margin); the theme supplies the surrounding
+  clear-space through layout
+- design-tokens docs rewritten to document the flush-logo convention
+
 ## 0.2.0
 
 Typography overhaul — the theme's webfonts now actually load, and the weight

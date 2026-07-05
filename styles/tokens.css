@@ -53,12 +53,6 @@
     --at-shadow-md: light-dark(0 2px 8px rgb(0 0 0 / 10%), 0 2px 8px rgb(0 0 0 / 65%));
     --at-shadow-lg: light-dark(0 8px 32px rgb(0 0 0 / 20%), 0 12px 40px rgb(0 0 0 / 70%));
 
-    /* Nav brand logo visual offset — for logo artwork with built-in
-       whitespace on its left edge, a negative offset pulls the visible
-       mark back into line with the rest of the nav contents. Brands set
-       this to suit their logo file; 0 suits a tight bounding box. */
-    --at-logo-offset-x: 0px;
-
     /* Surfaces — neutrals tinted toward the primary hue so brand and UI
        surfaces cohere subconsciously; they re-derive automatically when a
        brand overrides --at-primary. Light/dark resolved via `light-dark()`,

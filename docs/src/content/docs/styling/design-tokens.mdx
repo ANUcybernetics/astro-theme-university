@@ -83,13 +83,17 @@ The page layout uses a body-level CSS grid with named column lines. `--at-conten
 
 Use these on hover/focus states (e.g. `var(--at-shadow-md)` for card hover) and floating panels (e.g. `var(--at-shadow-lg)` for the search dialog) rather than hardcoding shadow values.
 
-## Nav brand offset
+## Nav brand alignment
 
-| Token                | Value |
-| -------------------- | ----- |
-| `--at-logo-offset-x` | `0px` |
+The nav brand logo (and the footer band logo) are pulled left by one
+`--at-content-inset` so the logo's left edge lines up with the content rule ---
+the vertical accent line down the left of the content column. This alignment is
+derived from the grid, so there is no per-brand offset token to tune.
 
-Some logo artwork ships with built-in whitespace on its left edge, which makes the visible mark look pushed right relative to the nav contents. Set a negative offset to pull it back into line; the `0px` default suits a tight bounding box (and the text wordmark).
+For it to land correctly, brand logo artwork must be authored **flush**: the
+painted mark's bounding box should meet the viewBox edge, with no built-in
+transparent margin. The theme supplies the surrounding clear-space through
+layout, so any padding baked into the asset just pushes the mark out of line.
 
 ## Colours
 

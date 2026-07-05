@@ -220,7 +220,7 @@
     }
 
     .at-nav-brand {
-      transform: translateX(var(--at-logo-offset-x));
+      transform: translateX(calc(-1 * var(--at-content-inset)));
     }
 
     .at-nav-toggle {
@@ -396,7 +396,7 @@
 
   @media (width >= 640px) {
     .at-footer-band-logo {
-      transform: translateX(var(--at-logo-offset-x));
+      transform: translateX(calc(-1 * var(--at-content-inset)));
     }
   }
 
