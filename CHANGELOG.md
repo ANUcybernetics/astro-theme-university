@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.2.0
 
 Typography overhaul — the theme's webfonts now actually load, and the weight
 hierarchy is rebalanced:
