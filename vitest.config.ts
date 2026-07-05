@@ -4,7 +4,27 @@ import icon from "astro-icon";
 
 export default getViteConfig(
   {
-    plugins: [svelte()],
+    plugins: [
+      svelte(),
+      // Container tests render BaseLayout outside the integration, so the
+      // fonts virtual module (normally provided by universityTheme()) is
+      // stubbed empty — no <Font> rendering, matching a fonts: false setup.
+      {
+        name: "test:astro-theme-university-fonts-stub",
+        resolveId(id: string) {
+          if (id === "virtual:astro-theme-university/fonts") {
+            return "\0virtual:astro-theme-university/fonts";
+          }
+          return null;
+        },
+        load(id: string) {
+          if (id === "\0virtual:astro-theme-university/fonts") {
+            return "export const fontVariables = [];\n";
+          }
+          return null;
+        },
+      },
+    ],
     test: {
       server: {
         deps: {

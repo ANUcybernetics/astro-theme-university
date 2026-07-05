@@ -24,6 +24,7 @@
     "index.ts",
     "types.ts",
     "types-shim.d.ts",
+    "virtual.d.ts",
     "link-checker.ts",
     "a11y-checker.ts",
     "deck-checker.ts",

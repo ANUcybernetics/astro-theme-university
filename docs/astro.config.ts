@@ -17,6 +17,7 @@ export default defineConfig({
     universityTheme({ llmsTxt: true, extraRemarkPlugins: deckRemarkPlugins }),
     astromotion({
       theme: "./src/decks/theme.css",
+      fontVariables: ["--font-public-sans"],
       shikiConfig: { themes: { light: themeLight, dark: themeDark }, defaultColor: false },
     }),
   ],

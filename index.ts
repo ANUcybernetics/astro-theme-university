@@ -145,6 +145,11 @@ export default function universityTheme(options: ThemeOptions = {}): AstroIntegr
               name: "Public Sans",
               cssVariable: "--font-public-sans",
               provider: fontProviders.google(),
+              // Variable font: one file per style covers every weight the
+              // styles use (400 body, 600 headings, 700 strong). Without
+              // this Astro defaults to weight 400 only and browsers fake
+              // the rest with synthetic bold.
+              weights: ["100 900"] as [string, ...string[]],
             },
             {
               name: "Roboto Mono",
@@ -237,6 +242,31 @@ export default function universityTheme(options: ThemeOptions = {}): AstroIntegr
             ssr: {
               noExternal: ["@astro-community/astro-embed-youtube"],
             },
+            plugins: [
+              // BaseLayout renders <Font> for each of these variables so the
+              // registered webfonts actually reach the page as @font-face
+              // rules (registering fonts in config alone emits nothing).
+              // Mirrors astromotion's virtual:astromotion/fonts pattern;
+              // empty when fonts: false so the layout degrades cleanly.
+              {
+                name: "astro-theme-university:fonts",
+                resolveId(id: string) {
+                  if (id === "virtual:astro-theme-university/fonts") {
+                    return "\0virtual:astro-theme-university/fonts";
+                  }
+                  return null;
+                },
+                load(id: string) {
+                  if (id === "\0virtual:astro-theme-university/fonts") {
+                    const fontVariables = shouldAddFonts
+                      ? ["--font-public-sans", "--font-roboto-mono"]
+                      : [];
+                    return `export const fontVariables = ${JSON.stringify(fontVariables)};\n`;
+                  }
+                  return null;
+                },
+              },
+            ],
           },
         });
       },
