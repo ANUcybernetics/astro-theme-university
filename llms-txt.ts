@@ -204,3 +204,17 @@ export async function readSiteEntries(srcDir: string): Promise<LlmsEntry[]> {
   const pageUrls = new Set(pageEntries.map((e) => e.url));
   return [...pageEntries, ...contentEntries.filter((e) => !pageUrls.has(e.url))];
 }
+
+/** Entry URLs are derived from source file paths, not from the router, so a
+ *  custom route mapping (or none at all) silently orphans them. Returns the
+ *  URLs with no matching page in dist — either directory format
+ *  (`<url>/index.html`) or file format (`<url>.html`). */
+export function findUnroutedEntries(distPath: string, entries: LlmsEntry[]): string[] {
+  return entries
+    .filter((entry) => {
+      const rel = entry.url.replace(/^\//, "").replace(/\/$/, "");
+      if (existsSync(join(distPath, rel, "index.html"))) return false;
+      return !(rel && existsSync(join(distPath, `${rel}.html`)));
+    })
+    .map((entry) => entry.url);
+}

@@ -9,6 +9,7 @@ import {
   generateLlmsFullTxt,
   readContentEntries,
   readSiteEntries,
+  findUnroutedEntries,
 } from "./llms-txt.js";
 import type { LlmsEntry, LlmsTxtOptions } from "./llms-txt.js";
 import { fsTest } from "./test-utils.js";
@@ -490,5 +491,37 @@ describe("full pipeline", () => {
     expect(llmsFullTxt).toContain("Welcome to the site.");
     expect(llmsFullTxt).toContain("Step 1: Install.");
     expect(llmsFullTxt).toContain("---");
+  });
+});
+
+describe("findUnroutedEntries", () => {
+  const entry = (url: string): LlmsEntry => ({ url, title: "T", body: "" });
+
+  fsTest("passes entries whose page exists in directory format", async ({ tmpDir }) => {
+    await mkdir(join(tmpDir, "guides", "setup"), { recursive: true });
+    await writeFile(join(tmpDir, "index.html"), "<html></html>");
+    await writeFile(join(tmpDir, "guides", "setup", "index.html"), "<html></html>");
+
+    expect(findUnroutedEntries(tmpDir, [entry("/"), entry("/guides/setup/")])).toEqual([]);
+  });
+
+  fsTest("passes entries whose page exists in file format", async ({ tmpDir }) => {
+    await mkdir(join(tmpDir, "guides"), { recursive: true });
+    await writeFile(join(tmpDir, "guides", "setup.html"), "<html></html>");
+
+    expect(findUnroutedEntries(tmpDir, [entry("/guides/setup/")])).toEqual([]);
+  });
+
+  fsTest("reports entries with no built page", async ({ tmpDir }) => {
+    await mkdir(join(tmpDir, "real"), { recursive: true });
+    await writeFile(join(tmpDir, "real", "index.html"), "<html></html>");
+
+    expect(findUnroutedEntries(tmpDir, [entry("/real/"), entry("/orphaned/")])).toEqual([
+      "/orphaned/",
+    ]);
+  });
+
+  fsTest("reports the root URL when dist has no index.html", async ({ tmpDir }) => {
+    expect(findUnroutedEntries(tmpDir, [entry("/")])).toEqual(["/"]);
   });
 });

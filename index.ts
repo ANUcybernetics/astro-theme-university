@@ -23,7 +23,12 @@ import rehypeBaseLinks from "./rehype-base-links.js";
 import { checkA11y } from "./a11y-checker.js";
 import { checkBaseLinks } from "./link-checker.js";
 import { checkDecks } from "./deck-checker.js";
-import { readSiteEntries, generateLlmsTxt, generateLlmsFullTxt } from "./llms-txt.js";
+import {
+  readSiteEntries,
+  generateLlmsTxt,
+  generateLlmsFullTxt,
+  findUnroutedEntries,
+} from "./llms-txt.js";
 
 export type {
   NavLink,
@@ -271,7 +276,14 @@ export default function universityTheme(options: ThemeOptions = {}): AstroIntegr
         });
       },
       "astro:build:done": async ({ dir, logger }) => {
-        if (!shouldSearch && !shouldCheckA11y && !shouldCheckDecks && !shouldCheckLinks) return;
+        if (
+          !shouldSearch &&
+          !shouldCheckA11y &&
+          !shouldCheckDecks &&
+          !shouldCheckLinks &&
+          !shouldGenerateLlmsTxt
+        )
+          return;
         let distPath: string;
         try {
           distPath = dir instanceof URL ? fileURLToPath(dir) : String(dir);
@@ -338,6 +350,18 @@ export default function universityTheme(options: ThemeOptions = {}): AstroIntegr
 
         if (shouldGenerateLlmsTxt) {
           const entries = await readSiteEntries(srcDir);
+
+          // Entry URLs come from source file paths, not the router — catch
+          // the drift where a markdown file exists but no route renders it.
+          const unrouted = findUnroutedEntries(distPath, entries);
+          if (unrouted.length > 0) {
+            const lines = unrouted.slice(0, 30).map((url) => `  ${url}`);
+            if (unrouted.length > 30) lines.push(`  ... and ${unrouted.length - 30} more`);
+            throw new Error(
+              `Found ${unrouted.length} llms.txt entr${unrouted.length === 1 ? "y" : "ies"} with no built page in dist (each markdown file under src/content or src/pages must be rendered at the URL its path implies):\n${lines.join("\n")}`,
+            );
+          }
+
           const preamblePath = join(srcDir, "llms.md");
           const preamble = existsSync(preamblePath)
             ? readFileSync(preamblePath, "utf-8")

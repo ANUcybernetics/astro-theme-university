@@ -81,6 +81,8 @@ Key areas include quantum computing, climate modelling, and policy analysis.
 
 The theme appends an auto-generated `## Pages` section listing all published content pages with their titles and descriptions. If `src/llms.md` doesn't exist, the theme falls back to a minimal header using the site name from your theme options.
 
+Entry URLs are derived from each markdown file's path under `src/content/` and `src/pages/`, so the build verifies that every entry has a matching page in the output (`<url>/index.html` or `<url>.html`) and fails if any entry would point at a page that doesn't exist — for example when a collection renders under a different route than its directory name implies.
+
 ## Site config {#site-config}
 
 Rather than repeating the same props on every page, create a central config file that exports your site's identity and navigation. Use the `defineSiteConfig` helper from `astro-theme-university/types` — it's an identity-typed function that gives you autocomplete and type-checking on the full `SiteConfig` shape:
