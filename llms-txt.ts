@@ -197,7 +197,14 @@ export async function readContentEntries(contentDir: string): Promise<LlmsEntry[
 }
 
 export async function readSiteEntries(srcDir: string): Promise<LlmsEntry[]> {
-  const contentEntries = await readContentEntries(join(srcDir, "content"));
+  // The theme's page-collection convention (definePageCollection + a root
+  // catch-all) renders src/content/pages/<id> at /<id>/ — strip the
+  // collection segment to match. Other collections keep their directory
+  // name in the URL (src/content/news/<id> → /news/<id>/).
+  const contentEntries = (await readContentEntries(join(srcDir, "content"))).map((entry) => ({
+    ...entry,
+    url: entry.url.replace(/^\/pages\//, "/"),
+  }));
   const pageEntries = await readContentEntries(join(srcDir, "pages"));
 
   // A file in src/pages owns its route, so on a URL collision the page wins.
