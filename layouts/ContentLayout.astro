@@ -16,6 +16,7 @@ const transitionName = `card-title-${Astro.url.pathname.replace(/^\/|\/$/g, "").
 ---
 
 <BaseLayout title={title} {...baseProps}>
+  <slot name="head" slot="head" />
   {
     heroImage && (
       <Hero slot="hero" title={title} image={heroImage} imageAlt={heroImageAlt ?? ""} transitionName={transitionName} />
