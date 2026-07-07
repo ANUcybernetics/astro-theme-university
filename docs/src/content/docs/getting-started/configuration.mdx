@@ -81,6 +81,8 @@ Key areas include quantum computing, climate modelling, and policy analysis.
 
 The theme appends an auto-generated `## Pages` section listing all published content pages with their titles and descriptions. If `src/llms.md` doesn't exist, the theme falls back to a minimal header using the site name from your theme options.
 
+Every page also advertises the file to agent visitors with a `<link rel="alternate" type="text/markdown" href="/llms.txt">` in the head, so a crawler that reads the head can find it without relying on the well-known-path convention. The link is emitted only when `llmsTxt: true`, and its `href` respects your configured `base` path.
+
 Entry URLs are derived from each markdown file's path under `src/content/` and `src/pages/`: the `pages` collection renders at the site root (`src/content/pages/about.md` → `/about/`, matching the `definePageCollection` catch-all convention), while any other collection keeps its directory name (`src/content/news/launch.md` → `/news/launch/`). The build verifies that every entry has a matching page in the output (`<url>/index.html` or `<url>.html`) and fails if any entry would point at a page that doesn't exist — for example when a collection renders under a different route than its directory name implies.
 
 ## Site config {#site-config}

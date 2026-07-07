@@ -2,6 +2,7 @@
 import { Font } from "astro:assets";
 import { ClientRouter } from "astro:transitions";
 import { fontVariables } from "virtual:astro-theme-university/fonts";
+import { llmsTxtHref } from "virtual:astro-theme-university/llms";
 import Nav from "../components/Nav.astro";
 import Hero from "../components/Hero.astro";
 import Footer from "../components/Footer.astro";
@@ -148,6 +149,9 @@ if (typeof heroImage === 'string') {
     {description && <meta name="description" content={description} />}
     <meta name="generator" content={Astro.generator} />
     {favicon && <link rel="icon" type="image/svg+xml" href={favicon.src} />}
+    {llmsTxtHref && (
+      <link rel="alternate" type="text/markdown" href={llmsTxtHref} title="llms.txt" />
+    )}
     {clientRouter && <ClientRouter />}
     {colorScheme === "auto" && (
       <script is:inline data-astro-rerun>

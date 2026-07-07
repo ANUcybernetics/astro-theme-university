@@ -34,6 +34,16 @@ describe("BaseLayout", () => {
     expect(html).toContain('href="/custom-favicon.svg"');
   });
 
+  test("emits no llms.txt alternate link when llmsTxt generation is off", async () => {
+    // The test stub sets llmsTxtHref to null (see vitest.config.ts), matching
+    // an llmsTxt: false setup.
+    const container = await createContainer();
+    const html = await container.renderToString(BaseLayout, {
+      props: { title: "Test" },
+    });
+    expect(html).not.toMatch(/rel="alternate"[^>]*llms\.txt/);
+  });
+
   test("renders the auto-detect script when colorScheme is 'auto'", async () => {
     const container = await createContainer();
     const html = await container.renderToString(BaseLayout, {

@@ -271,6 +271,30 @@ export default function universityTheme(options: ThemeOptions = {}): AstroIntegr
                   return null;
                 },
               },
+              // Advertises the generated /llms.txt to agent visitors via a
+              // <link rel="alternate" type="text/markdown"> in every page head.
+              // Only set when llmsTxt generation is on, so the link never points
+              // at a file that wasn't built (which would also trip the link
+              // checker). base-path-aware: the file lands at the dist root,
+              // served under config.base.
+              {
+                name: "astro-theme-university:llms",
+                resolveId(id: string) {
+                  if (id === "virtual:astro-theme-university/llms") {
+                    return "\0virtual:astro-theme-university/llms";
+                  }
+                  return null;
+                },
+                load(id: string) {
+                  if (id === "\0virtual:astro-theme-university/llms") {
+                    const llmsTxtHref = shouldGenerateLlmsTxt
+                      ? `${basePath.replace(/\/?$/, "/")}llms.txt`
+                      : null;
+                    return `export const llmsTxtHref = ${JSON.stringify(llmsTxtHref)};\n`;
+                  }
+                  return null;
+                },
+              },
             ],
           },
         });

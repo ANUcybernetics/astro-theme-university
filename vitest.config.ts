@@ -24,6 +24,23 @@ export default getViteConfig(
           return null;
         },
       },
+      // Likewise stub the llms virtual module. null href matches an
+      // llmsTxt: false setup, so BaseLayout emits no llms.txt <link>.
+      {
+        name: "test:astro-theme-university-llms-stub",
+        resolveId(id: string) {
+          if (id === "virtual:astro-theme-university/llms") {
+            return "\0virtual:astro-theme-university/llms";
+          }
+          return null;
+        },
+        load(id: string) {
+          if (id === "\0virtual:astro-theme-university/llms") {
+            return "export const llmsTxtHref = null;\n";
+          }
+          return null;
+        },
+      },
     ],
     test: {
       server: {
