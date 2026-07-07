@@ -22,7 +22,7 @@ import remarkDefaultLayout from "./remark-default-layout.js";
 import rehypeBaseLinks from "./rehype-base-links.js";
 import { checkA11y } from "./a11y-checker.js";
 import { checkBaseLinks } from "./link-checker.js";
-import { checkDecks } from "./deck-checker.js";
+import { checkDecks, countSourceDecks } from "./deck-checker.js";
 import {
   readSiteEntries,
   generateLlmsTxt,
@@ -362,7 +362,22 @@ export default function universityTheme(options: ThemeOptions = {}): AstroIntegr
         if (shouldCheckDecks) {
           const { checked, violations } = await checkDecks(distPath);
           if (violations.length === 0) {
-            logger.info(`Checked ${checked} deck(s) — no structural violations.`);
+            if (checked === 0) {
+              // Zero decks found and zero violations look identical in the
+              // happy-path log, so distinguish "site has no decks" from "the
+              // decks didn't surface in dist" — the latter means the checks
+              // silently ran on nothing.
+              const sourceDecks = await countSourceDecks(srcDir);
+              if (sourceDecks > 0) {
+                logger.warn(
+                  `Found ${sourceDecks} source deck(s) under srcDir but no built deck pages (.reveal slides) in dist — deck structure checks did not run. Check the deck route configuration.`,
+                );
+              } else {
+                logger.info("Checked 0 decks — none found.");
+              }
+            } else {
+              logger.info(`Checked ${checked} deck(s) — no structural violations.`);
+            }
           } else {
             const lines = violations
               .slice(0, 30)

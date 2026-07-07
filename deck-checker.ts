@@ -1,4 +1,4 @@
-import { readFile } from "node:fs/promises";
+import { readdir, readFile } from "node:fs/promises";
 import { join, relative } from "node:path";
 import { parseHTML } from "linkedom";
 import { collectHtmlFiles } from "./link-checker.js";
@@ -9,15 +9,51 @@ export interface DeckViolation {
   detail: string;
 }
 
-export async function collectDeckFiles(distDir: string): Promise<string[]> {
-  const decksDir = join(distDir, "decks");
+export interface DeckPage {
+  file: string;
+  html: string;
+}
+
+/** Deck pages are identified by content, not path: consumers can remount the
+ * astromotion deck route anywhere (e.g. /lectures/ instead of /decks/), so a
+ * hardcoded dist/decks/ scan silently checks nothing. A page counts as a deck
+ * when it carries Reveal.js's `.reveal .slides` wrapper — specific enough that
+ * a userland "reveal" utility class won't false-positive, while the
+ * zero-decks-found warning in the integration covers the case where the
+ * wrapper itself regresses. */
+export async function collectDeckPages(distDir: string): Promise<DeckPage[]> {
+  let all: string[];
   try {
-    const all = await collectHtmlFiles(decksDir);
-    // exclude the top-level decks/index.html listing page
-    return all.filter((f) => f !== join(decksDir, "index.html"));
+    all = await collectHtmlFiles(distDir);
   } catch {
     return [];
   }
+  const decks: DeckPage[] = [];
+  for (const file of all) {
+    const html = await readFile(file, "utf-8");
+    if (!html.includes("reveal")) continue; // cheap prefilter before parsing
+    const { document } = parseHTML(html);
+    if (document.querySelector(".reveal .slides")) decks.push({ file, html });
+  }
+  return decks;
+}
+
+/** Count source deck files (astromotion's `*.deck.*` convention) under a
+ * directory, so the integration can warn when decks exist in src but none
+ * surfaced in dist. */
+export async function countSourceDecks(dir: string): Promise<number> {
+  let entries;
+  try {
+    entries = await readdir(dir, { withFileTypes: true });
+  } catch {
+    return 0;
+  }
+  let count = 0;
+  for (const entry of entries) {
+    if (entry.isDirectory()) count += await countSourceDecks(join(dir, entry.name));
+    else if (/\.deck\.[^./]+$/.test(entry.name)) count += 1;
+  }
+  return count;
 }
 
 export function checkDeckHtml(html: string, page: string): DeckViolation[] {
@@ -106,14 +142,13 @@ export function checkDeckHtml(html: string, page: string): DeckViolation[] {
 export async function checkDecks(
   distDir: string,
 ): Promise<{ checked: number; violations: DeckViolation[] }> {
-  const deckFiles = await collectDeckFiles(distDir);
+  const deckPages = await collectDeckPages(distDir);
   const violations: DeckViolation[] = [];
 
-  for (const file of deckFiles) {
-    const html = await readFile(file, "utf-8");
-    const page = "/decks/" + relative(join(distDir, "decks"), file).replace(/index\.html$/, "");
+  for (const { file, html } of deckPages) {
+    const page = "/" + relative(distDir, file).replace(/index\.html$/, "");
     violations.push(...checkDeckHtml(html, page));
   }
 
-  return { checked: deckFiles.length, violations };
+  return { checked: deckPages.length, violations };
 }

@@ -1,7 +1,7 @@
 import { describe, expect, test } from "vitest";
 import { mkdir, writeFile } from "node:fs/promises";
 import { join } from "node:path";
-import { checkDeckHtml, collectDeckFiles, checkDecks } from "./deck-checker.js";
+import { checkDeckHtml, collectDeckPages, checkDecks, countSourceDecks } from "./deck-checker.js";
 import { fsTest } from "./test-utils.js";
 
 const MINIMAL_DECK = `
@@ -135,26 +135,38 @@ describe("checkDeckHtml", () => {
   });
 });
 
-describe("collectDeckFiles", () => {
-  fsTest("returns empty array when decks directory does not exist", async ({ tmpDir }) => {
-    const files = await collectDeckFiles(tmpDir);
-    expect(files).toEqual([]);
+describe("collectDeckPages", () => {
+  fsTest("returns empty array when dist directory does not exist", async ({ tmpDir }) => {
+    const pages = await collectDeckPages(join(tmpDir, "missing"));
+    expect(pages).toEqual([]);
   });
 
-  fsTest("finds html files in decks subdirectory", async ({ tmpDir }) => {
-    await mkdir(join(tmpDir, "decks", "example"), { recursive: true });
-    await writeFile(join(tmpDir, "decks", "example", "index.html"), MINIMAL_DECK);
-    const files = await collectDeckFiles(tmpDir);
-    expect(files).toHaveLength(1);
-    expect(files[0]).toContain("example");
+  fsTest("finds deck pages by content, wherever they're mounted", async ({ tmpDir }) => {
+    // consumers can remount the deck route (e.g. /lectures/), so discovery
+    // must not assume dist/decks/
+    await mkdir(join(tmpDir, "lectures", "week-1"), { recursive: true });
+    await writeFile(join(tmpDir, "lectures", "week-1", "index.html"), MINIMAL_DECK);
+    const pages = await collectDeckPages(tmpDir);
+    expect(pages).toHaveLength(1);
+    expect(pages[0].file).toContain("week-1");
+  });
+
+  fsTest("skips non-deck pages, including ones mentioning reveal", async ({ tmpDir }) => {
+    await mkdir(join(tmpDir, "lectures"), { recursive: true });
+    await writeFile(
+      join(tmpDir, "lectures", "index.html"),
+      '<html><body><main><h1>Lectures</h1><p class="reveal">a scroll-reveal util, not a deck</p></main></body></html>',
+    );
+    const pages = await collectDeckPages(tmpDir);
+    expect(pages).toEqual([]);
   });
 });
 
 describe("checkDecks", () => {
-  fsTest("checks all deck files and returns results", async ({ tmpDir }) => {
-    await mkdir(join(tmpDir, "decks", "good"), { recursive: true });
+  fsTest("checks all deck pages and reports page URLs from dist root", async ({ tmpDir }) => {
+    await mkdir(join(tmpDir, "lectures", "good"), { recursive: true });
     await mkdir(join(tmpDir, "decks", "bad"), { recursive: true });
-    await writeFile(join(tmpDir, "decks", "good", "index.html"), MINIMAL_DECK);
+    await writeFile(join(tmpDir, "lectures", "good", "index.html"), MINIMAL_DECK);
     await writeFile(
       join(tmpDir, "decks", "bad", "index.html"),
       '<html><body><div class="reveal"><div class="slides"></div></div></body></html>',
@@ -163,11 +175,27 @@ describe("checkDecks", () => {
     expect(checked).toBe(2);
     expect(violations).toHaveLength(1);
     expect(violations[0].rule).toBe("no-slides");
+    expect(violations[0].page).toBe("/decks/bad/");
   });
 
-  fsTest("returns zero violations when no deck files exist", async ({ tmpDir }) => {
+  fsTest("returns zero violations when no deck pages exist", async ({ tmpDir }) => {
     const { checked, violations } = await checkDecks(tmpDir);
     expect(checked).toBe(0);
     expect(violations).toEqual([]);
+  });
+});
+
+describe("countSourceDecks", () => {
+  fsTest("returns zero for a missing or deck-free directory", async ({ tmpDir }) => {
+    expect(await countSourceDecks(join(tmpDir, "missing"))).toBe(0);
+    await writeFile(join(tmpDir, "page.mdx"), "# not a deck");
+    expect(await countSourceDecks(tmpDir)).toBe(0);
+  });
+
+  fsTest("counts *.deck.* files recursively", async ({ tmpDir }) => {
+    await mkdir(join(tmpDir, "decks", "nested"), { recursive: true });
+    await writeFile(join(tmpDir, "decks", "week-1.deck.mdx"), "# deck");
+    await writeFile(join(tmpDir, "decks", "nested", "week-2.deck.md"), "# deck");
+    expect(await countSourceDecks(tmpDir)).toBe(2);
   });
 });
