@@ -107,6 +107,25 @@
     display: block;
   }
 
+  /* Compact logo (crest / monogram): hidden by default, so a consumer that
+     supplies one still shows the full lockup at desktop widths. Below the
+     mobile breakpoint the full lockup is swapped out for it, keeping the wide
+     horizontal wordmark from wrapping the nav bar. The light/dark image
+     toggle inside each span is handled by the .at-nav-logo--dark rules above. */
+  .at-nav-logo-compact {
+    display: none;
+  }
+
+  @media (width < 640px) {
+    .at-nav-brand:has(.at-nav-logo-compact) .at-nav-logo-full {
+      display: none;
+    }
+
+    .at-nav-logo-compact {
+      display: block;
+    }
+  }
+
   /* Text wordmark — the brand fallback when no logo image is provided. */
   .at-nav-wordmark {
     font-size: 1.375rem;

@@ -117,7 +117,7 @@ export const siteConfig = defineSiteConfig({
 Import `defineSiteConfig` from `astro-theme-university/types` (the types-only subpath), **not** from `astro-theme-university` directly. The subpath keeps your site-config module lightweight and avoids pulling the theme's integration code into your page bundles.
 :::
 
-The theme ships no default logo. With no `logo` prop, the site `name` renders in the navigation bar as a text wordmark. To show a logo instead, pass an imported image as `logo` (and optionally `logoDark` for dark mode) --- see the [Nav docs](/docs/components/nav/).
+The theme ships no default logo. With no `logo` prop, the site `name` renders in the navigation bar as a text wordmark. To show a logo instead, pass an imported image as `logo` (and optionally `logoDark` for dark mode). If your logo is a wide horizontal lockup, also pass `logoCompact` (a crest or monogram) so the nav swaps to it below the 640px breakpoint instead of wrapping --- see the [Nav docs](/docs/components/nav/).
 
 The `socials` array supports `"facebook"`, `"instagram"`, `"youtube"`, and `"linkedin"` as platform values.
 

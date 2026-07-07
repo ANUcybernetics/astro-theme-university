@@ -17,11 +17,18 @@ export interface NavProps {
   logo?: ImageMetadata;
   /** Logo image (dark mode). Only used when `logo` is also provided. */
   logoDark?: ImageMetadata;
+  /** Compact logo (e.g. a crest or monogram) swapped in below the mobile
+   *  breakpoint, where a wide horizontal lockup would wrap the nav bar.
+   *  Only used when `logo` is also provided; when omitted the full logo
+   *  is shown at every width. */
+  logoCompact?: ImageMetadata;
+  /** Compact logo (dark mode). Only used when `logoCompact` is provided. */
+  logoCompactDark?: ImageMetadata;
 }
 
 type Props = NavProps;
 
-const { name, links = [], search = true, logo, logoDark } = Astro.props;
+const { name, links = [], search = true, logo, logoDark, logoCompact, logoCompactDark } = Astro.props;
 const currentPath = Astro.url.pathname;
 ---
 
@@ -30,21 +37,43 @@ const currentPath = Astro.url.pathname;
     <a href={import.meta.env.BASE_URL} class="at-nav-brand">
       {logo ? (
         <>
-          <img
-            src={logo.src}
-            width={logo.width}
-            height={logo.height}
-            alt={name}
-            class:list={["at-nav-logo", { "at-nav-logo--has-dark": !!logoDark }]}
-          />
-          {logoDark && (
+          <span class="at-nav-logo-full">
             <img
-              src={logoDark.src}
-              width={logoDark.width}
-              height={logoDark.height}
+              src={logo.src}
+              width={logo.width}
+              height={logo.height}
               alt={name}
-              class="at-nav-logo at-nav-logo--dark"
+              class:list={["at-nav-logo", { "at-nav-logo--has-dark": !!logoDark }]}
             />
+            {logoDark && (
+              <img
+                src={logoDark.src}
+                width={logoDark.width}
+                height={logoDark.height}
+                alt={name}
+                class="at-nav-logo at-nav-logo--dark"
+              />
+            )}
+          </span>
+          {logoCompact && (
+            <span class="at-nav-logo-compact">
+              <img
+                src={logoCompact.src}
+                width={logoCompact.width}
+                height={logoCompact.height}
+                alt={name}
+                class:list={["at-nav-logo", { "at-nav-logo--has-dark": !!logoCompactDark }]}
+              />
+              {logoCompactDark && (
+                <img
+                  src={logoCompactDark.src}
+                  width={logoCompactDark.width}
+                  height={logoCompactDark.height}
+                  alt={name}
+                  class="at-nav-logo at-nav-logo--dark"
+                />
+              )}
+            </span>
           )}
         </>
       ) : (

@@ -43,6 +43,11 @@ export interface BaseLayoutProps {
   logo?: ImageMetadata;
   /** Logo image (dark mode), passed through to Nav. */
   logoDark?: ImageMetadata;
+  /** Compact logo (crest / monogram) swapped into the nav below the mobile
+   *  breakpoint, passed through to Nav. */
+  logoCompact?: ImageMetadata;
+  /** Compact logo (dark mode), passed through to Nav. */
+  logoCompactDark?: ImageMetadata;
 
   /** Force a specific colour scheme. 'auto' (default) lets users toggle. */
   colorScheme?: "auto" | "light" | "dark";
@@ -84,6 +89,8 @@ const {
   favicon,
   logo,
   logoDark,
+  logoCompact,
+  logoCompactDark,
 
   colorScheme = "auto",
 
@@ -180,6 +187,8 @@ if (typeof heroImage === 'string') {
       search={search}
       logo={logo}
       logoDark={logoDark}
+      logoCompact={logoCompact}
+      logoCompactDark={logoCompactDark}
     />
     {heroTitle && resolvedHeroImage && (
       <Hero title={heroTitle} image={resolvedHeroImage} imageAlt={heroImageAlt ?? ""} />

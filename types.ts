@@ -93,6 +93,12 @@ export interface SiteConfig {
   logo?: ImageMetadata;
   /** Logo image (dark mode). Only used when `logo` is also provided. */
   logoDark?: ImageMetadata;
+  /** Compact logo (e.g. a crest or monogram) swapped into the nav below the
+   *  mobile breakpoint, where a wide horizontal lockup would wrap. Only used
+   *  when `logo` is also provided. */
+  logoCompact?: ImageMetadata;
+  /** Compact logo (dark mode). Only used when `logoCompact` is provided. */
+  logoCompactDark?: ImageMetadata;
   /** Favicon. When omitted, no favicon link is emitted. */
   favicon?: ImageMetadata;
   /** Footer legal links. */

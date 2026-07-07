@@ -56,6 +56,7 @@ The component handles several concerns automatically:
 - **Mobile menu** --- below 640px, links move behind a hamburger toggle button. The button updates [`aria-expanded`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-expanded) to reflect menu state.
 - **Theme toggle** --- a `ThemeToggle.svelte` island is included automatically, giving users control over light and dark mode.
 - **Brand mark** --- with no `logo` prop, the site `name` renders as a text wordmark (`.at-nav-wordmark`). When you pass a `logo` (an imported `ImageMetadata`), it replaces the wordmark; pass `logoDark` as well and the nav switches between the two based on the active theme (`logoDark` is only used when `logo` is also given).
+- **Compact mark** --- a wide horizontal lockup can wrap the nav bar on narrow screens. Pass `logoCompact` (a crest or monogram) and the nav swaps to it below the 640px breakpoint, restoring the full `logo` above it; `logoCompactDark` supplies a dark-mode variant. Both are only used when `logo` is given.
 
 ## Notes
 
