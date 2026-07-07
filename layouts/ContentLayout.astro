@@ -4,14 +4,14 @@ import Hero from "../components/Hero.astro";
 
 export interface ContentLayoutProps extends BaseLayoutProps {
   /** Lead text displayed below the title. */
-  summary?: string | null;
+  description?: string | null;
   /** Use a wider content column. */
   wide?: boolean;
 }
 
 type Props = ContentLayoutProps;
 
-const { title, summary, heroImage, heroImageAlt, ...baseProps } = Astro.props;
+const { title, description, heroImage, heroImageAlt, ...baseProps } = Astro.props;
 const transitionName = `card-title-${Astro.url.pathname.replace(/^\/|\/$/g, "").replace(/\//g, "-")}`;
 ---
 
@@ -23,6 +23,6 @@ const transitionName = `card-title-${Astro.url.pathname.replace(/^\/|\/$/g, "").
     )
   }
   {!heroImage && <h1 transition:name={transitionName}>{title}</h1>}
-  {summary && <p class="lead">{summary}</p>}
+  {description && <p class="lead">{description}</p>}
   <slot />
 </BaseLayout>

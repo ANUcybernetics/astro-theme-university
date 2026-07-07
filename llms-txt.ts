@@ -174,12 +174,7 @@ export async function readContentEntries(contentDir: string): Promise<LlmsEntry[
     const title = data.title;
     if (typeof title !== "string" || !title) continue;
 
-    const description =
-      typeof data.description === "string"
-        ? data.description
-        : typeof data.summary === "string"
-          ? data.summary
-          : undefined;
+    const description = typeof data.description === "string" ? data.description : undefined;
 
     const cleanBody = stripMdxSyntax(body);
     const url = filePathToUrl(filePath, contentDir);

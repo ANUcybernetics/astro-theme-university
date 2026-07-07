@@ -1,6 +1,6 @@
 ---
 title: ContentLayout
-description: A convenience layout that wraps BaseLayout with a page title, optional summary, and optional hero image.
+description: A convenience layout that wraps BaseLayout with a page title, optional description, and optional hero image.
 section: layouts
 order: 2
 heroImage: ../../../assets/images/hero/CYBERNETICS_A_123.avif
@@ -17,7 +17,7 @@ import ContentLayout from "astro-theme-university/layouts/ContentLayout.astro";
 
 <ContentLayout
   title="About the project"
-  summary="A brief introduction to what we do."
+  description="A brief introduction to what we do."
 >
   <p>Page content goes here.</p>
 </ContentLayout>
@@ -40,7 +40,7 @@ import bannerImage from "../assets/images/banner.avif";
 
 <ContentLayout
   title="Research & Innovation"
-  summary="Exploring the frontiers of computing."
+  description="Exploring the frontiers of computing."
   heroImage={bannerImage}
   heroImageAlt="Aerial view of campus"
 >

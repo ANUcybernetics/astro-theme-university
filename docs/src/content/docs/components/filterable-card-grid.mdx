@@ -1,6 +1,6 @@
 ---
 title: FilterableCardGrid
-description: A card grid with a built-in searchbox for live filtering by title, summary, or tags.
+description: A card grid with a built-in searchbox for live filtering by title, description, or tags.
 section: components
 order: 13
 heroImage: ../../../assets/images/hero/CYBERNETICS_A_083.avif
@@ -10,16 +10,16 @@ import PropsTable from "../../../components/PropsTable.astro";
 import Example from "../../../components/Example.astro";
 import FilterableCardGrid from "astro-theme-university/components/FilterableCardGrid.svelte";
 
-The FilterableCardGrid component renders a list of items as cards with a searchbox above the grid. Typing into the searchbox filters the visible cards live by matching against the item's title, summary, and tags. It is designed as a drop-in replacement for `CardGrid` + `Card` on collection listing pages.
+The FilterableCardGrid component renders a list of items as cards with a searchbox above the grid. Typing into the searchbox filters the visible cards live by matching against the item's title, description, and tags. It is designed as a drop-in replacement for `CardGrid` + `Card` on collection listing pages.
 
 ```astro
 ---
 import FilterableCardGrid from "astro-theme-university/components/FilterableCardGrid.svelte";
 
 const items = [
-  { title: "Installation", href: "/install/", summary: "Get up and running in minutes." },
-  { title: "Configuration", href: "/config/", summary: "Customise the theme to suit your site." },
-  { title: "Deployment", href: "/deploy/", summary: "Publish your site to the web." },
+  { title: "Installation", href: "/install/", description: "Get up and running in minutes." },
+  { title: "Configuration", href: "/config/", description: "Customise the theme to suit your site." },
+  { title: "Deployment", href: "/deploy/", description: "Publish your site to the web." },
 ];
 ---
 
@@ -41,25 +41,25 @@ const items = [
       {
         title: "Card",
         href: "/docs/components/card/",
-        summary: "Linkable container with title, body, and optional image.",
+        description: "Linkable container with title, body, and optional image.",
         tags: ["layout"],
       },
       {
         title: "CardGrid",
         href: "/docs/components/card-grid/",
-        summary: "Responsive grid for arranging cards in 2 or 3 columns.",
+        description: "Responsive grid for arranging cards in 2 or 3 columns.",
         tags: ["layout"],
       },
       {
         title: "Callout",
         href: "/docs/components/callout/",
-        summary: "Highlighted aside for notes, warnings, and tips.",
+        description: "Highlighted aside for notes, warnings, and tips.",
         tags: ["content"],
       },
       {
         title: "Countdown",
         href: "/docs/components/countdown/",
-        summary: "Live countdown timer for deadlines.",
+        description: "Live countdown timer for deadlines.",
         tags: ["content", "interactive"],
       },
     ]}
@@ -74,7 +74,7 @@ const items = [
 
 ## Filter behaviour
 
-The query is split on whitespace into tokens. Every token must appear (substring match, case-insensitive) somewhere in the item's title, summary, or any tag. With no query, all items are shown in their original order.
+The query is split on whitespace into tokens. Every token must appear (substring match, case-insensitive) somewhere in the item's title, description, or any tag. With no query, all items are shown in their original order.
 
 ## Accessibility
 

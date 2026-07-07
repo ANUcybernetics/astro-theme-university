@@ -5,19 +5,19 @@ const items: CardItem[] = [
   {
     title: "Agent loops",
     href: "/topics/agent-loops/",
-    summary: "The read-edit-run cycle",
+    description: "The read-edit-run cycle",
     tags: ["concept"],
   },
   {
     title: "Tool use",
     href: "/topics/tool-use/",
-    summary: "How agents call tools",
+    description: "How agents call tools",
     tags: ["concept", "practice"],
   },
   {
     title: "Submitting work",
     href: "/topics/submitting-work/",
-    summary: "How to submit assessments",
+    description: "How to submit assessments",
     tags: ["practice"],
   },
   {
@@ -42,7 +42,7 @@ describe("matchCardItems", () => {
     expect(result[0].title).toBe("Agent loops");
   });
 
-  test("matches summary text", () => {
+  test("matches description text", () => {
     const result = matchCardItems(items, "cycle");
     expect(result).toHaveLength(1);
     expect(result[0].title).toBe("Agent loops");
@@ -84,14 +84,14 @@ describe("matchCardItems", () => {
     expect(JSON.stringify(items)).toBe(snapshot);
   });
 
-  test("handles items with no summary or tags", () => {
+  test("handles items with no description or tags", () => {
     const sparse: CardItem[] = [{ title: "Lonely", href: "/lonely/" }];
     expect(matchCardItems(sparse, "lonely")).toHaveLength(1);
     expect(matchCardItems(sparse, "missing")).toHaveLength(0);
   });
 
-  test("treats null summary and null tags the same as undefined", () => {
-    const nullable: CardItem[] = [{ title: "Nully", href: "/nully/", summary: null, tags: null }];
+  test("treats null description and null tags the same as undefined", () => {
+    const nullable: CardItem[] = [{ title: "Nully", href: "/nully/", description: null, tags: null }];
     expect(matchCardItems(nullable, "nully")).toHaveLength(1);
     expect(matchCardItems(nullable, "missing")).toHaveLength(0);
   });

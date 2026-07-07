@@ -376,14 +376,14 @@ describe("readContentEntries", () => {
     expect(entries[0].title).toBe("Has Title");
   });
 
-  fsTest("uses summary as description fallback", async ({ tmpDir }) => {
+  fsTest("does not fall back to legacy summary frontmatter", async ({ tmpDir }) => {
     await writeFile(
       join(tmpDir, "topic.md"),
       "---\ntitle: Topic\nsummary: A summary\n---\n\nContent.\n",
     );
 
     const entries = await readContentEntries(tmpDir);
-    expect(entries[0].description).toBe("A summary");
+    expect(entries[0].description).toBeUndefined();
   });
 
   fsTest("ignores non-markdown files", async ({ tmpDir }) => {

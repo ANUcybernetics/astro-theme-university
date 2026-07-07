@@ -1,4 +1,4 @@
-import { writeFileSync } from "node:fs";
+import { mkdirSync, writeFileSync } from "node:fs";
 import { resolve, basename, dirname } from "node:path";
 import { globSync } from "node:fs";
 import {
@@ -48,5 +48,6 @@ if (themeOptions) {
 }
 
 const outPath = resolve(root, "docs/src/data/props.json");
+mkdirSync(dirname(outPath), { recursive: true });
 writeFileSync(outPath, JSON.stringify(output, null, 2) + "\n");
 console.log(`Wrote ${Object.keys(output).length} entries to ${outPath}`);

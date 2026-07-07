@@ -93,8 +93,8 @@
             <svelte:element this={headingLevel} class="at-card-title">
               {item.title}
             </svelte:element>
-            {#if item.summary}
-              <p>{item.summary}</p>
+            {#if item.description}
+              <p>{item.description}</p>
             {/if}
           </div>
         </a>

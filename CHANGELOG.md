@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.5.0
+
+One name for the one-line blurb: `description` everywhere, matching what
+astromotion decks and HTML `<meta name="description">` already call it.
+**Breaking**: consumers using `summary` must rename.
+
+- `ContentLayout`: the `summary` prop is now `description`
+- `CardItem` / `matchCardItems` / `FilterableCardGrid`: item `summary` →
+  `description`
+- llms.txt generation no longer falls back to `summary:` frontmatter —
+  `description:` is the only source for entry blurbs
+- `scripts/extract-props.ts` now creates `docs/src/data/` before writing, so
+  `pnpm test` passes on a fresh clone
+
 ## 0.4.0
 
 The content rule now _bisects_ the brand mark rather than skimming its left edge
