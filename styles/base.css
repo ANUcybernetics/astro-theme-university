@@ -216,6 +216,15 @@
     margin-block: 0;
   }
 
+  /* The nav brand logo is chrome, not flowing content. Left with the rhythm
+     rule's 1em bottom margin it inflates the brand box below the logo, so on
+     the flex nav row the logo floats ~0.5em above the nav links and icon
+     buttons (which centre in the taller line). Drop the margin so the logo
+     and the nav items share one centre line. */
+  .at-nav-logo {
+    margin-block: 0;
+  }
+
   figcaption {
     font-size: var(--at-font-size-sm);
     color: var(--at-text-secondary);
