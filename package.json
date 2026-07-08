@@ -32,6 +32,7 @@
     "url.ts",
     "rehype-base-links.ts",
     "remark-callout.ts",
+    "markdown.ts",
     "remark-default-layout.ts",
     "match-card-items.ts",
     "components/",
@@ -46,6 +47,7 @@
   "exports": {
     ".": "./index.ts",
     "./types": "./types.ts",
+    "./markdown": "./markdown.ts",
     "./components/*": "./components/*",
     "./layouts/*": "./layouts/*",
     "./pages/*": "./pages/*",

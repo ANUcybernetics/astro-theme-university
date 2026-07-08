@@ -507,6 +507,12 @@
     margin-block-end: 0;
   }
 
+  /* Promoted from a `:::tip[Label]` directive label. */
+  .at-callout__title {
+    font-weight: 600;
+    margin-block-end: var(--at-spacing-xs);
+  }
+
   .at-callout--info {
     --at-accent: var(--at-info);
     --at-accent-soft: var(--at-info-soft);
@@ -525,6 +531,17 @@
   .at-callout--error {
     --at-accent: var(--at-error);
     --at-accent-soft: var(--at-error-soft);
+  }
+
+  /* `:::details` renders a <details> disclosure; neutral accent, no soft fill. */
+  .at-callout--details {
+    --at-accent: var(--at-divider);
+    --at-accent-soft: transparent;
+  }
+
+  .at-callout--details > summary {
+    cursor: pointer;
+    font-weight: 600;
   }
 
   /* Card */

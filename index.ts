@@ -13,11 +13,10 @@ import { promisify } from "node:util";
 import remarkDirective from "remark-directive";
 import remarkSmartypants from "remark-smartypants";
 import remarkCustomHeadingId from "remark-custom-heading-id";
-import rehypeSlug from "rehype-slug";
-import rehypeAutolinkHeadings from "rehype-autolink-headings";
 // @ts-expect-error astro-broken-links-checker ships no type declarations
 import astroBrokenLinksChecker from "astro-broken-links-checker";
 import remarkCallout from "./remark-callout.js";
+import { headingAnchorPlugins } from "./markdown.js";
 import remarkDefaultLayout from "./remark-default-layout.js";
 import rehypeBaseLinks from "./rehype-base-links.js";
 import { checkA11y } from "./a11y-checker.js";
@@ -214,18 +213,7 @@ export default function universityTheme(options: ThemeOptions = {}): AstroIntegr
                 ...(options.extraRemarkPlugins ?? []),
               ],
               rehypePlugins: [
-                rehypeSlug,
-                [
-                  rehypeAutolinkHeadings,
-                  {
-                    behavior: "append",
-                    properties: { class: "at-heading-anchor", ariaHidden: "true", tabIndex: -1 },
-                    content: {
-                      type: "text",
-                      value: "#",
-                    },
-                  },
-                ],
+                ...headingAnchorPlugins,
                 ...(options.extraRehypePlugins ?? []),
                 // Last, so links produced by consumer rehype plugins are
                 // rewritten too. No-op when base is "/".

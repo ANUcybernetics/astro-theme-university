@@ -40,4 +40,39 @@ describe("remarkCallout", () => {
     expect(html).toContain("9:30am");
     expect(html).toContain("at-callout--info");
   });
+
+  test("promotes a callout's [label] to a styled title", async () => {
+    const html = await render(":::tip[Come study with me]\nDetails here.\n:::\n");
+
+    expect(html).toContain('<p class="at-callout__title">Come study with me</p>');
+    expect(html).toContain("at-callout--tip");
+    expect(html).toContain("Details here.");
+  });
+
+  test("maps :::danger and :::caution onto the canonical styled types", async () => {
+    const danger = await render(":::danger\nBoom\n:::\n");
+    expect(danger).toContain("at-callout--error");
+    expect(danger).toContain('role="note"');
+
+    const caution = await render(":::caution\nCareful\n:::\n");
+    expect(caution).toContain("at-callout--warning");
+  });
+
+  test("renders :::details as a disclosure with the label as its summary", async () => {
+    const html = await render(":::details[Show working]\nHidden body.\n:::\n");
+
+    expect(html).toContain("<details");
+    expect(html).toContain("at-callout--details");
+    expect(html).toContain("<summary>Show working</summary>");
+    expect(html).toContain("Hidden body.");
+    expect(html).not.toContain('role="note"');
+  });
+
+  test("renders a label-less :::details without a summary", async () => {
+    const html = await render(":::details\nJust a body.\n:::\n");
+
+    expect(html).toContain("<details");
+    expect(html).not.toContain("<summary>");
+    expect(html).toContain("Just a body.");
+  });
 });
