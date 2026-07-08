@@ -95,6 +95,12 @@
     } else if (e.key === "Enter" && results[selectedIndex]) {
       e.preventDefault();
       window.location.href = results[selectedIndex].url;
+    } else if (e.key === "Escape") {
+      // A type="search" input swallows the first Escape to clear its own text,
+      // so the dialog's native Escape-to-close never fires while the field has
+      // content. Close explicitly so one Escape always dismisses the dialog.
+      e.preventDefault();
+      closeDialog();
     }
   }
 
