@@ -16,6 +16,11 @@
 
   let { basePath = "/" }: { basePath?: string } = $props();
 
+  // Astro's import.meta.env.BASE_URL omits the trailing slash when `base` is
+  // configured without one, so normalise before joining asset paths under it —
+  // otherwise `${basePath}pagefind/…` collapses to `…sitepagefind/…` (404).
+  const base = $derived(basePath.endsWith("/") ? basePath : `${basePath}/`);
+
   const searchIconSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="m17 17l4 4M3 11a8 8 0 1 0 16 0a8 8 0 0 0-16 0"/></svg>`;
 
   let dialogEl: HTMLDialogElement;
@@ -32,7 +37,7 @@
     if (pagefind) return pagefind;
     if (loadFailed) return null;
     try {
-      const url = `${basePath}pagefind/pagefind.js`;
+      const url = `${base}pagefind/pagefind.js`;
       const mod = (await import(/* @vite-ignore */ url)) as PagefindApi;
       await mod.init();
       pagefind = mod;
