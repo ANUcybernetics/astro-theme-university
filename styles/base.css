@@ -187,7 +187,13 @@
      `margin-block: 0 1em` convention so adjacent blocks settle on a
      consistent 1em gap (top margins collapse against the previous
      element's bottom margin). Headings opt out via their own rule
-     above (1.5em top / 0.5em bottom). */
+     above (1.5em top / 0.5em bottom).
+
+     `svg` is deliberately absent: in this theme an svg is an icon (chrome),
+     never flowing content. Giving it a bottom margin centred its *margin box*
+     in every `align-items: center` flex row, floating the glyph ~0.5em above
+     its label. Consumers that do place an svg in the flow (a chart, a diagram)
+     wrap it in a block that carries the rhythm itself. */
   ul,
   ol,
   dl,
@@ -196,8 +202,7 @@
   figure,
   img,
   picture,
-  video,
-  svg {
+  video {
     margin-block: 0 1em;
   }
 
@@ -206,13 +211,6 @@
      figcaption. */
   figure > img,
   figure > picture {
-    margin-block: 0;
-  }
-
-  /* Icon svgs inside buttons aren't flowing content: the rhythm rule's
-     leftover bottom margin pushes them ~0.5em above the label's vertical
-     centre in flex buttons (including .at-icon-button). */
-  button svg {
     margin-block: 0;
   }
 
