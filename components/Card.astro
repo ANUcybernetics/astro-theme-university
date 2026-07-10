@@ -16,14 +16,29 @@ export interface CardProps {
   image?: ImageMetadata;
   /** Alt text for the card image. Set to a meaningful description if the image conveys information. */
   imageAlt?: string;
+  /** Srcset widths (px) for the card image. The default covers the card grids up to 2x DPR. */
+  imageWidths?: number[];
+  /** The `sizes` attribute paired with `imageWidths`. The default matches the card-grid layout
+   *  (full content column below the content breakpoint, ~24rem columns above it). */
+  imageSizes?: string;
   /** HTML heading level for the card title. */
   headingLevel?: HeadingLevel;
 }
 
 type Props = CardProps;
 
-const { title, href: rawHref, image, imageAlt, headingLevel = "h3" } = Astro.props;
+const {
+  title,
+  href: rawHref,
+  image,
+  imageAlt,
+  imageWidths = [320, 480, 640, 960],
+  imageSizes = "(min-width: 48rem) 24rem, 100vw",
+  headingLevel = "h3",
+} = Astro.props;
 const resolvedImageAlt = imageAlt ?? (image ? title : "");
+const cardWidths = image ? imageWidths.filter((w) => w <= image.width) : [];
+const cardFallbackWidth = image ? Math.min(Math.max(...imageWidths), image.width) : undefined;
 const href = rawHref ? withBase(rawHref) : undefined;
 const Tag = href ? "a" : "div";
 const Heading = headingLevel;
@@ -36,7 +51,15 @@ const transitionName = href
   {
     image && (
       <div class="at-card-image-frame">
-        <Image src={image} alt={resolvedImageAlt} class="at-card-image" loading="lazy" />
+        <Image
+          src={image}
+          alt={resolvedImageAlt}
+          widths={cardWidths}
+          sizes={imageSizes}
+          width={cardFallbackWidth}
+          class="at-card-image"
+          loading="lazy"
+        />
       </div>
     )
   }

@@ -9,17 +9,36 @@ export interface HeroProps {
   image: ImageMetadata;
   /** Alt text for the hero image. Describes the image for screen reader users. */
   imageAlt: string;
+  /** Srcset widths (px) for the hero image. The default covers full-bleed display up to 2x DPR. */
+  imageWidths?: number[];
   /** View transition name for the heading element. */
   transitionName?: string;
 }
 
 type Props = HeroProps;
 
-const { title, image, imageAlt, transitionName } = Astro.props;
+const {
+  title,
+  image,
+  imageAlt,
+  imageWidths = [768, 1280, 1920, 2560],
+  transitionName,
+} = Astro.props;
+const heroWidths = imageWidths.filter((w) => w <= image.width);
+const heroFallbackWidth = Math.min(Math.max(...imageWidths), image.width);
 ---
 
 <section class="at-hero" aria-label={title}>
-  <Image src={image} alt={imageAlt} class="at-hero-image" />
+  <Image
+    src={image}
+    alt={imageAlt}
+    widths={heroWidths}
+    sizes="100vw"
+    width={heroFallbackWidth}
+    loading="eager"
+    fetchpriority="high"
+    class="at-hero-image"
+  />
   <div class="at-hero-content">
     <h1 class="at-hero-title" transition:name={transitionName}>{title}</h1>
   </div>

@@ -40,7 +40,15 @@ describe("extract-props", () => {
   test("extracts prop names and types from astro components", () => {
     const card = data["components/Card"];
     const names = card.props.map((p: any) => p.name);
-    expect(names).toEqual(["title", "href", "image", "imageAlt", "headingLevel"]);
+    expect(names).toEqual([
+      "title",
+      "href",
+      "image",
+      "imageAlt",
+      "imageWidths",
+      "imageSizes",
+      "headingLevel",
+    ]);
     expect(card.props[0]).toMatchObject({
       name: "title",
       type: "string",
