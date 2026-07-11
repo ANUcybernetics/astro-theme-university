@@ -93,6 +93,13 @@
             <svelte:element this={headingLevel} class="at-card-title">
               {item.title}
             </svelte:element>
+            {#if item.badges?.length}
+              <p class="at-card-badges">
+                {#each item.badges as badge (badge)}
+                  <span class="at-card-badge">{badge}</span>
+                {/each}
+              </p>
+            {/if}
             {#if item.description}
               <p>{item.description}</p>
             {/if}

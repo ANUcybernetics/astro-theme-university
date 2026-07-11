@@ -25,6 +25,12 @@ const items: CardItem[] = [
     href: "/topics/academic-integrity/",
     tags: ["admin"],
   },
+  {
+    title: "Prompt engineering",
+    href: "/topics/prompt-engineering/",
+    description: "Writing effective prompts",
+    badges: ["Week 2", "Week 5"],
+  },
 ];
 
 describe("matchCardItems", () => {
@@ -52,6 +58,18 @@ describe("matchCardItems", () => {
     const result = matchCardItems(items, "admin");
     expect(result).toHaveLength(1);
     expect(result[0].title).toBe("Academic integrity");
+  });
+
+  test("matches badge values", () => {
+    const result = matchCardItems(items, "week 5");
+    expect(result).toHaveLength(1);
+    expect(result[0].title).toBe("Prompt engineering");
+  });
+
+  test("treats null badges the same as undefined", () => {
+    const nullable: CardItem[] = [{ title: "Nully", href: "/nully/", badges: null }];
+    expect(matchCardItems(nullable, "nully")).toHaveLength(1);
+    expect(matchCardItems(nullable, "week")).toHaveLength(0);
   });
 
   test("matches partial words within title", () => {

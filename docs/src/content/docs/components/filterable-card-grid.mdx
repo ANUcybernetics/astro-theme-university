@@ -1,6 +1,6 @@
 ---
 title: FilterableCardGrid
-description: A card grid with a built-in searchbox for live filtering by title, description, or tags.
+description: A card grid with a built-in searchbox for live filtering by title, description, tags, or badges.
 section: components
 order: 13
 heroImage: ../../../assets/images/hero/CYBERNETICS_A_083.avif
@@ -10,7 +10,9 @@ import PropsTable from "../../../components/PropsTable.astro";
 import Example from "../../../components/Example.astro";
 import FilterableCardGrid from "astro-theme-university/components/FilterableCardGrid.svelte";
 
-The FilterableCardGrid component renders a list of items as cards with a searchbox above the grid. Typing into the searchbox filters the visible cards live by matching against the item's title, description, and tags. It is designed as a drop-in replacement for `CardGrid` + `Card` on collection listing pages.
+The FilterableCardGrid component renders a list of items as cards with a searchbox above the grid. Typing into the searchbox filters the visible cards live by matching against the item's title, description, tags, and badges. It is designed as a drop-in replacement for `CardGrid` + `Card` on collection listing pages.
+
+Each item can carry two kinds of metadata beyond its title and description: `tags` are searchable but invisible, while `badges` are short labels (e.g. `"Week 1"`) rendered as small chips between the title and description, and searched like everything else.
 
 ```astro
 ---
@@ -61,6 +63,7 @@ const items = [
         href: "/docs/components/countdown/",
         description: "Live countdown timer for deadlines.",
         tags: ["content", "interactive"],
+        badges: ["Svelte"],
       },
     ]}
   />
@@ -74,7 +77,7 @@ const items = [
 
 ## Filter behaviour
 
-The query is split on whitespace into tokens. Every token must appear (substring match, case-insensitive) somewhere in the item's title, description, or any tag. With no query, all items are shown in their original order.
+The query is split on whitespace into tokens. Every token must appear (substring match, case-insensitive) somewhere in the item's title, description, tags, or badges. With no query, all items are shown in their original order.
 
 ## Accessibility
 

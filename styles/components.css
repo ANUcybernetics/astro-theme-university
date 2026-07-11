@@ -918,6 +918,22 @@
     border-radius: var(--at-border-radius);
   }
 
+  .at-card-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--at-spacing-xs);
+    margin-block: 0 var(--at-spacing-xs);
+  }
+
+  .at-card-badge {
+    font-size: var(--at-font-size-xs);
+    line-height: 1.4;
+    padding: 0.0625rem 0.5rem;
+    color: var(--at-text-muted);
+    border: 1px solid var(--at-divider);
+    border-radius: 999px;
+  }
+
   /* Search */
   .at-search-dialog {
     border: none;
