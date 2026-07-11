@@ -931,7 +931,7 @@
     padding: 0.0625rem 0.5rem;
     color: var(--at-text-muted);
     border: 1px solid var(--at-divider);
-    border-radius: 999px;
+    border-radius: var(--at-border-radius);
   }
 
   /* Search */
