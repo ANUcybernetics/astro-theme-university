@@ -270,17 +270,22 @@ body.reveal-viewport {
     text-shadow: 0 0 10px rgb(0 0 0 / 70%);
 
     blockquote {
-      border-inline-start: 10px solid var(--at-primary);
+      border-block-start: 1px solid var(--at-primary);
       width: 80%;
       margin: 0 auto;
       text-align: start;
-      padding-inline-start: 1.5rem;
+      padding-block-start: 1rem;
       color: var(--at-white);
 
       p {
         font-size: 2.75rem;
         line-height: 1.3;
         margin: 0;
+      }
+
+      cite {
+        color: var(--at-primary);
+        font-style: normal;
       }
     }
   }

@@ -227,6 +227,8 @@
     font-size: var(--at-font-size-sm);
     color: var(--at-text-secondary);
     margin-block-start: var(--at-spacing-sm);
+    padding-block-end: var(--at-spacing-sm);
+    border-block-end: 1px solid var(--at-divider);
     text-wrap: pretty;
   }
 
@@ -275,14 +277,21 @@
     font-weight: var(--shiki-dark-font-weight);
   }
 
+  /* Quotes are set off by whitespace and weight, not an accent bar — the
+     deep indent is the accent. */
   blockquote {
     margin-inline: 0;
-    padding-inline-start: var(--at-spacing-md);
-    border-inline-start: 4px solid var(--at-accent);
+    padding-inline-start: var(--at-spacing-2xl);
     color: var(--at-text-secondary);
-    font-style: italic;
+    font-weight: 300;
     hanging-punctuation: first last;
     text-wrap: pretty;
+  }
+
+  @media (width < 640px) {
+    blockquote {
+      padding-inline-start: var(--at-spacing-xl);
+    }
   }
 
   table {

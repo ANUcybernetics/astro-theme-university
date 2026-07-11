@@ -491,11 +491,12 @@
     margin-block-start: var(--at-spacing-xs);
   }
 
-  /* Callout */
+  /* Callout. The type colour rides on a hairline top rule (no text-contrast
+     requirement, unlike accent-coloured text) over the soft tint. */
   .at-callout {
     margin-block: var(--at-spacing-md);
     padding: var(--at-spacing-md);
-    border-inline-start: 4px solid var(--at-accent);
+    border-block-start: 1px solid var(--at-accent);
     background: var(--at-accent-soft);
   }
 
