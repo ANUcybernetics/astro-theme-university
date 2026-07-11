@@ -73,6 +73,10 @@ The page layout uses a body-level CSS grid with named column lines. `--at-conten
 | -------------------- | ---------- |
 | `--at-border-radius` | `0.375rem` |
 
+Every rounded corner in the theme (including the deck styles) derives from
+`--at-border-radius`, either directly or as a fixed multiple, so a brand can
+square the whole theme by pinning it to `0`.
+
 ## Elevation
 
 | Token            | Light                         | Dark                           |
