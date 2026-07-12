@@ -25,6 +25,19 @@
   --at-light-grey: #e6e6e6;
   --at-dark-grey: #0d0d0d;
 
+  /* Decks are dark surfaces. Declaring it means any light-dark() token
+     arriving from a brand CSS (imported after deck.css) resolves to its
+     dark arm natively — without this, brand tokens key off the default
+     light scheme and render light-mode values on a dark deck. */
+  color-scheme: dark;
+
+  /* Semantic tokens deck.css itself consumes (tables), declared here so
+     the standalone contract holds without tokens.css — the values mirror
+     tokens.css's dark-arm derivations. */
+  --at-divider: oklch(from var(--at-primary) 95% 0.005 h / 12%);
+  --at-table-header-bg: var(--at-primary);
+  --at-table-header-text: var(--at-white);
+
   /* Reveal.js variables */
   --r-background-color: var(--at-dark-grey);
   --r-main-color: var(--at-light-grey);

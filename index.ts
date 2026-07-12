@@ -231,6 +231,27 @@ export default function universityTheme(options: ThemeOptions = {}): AstroIntegr
           vite: {
             css: {
               transformer: "lightningcss",
+              lightningcss: {
+                // The theme's real browser floor is set by oklch relative
+                // colour syntax, which lightningcss can't downlevel and
+                // ships raw — and every browser that has it also has native
+                // light-dark(). Left to Vite's default conservative targets,
+                // lightningcss splits each light-dark() into a
+                // var(--lightningcss-light/dark) pair whose :root flip
+                // declarations are only emitted next to a color-scheme
+                // declaration; a stylesheet using light-dark() that loads on
+                // a page without one (brand CSS on an astromotion deck page,
+                // which never loads base.css) then resolves every such token
+                // to invalid two-colour junk. Declaring the floor keeps
+                // light-dark() native and self-contained.
+                // Encoding: major << 16 | minor << 8.
+                targets: {
+                  chrome: 123 << 16,
+                  edge: 123 << 16,
+                  firefox: 128 << 16,
+                  safari: (17 << 16) | (5 << 8),
+                },
+              },
             },
             ssr: {
               noExternal: ["@astro-community/astro-embed-youtube"],
