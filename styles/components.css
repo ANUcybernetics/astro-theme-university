@@ -446,10 +446,8 @@
   }
 
   .at-footer-acknowledgement p {
-    font-style: italic;
     color: var(--at-text-secondary);
     line-height: 1.7;
-    max-inline-size: 60ch;
     text-wrap: pretty;
   }
 
