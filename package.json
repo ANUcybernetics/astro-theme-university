@@ -1,6 +1,6 @@
 {
   "name": "astro-theme-university",
-  "version": "0.5.13",
+  "version": "0.5.14",
   "description": "Astro 7 + Svelte 5 theme package for university-style sites — layouts, components, content-collection helpers, post-build checks, and a Reveal.js deck theme. Re-brandable via CSS custom properties and data-only branding props.",
   "keywords": [
     "astro-component",
