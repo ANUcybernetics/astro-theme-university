@@ -277,24 +277,24 @@
     font-weight: var(--shiki-dark-font-weight);
   }
 
-  /* Quotes share the callout/deck hairline language: a 1px accent top rule
-     over indented, light-weight text. The indent is margin, not padding, so
-     the rule starts where the text does rather than spanning the content
-     column like a section divider. */
+  /* Quotes carry the callout/deck hairline language as a short accent dash
+     overbar: cut down from a full-width rule (which reads as a section
+     divider once the text sits flush left) so it reads as a quote mark. The
+     text keeps the full measure, set off by weight alone. */
   blockquote {
-    margin-inline: var(--at-spacing-xl) 0;
-    padding-block-start: var(--at-spacing-sm);
-    border-block-start: 1px solid var(--at-accent);
+    margin-inline: 0;
     color: var(--at-text-secondary);
     font-weight: 300;
     hanging-punctuation: first last;
     text-wrap: pretty;
   }
 
-  @media (width < 640px) {
-    blockquote {
-      margin-inline-start: var(--at-spacing-lg);
-    }
+  blockquote::before {
+    content: "";
+    display: block;
+    inline-size: 3rem;
+    border-block-start: 1px solid var(--at-accent);
+    padding-block-end: var(--at-spacing-sm);
   }
 
   table {
