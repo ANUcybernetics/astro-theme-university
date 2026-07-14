@@ -277,11 +277,14 @@
     font-weight: var(--shiki-dark-font-weight);
   }
 
-  /* Quotes are set off by whitespace and weight, not an accent bar — the
-     deep indent is the accent. */
+  /* Quotes share the callout/deck hairline language: a 1px accent top rule
+     over indented, light-weight text. The indent is margin, not padding, so
+     the rule starts where the text does rather than spanning the content
+     column like a section divider. */
   blockquote {
-    margin-inline: 0;
-    padding-inline-start: var(--at-spacing-2xl);
+    margin-inline: var(--at-spacing-xl) 0;
+    padding-block-start: var(--at-spacing-sm);
+    border-block-start: 1px solid var(--at-accent);
     color: var(--at-text-secondary);
     font-weight: 300;
     hanging-punctuation: first last;
@@ -290,7 +293,7 @@
 
   @media (width < 640px) {
     blockquote {
-      padding-inline-start: var(--at-spacing-xl);
+      margin-inline-start: var(--at-spacing-lg);
     }
   }
 
