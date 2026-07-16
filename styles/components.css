@@ -834,10 +834,13 @@
     cursor: not-allowed;
   }
 
-  /* Card grid */
+  /* Card grid. Block margin keeps grids from sitting flush against
+     surrounding prose; adjacent-margin collapsing absorbs it next to
+     headings and paragraphs with larger margins of their own. */
   .at-card-grid {
     display: grid;
     gap: var(--at-spacing-lg);
+    margin-block: var(--at-spacing-xl);
   }
 
   .at-card-grid--2 {
