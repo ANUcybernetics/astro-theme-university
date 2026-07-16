@@ -1,4 +1,5 @@
 ---
+import type { HTMLAttributes } from "astro/types";
 import { Font } from "astro:assets";
 import { ClientRouter } from "astro:transitions";
 import { fontVariables } from "virtual:astro-theme-university/fonts";
@@ -52,6 +53,14 @@ export interface BaseLayoutProps {
   /** Force a specific colour scheme. 'auto' (default) lets users toggle. */
   colorScheme?: "auto" | "light" | "dark";
 
+  /** Extra attributes spread onto the theme's `<main>` element (e.g.
+   *  `data-pagefind-body` to scope search indexing to page content without
+   *  wrapping the slot in an extra element, which would break `.at-main`'s
+   *  subgrid placement). A `class` is merged after the theme's own
+   *  `at-main`; don't pass `id` (the theme sets `id="main"` as the
+   *  skip-link target). */
+  mainAttrs?: HTMLAttributes<"main">;
+
   /** Contact details displayed in the footer. */
   contact?: ContactInfo;
   /** Social media links displayed as icons in the footer. */
@@ -94,6 +103,8 @@ const {
 
   colorScheme = "auto",
 
+  mainAttrs = {},
+
   contact,
   socials,
   licence,
@@ -102,6 +113,8 @@ const {
   partnerships,
   meta,
 } = Astro.props;
+
+const { class: mainClass, ...mainRest } = mainAttrs;
 
 const imageModules = import.meta.glob<{ default: ImageMetadata }>(
   '/src/assets/**/*.{avif,png,jpg,jpeg,webp,gif,svg}',
@@ -194,7 +207,7 @@ if (typeof heroImage === 'string') {
       <Hero title={heroTitle} image={resolvedHeroImage} imageAlt={heroImageAlt ?? ""} />
     )}
     <slot name="hero" />
-    <main id="main" class="at-main">
+    <main id="main" class:list={["at-main", mainClass]} {...mainRest}>
       <slot />
     </main>
     <Footer name={name} contact={contact} socials={socials} licence={licence} colorScheme={colorScheme} acknowledgement={acknowledgement} legalLinks={legalLinks} partnerships={partnerships} meta={meta}>
