@@ -651,12 +651,7 @@
     /* The title block is bottom-aligned but a wrapped multi-line title climbs
        well past the midpoint, so the scrim holds ~60% black through the lower
        half rather than fading linearly from the bottom edge. */
-    background: linear-gradient(
-      to top,
-      rgb(0 0 0 / 80%),
-      rgb(0 0 0 / 60%) 50%,
-      rgb(0 0 0 / 15%)
-    );
+    background: linear-gradient(to top, rgb(0 0 0 / 80%), rgb(0 0 0 / 60%) 50%, rgb(0 0 0 / 15%));
   }
 
   @keyframes hero-fade-up {

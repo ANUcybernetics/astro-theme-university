@@ -26,7 +26,12 @@ export function matchCardItems<T extends CardItem>(items: T[], query: string): T
   const tokens = query.toLowerCase().trim().split(/\s+/).filter(Boolean);
   if (tokens.length === 0) return [...items];
   return items.filter((item) => {
-    const haystack = [item.title, item.description ?? "", ...(item.tags ?? []), ...(item.badges ?? [])]
+    const haystack = [
+      item.title,
+      item.description ?? "",
+      ...(item.tags ?? []),
+      ...(item.badges ?? []),
+    ]
       .join(" ")
       .toLowerCase();
     return tokens.every((token) => haystack.includes(token));

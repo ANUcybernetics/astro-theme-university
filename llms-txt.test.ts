@@ -458,23 +458,24 @@ describe("readSiteEntries", () => {
     expect(entries[0].title).toBe("Setup (page)");
   });
 
-  fsTest("maps the pages collection to the site root, other collections keep their directory", async ({
-    tmpDir,
-  }) => {
-    await mkdir(join(tmpDir, "content", "pages"), { recursive: true });
-    await mkdir(join(tmpDir, "content", "news"), { recursive: true });
-    await writeFile(
-      join(tmpDir, "content", "pages", "about.md"),
-      "---\ntitle: About\n---\n\nBody.\n",
-    );
-    await writeFile(
-      join(tmpDir, "content", "news", "launch.md"),
-      "---\ntitle: Launch\n---\n\nBody.\n",
-    );
+  fsTest(
+    "maps the pages collection to the site root, other collections keep their directory",
+    async ({ tmpDir }) => {
+      await mkdir(join(tmpDir, "content", "pages"), { recursive: true });
+      await mkdir(join(tmpDir, "content", "news"), { recursive: true });
+      await writeFile(
+        join(tmpDir, "content", "pages", "about.md"),
+        "---\ntitle: About\n---\n\nBody.\n",
+      );
+      await writeFile(
+        join(tmpDir, "content", "news", "launch.md"),
+        "---\ntitle: Launch\n---\n\nBody.\n",
+      );
 
-    const entries = await readSiteEntries(tmpDir);
-    expect(entries.map((e) => e.url).toSorted()).toEqual(["/about/", "/news/launch/"]);
-  });
+      const entries = await readSiteEntries(tmpDir);
+      expect(entries.map((e) => e.url).toSorted()).toEqual(["/about/", "/news/launch/"]);
+    },
+  );
 
   fsTest("tolerates a missing pages or content directory", async ({ tmpDir }) => {
     await mkdir(join(tmpDir, "content"), { recursive: true });

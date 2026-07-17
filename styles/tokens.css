@@ -120,10 +120,7 @@
 
     /* Semantic status colours (for callouts, form validation, etc.) */
     --at-info: light-dark(var(--at-tertiary), #38bdf8);
-    --at-info-soft: light-dark(
-      rgb(from var(--at-tertiary) r g b / 10%),
-      rgb(56 189 248 / 14%)
-    );
+    --at-info-soft: light-dark(rgb(from var(--at-tertiary) r g b / 10%), rgb(56 189 248 / 14%));
     --at-success: light-dark(#16a34a, #4ade80);
     --at-success-soft: light-dark(rgb(22 163 74 / 10%), rgb(74 222 128 / 14%));
     --at-warning: light-dark(#b45309, #fbbf24);

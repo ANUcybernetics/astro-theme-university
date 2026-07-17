@@ -109,7 +109,9 @@ describe("matchCardItems", () => {
   });
 
   test("treats null description and null tags the same as undefined", () => {
-    const nullable: CardItem[] = [{ title: "Nully", href: "/nully/", description: null, tags: null }];
+    const nullable: CardItem[] = [
+      { title: "Nully", href: "/nully/", description: null, tags: null },
+    ];
     expect(matchCardItems(nullable, "nully")).toHaveLength(1);
     expect(matchCardItems(nullable, "missing")).toHaveLength(0);
   });
