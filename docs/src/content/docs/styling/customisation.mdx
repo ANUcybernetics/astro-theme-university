@@ -53,7 +53,7 @@ Because the theme tokens are declared inside the `at.tokens` CSS layer and your 
 
 ## Adjusting typography
 
-To use a different body font, redefine `--at-font-body`. Make sure you also load the font itself --- via a `<link>` in your layout's `<head>`, an [`@font-face`](https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face) declaration, or Astro's [font system](https://docs.astro.build/en/guides/fonts/).
+To use a different body font, redefine `--at-font-body`. Make sure you also load the font itself. The easiest path is Astro's [font system](https://docs.astro.build/en/guides/fonts/): `BaseLayout` emits an `@font-face` for every font registered in your config's top-level `fonts` array, and the `preloadFonts` integration option controls which of them are preloaded (by default only the theme body font). Fonts loaded outside the font system need a `<link>` in your layout's `<head>` or your own [`@font-face`](https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face) declaration.
 
 ```css
 :root {

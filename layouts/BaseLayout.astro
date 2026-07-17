@@ -2,7 +2,7 @@
 import type { HTMLAttributes } from "astro/types";
 import { Font } from "astro:assets";
 import { ClientRouter } from "astro:transitions";
-import { fontVariables } from "virtual:astro-theme-university/fonts";
+import { fontVariables, preloadFontVariables } from "virtual:astro-theme-university/fonts";
 import { llmsTxtHref } from "virtual:astro-theme-university/llms";
 import Nav from "../components/Nav.astro";
 import Hero from "../components/Hero.astro";
@@ -159,11 +159,12 @@ if (typeof heroImage === 'string') {
         emission order. Keep in sync if new at.* layers are added. */}
     <style is:inline>@layer at.tokens, at.base, at.components;</style>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    {/* Emit @font-face for the theme fonts registered by the integration.
-        Only the body font is preloaded — the mono font is code-only and
-        may never be used on a given page. */}
+    {/* Emit @font-face for every registered font (the theme pair plus any the
+        site registers itself). Preloads default to the body font only — the
+        mono font is code-only and may never be used on a given page; sites
+        can widen the list via the preloadFonts integration option. */}
     {fontVariables.map((cssVariable) => (
-      <Font cssVariable={cssVariable} preload={cssVariable === "--font-public-sans"} />
+      <Font cssVariable={cssVariable} preload={preloadFontVariables.includes(cssVariable)} />
     ))}
     <title>{title}</title>
     {description && <meta name="description" content={description} />}

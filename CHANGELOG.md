@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.6.0
+
+BaseLayout now emits `@font-face` for every registered font, not just the theme
+pair --- fonts a site registers via Astro's top-level `fonts` config were
+previously dropped on theme-layout pages without warning.
+
+- new `preloadFonts` integration option: cssVariables of registered fonts that
+  BaseLayout should preload (default `["--font-public-sans"]`, the theme body
+  font, matching previous behaviour)
+- the fonts virtual module gains a `preloadFontVariables` export alongside
+  `fontVariables`
+- entries in an explicit `preloadFonts` list that match no registered font log a
+  warning at config time
+
 ## 0.5.0
 
 One name for the one-line blurb: `description` everywhere, matching what

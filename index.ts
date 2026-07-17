@@ -74,6 +74,11 @@ export interface ThemeOptions {
   icon?: boolean;
   /** Auto-register the theme fonts (Public Sans + Roboto Mono) via Google (default: true) */
   fonts?: boolean;
+  /** cssVariables of registered fonts that BaseLayout should preload — list
+   *  fonts that are visible above the fold on most pages. Applies to the theme
+   *  fonts and any fonts the site registers via the top-level `fonts` config.
+   *  (default: ["--font-public-sans"], the theme body font) */
+  preloadFonts?: string[];
   /** Module specifier(s) of brand CSS to import globally on every page,
    *  e.g. "astro-theme-anu/anu.css". The theme's own palette declarations
    *  are layered (`@layer at.tokens`), so unlayered brand declarations win
@@ -99,10 +104,14 @@ export default function universityTheme(options: ThemeOptions = {}): AstroIntegr
   const shouldAddMdx = options.mdx !== false;
   const shouldAddIcon = options.icon !== false;
   const shouldAddFonts = options.fonts !== false;
+  const preloadFonts = options.preloadFonts ?? ["--font-public-sans"];
 
   let srcDir: string;
   let siteUrl: string;
   let basePath: string;
+  // Every registered font cssVariable (theme + site + other integrations),
+  // resolved in astro:config:done once the config is final.
+  let registeredFontVariables: string[] = [];
 
   return {
     name: "astro-theme-university",
@@ -260,8 +269,11 @@ export default function universityTheme(options: ThemeOptions = {}): AstroIntegr
               // BaseLayout renders <Font> for each of these variables so the
               // registered webfonts actually reach the page as @font-face
               // rules (registering fonts in config alone emits nothing).
-              // Mirrors astromotion's virtual:astromotion/fonts pattern;
-              // empty when fonts: false so the layout degrades cleanly.
+              // Mirrors astromotion's virtual:astromotion/fonts pattern.
+              // Covers EVERY font in the final config — the theme pair plus
+              // anything the site registers itself — so site-registered fonts
+              // aren't silently dropped; empty when nothing is registered so
+              // the layout degrades cleanly.
               {
                 name: "astro-theme-university:fonts",
                 resolveId(id: string) {
@@ -272,10 +284,14 @@ export default function universityTheme(options: ThemeOptions = {}): AstroIntegr
                 },
                 load(id: string) {
                   if (id === "\0virtual:astro-theme-university/fonts") {
-                    const fontVariables = shouldAddFonts
-                      ? ["--font-public-sans", "--font-roboto-mono"]
-                      : [];
-                    return `export const fontVariables = ${JSON.stringify(fontVariables)};\n`;
+                    // registeredFontVariables is resolved in astro:config:done;
+                    // Vite only loads this module afterwards (dev request /
+                    // build), so the array is final by the time we serialise.
+                    const preload = preloadFonts.filter((v) => registeredFontVariables.includes(v));
+                    return (
+                      `export const fontVariables = ${JSON.stringify(registeredFontVariables)};\n` +
+                      `export const preloadFontVariables = ${JSON.stringify(preload)};\n`
+                    );
                   }
                   return null;
                 },
@@ -307,6 +323,20 @@ export default function universityTheme(options: ThemeOptions = {}): AstroIntegr
             ],
           },
         });
+      },
+      "astro:config:done": ({ config, logger }) => {
+        registeredFontVariables = (config.fonts ?? []).map((f) => f.cssVariable);
+        // Only validate an explicit preloadFonts list — the default entry is
+        // legitimately absent under fonts: false.
+        if (options.preloadFonts) {
+          for (const cssVariable of options.preloadFonts) {
+            if (!registeredFontVariables.includes(cssVariable)) {
+              logger.warn(
+                `preloadFonts entry "${cssVariable}" does not match any registered font cssVariable`,
+              );
+            }
+          }
+        }
       },
       "astro:build:done": async ({ dir, logger }) => {
         if (

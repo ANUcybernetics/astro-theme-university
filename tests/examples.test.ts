@@ -116,6 +116,14 @@ describe("example builds", () => {
       run("pnpm build", tempDir);
 
       expect(existsSync(join(tempDir, "dist"))).toBe(true);
+
+      // Site-registered fonts (Lora, from this example's astro.config) must
+      // be emitted alongside the theme pair, and both entries of the
+      // example's preloadFonts list must yield font preload links.
+      const indexHtml = readFileSync(join(tempDir, "dist", "index.html"), "utf-8");
+      expect(indexHtml).toContain("Lora");
+      const fontPreloads = indexHtml.match(/as="font"/g) ?? [];
+      expect(fontPreloads.length).toBeGreaterThanOrEqual(2);
     });
   }
 });

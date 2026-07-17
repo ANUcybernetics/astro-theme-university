@@ -127,6 +127,7 @@ describe("extract-props", () => {
       "mdx",
       "icon",
       "fonts",
+      "preloadFonts",
       "brandCss",
       "extraRemarkPluginsBefore",
       "extraRemarkPlugins",

@@ -19,7 +19,7 @@ export default getViteConfig(
         },
         load(id: string) {
           if (id === "\0virtual:astro-theme-university/fonts") {
-            return "export const fontVariables = [];\n";
+            return "export const fontVariables = [];\nexport const preloadFontVariables = [];\n";
           }
           return null;
         },
