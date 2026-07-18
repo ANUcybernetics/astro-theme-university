@@ -81,6 +81,24 @@ describe("BaseLayout", () => {
     expect(html).toContain("Forwarded acknowledgement text.");
   });
 
+  test("emits no robots meta or pagefind ignore by default", async () => {
+    const container = await createContainer();
+    const html = await container.renderToString(BaseLayout, {
+      props: { title: "Test" },
+    });
+    expect(html).not.toMatch(/<meta name="robots"/);
+    expect(html).not.toContain("data-pagefind-ignore");
+  });
+
+  test("unlisted pages get a noindex robots meta and a pagefind-ignored body", async () => {
+    const container = await createContainer();
+    const html = await container.renderToString(BaseLayout, {
+      props: { title: "Test", unlisted: true },
+    });
+    expect(html).toMatch(/<meta name="robots" content="noindex"/);
+    expect(html).toMatch(/<body[^>]*data-pagefind-ignore="all"/);
+  });
+
   test("renders content passed to the head slot inside <head>", async () => {
     const container = await createContainer();
     const html = await container.renderToString(BaseLayout, {

@@ -21,6 +21,10 @@ export interface BaseLayoutProps {
   title: string;
   /** Page meta description for SEO. */
   description?: string;
+  /** Unlisted page: builds at its URL for anyone with the link, but stays out
+   *  of the indexes — emits `<meta name="robots" content="noindex">` and marks
+   *  the page `data-pagefind-ignore="all"` so the on-site search skips it. */
+  unlisted?: boolean;
   /** Site name displayed in the nav and footer. */
   name?: string;
   /** Navigation links displayed in the top bar. */
@@ -86,6 +90,7 @@ type Props = BaseLayoutProps;
 const {
   title,
   description,
+  unlisted = false,
   name = "Site",
   links = [],
   search,
@@ -168,6 +173,7 @@ if (typeof heroImage === 'string') {
     ))}
     <title>{title}</title>
     {description && <meta name="description" content={description} />}
+    {unlisted && <meta name="robots" content="noindex" />}
     <meta name="generator" content={Astro.generator} />
     {favicon && <link rel="icon" type="image/svg+xml" href={favicon.src} />}
     {llmsTxtHref && (
@@ -193,7 +199,7 @@ if (typeof heroImage === 'string') {
     )}
     <slot name="head" />
   </head>
-  <body>
+  <body data-pagefind-ignore={unlisted ? "all" : undefined}>
     <a href="#main" class="visually-hidden">Skip to main content</a>
     <Nav
       name={name}
