@@ -198,4 +198,29 @@ describe("countSourceDecks", () => {
     await writeFile(join(tmpDir, "decks", "nested", "week-2.deck.md"), "# deck");
     expect(await countSourceDecks(tmpDir)).toBe(2);
   });
+
+  fsTest("excludes decks with published:false frontmatter", async ({ tmpDir }) => {
+    await mkdir(join(tmpDir, "decks"), { recursive: true });
+    // published: false → intentionally not built, so not counted
+    await writeFile(
+      join(tmpDir, "decks", "draft.deck.mdx"),
+      '---\ntitle: "Draft"\npublished: false\n---\n\n# deck',
+    );
+    // published: true, and absent → should build, so counted
+    await writeFile(
+      join(tmpDir, "decks", "live.deck.mdx"),
+      '---\ntitle: "Live"\npublished: true\n---\n\n# deck',
+    );
+    await writeFile(join(tmpDir, "decks", "plain.deck.mdx"), "# deck");
+    expect(await countSourceDecks(tmpDir)).toBe(2);
+  });
+
+  fsTest("a body mention of published:false does not exclude a deck", async ({ tmpDir }) => {
+    await mkdir(join(tmpDir, "decks"), { recursive: true });
+    await writeFile(
+      join(tmpDir, "decks", "week-1.deck.mdx"),
+      '---\ntitle: "Live"\n---\n\n# deck\n\nSetting published: false hides a deck.',
+    );
+    expect(await countSourceDecks(tmpDir)).toBe(1);
+  });
 });

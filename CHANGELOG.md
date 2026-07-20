@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.6.2
+
+The post-build deck-structure check no longer warns when a site's decks are all
+intentionally unpublished. Its "source decks exist but none built" tripwire
+(which catches a broken deck route config) counted every `*.deck.*` file on
+disk, frontmatter-blind, so a term's worth of `published: false` decks staged
+ahead looked identical to a misconfiguration. `countSourceDecks` now reads
+frontmatter and counts only decks expected to build — excluding
+`published: false` — mirroring astromotion's own build-time rule (v0.14.0+ drops
+unpublished decks from the production build). A genuinely misconfigured
+_published_ deck still trips the warning; an all-dark site logs "Checked 0 decks
+— none to build" instead.
+
 ## 0.6.0
 
 BaseLayout now emits `@font-face` for every registered font, not just the theme

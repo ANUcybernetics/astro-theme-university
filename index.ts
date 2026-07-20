@@ -409,10 +409,10 @@ export default function universityTheme(options: ThemeOptions = {}): AstroIntegr
               const sourceDecks = await countSourceDecks(srcDir);
               if (sourceDecks > 0) {
                 logger.warn(
-                  `Found ${sourceDecks} source deck(s) under srcDir but no built deck pages (.reveal slides) in dist — deck structure checks did not run. Check the deck route configuration.`,
+                  `Found ${sourceDecks} published source deck(s) under srcDir but no built deck pages (.reveal slides) in dist — deck structure checks did not run. Check the deck route configuration.`,
                 );
               } else {
-                logger.info("Checked 0 decks — none found.");
+                logger.info("Checked 0 decks — none to build.");
               }
             } else {
               logger.info(`Checked ${checked} deck(s) — no structural violations.`);

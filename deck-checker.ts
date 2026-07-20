@@ -38,9 +38,24 @@ export async function collectDeckPages(distDir: string): Promise<DeckPage[]> {
   return decks;
 }
 
-/** Count source deck files (astromotion's `*.deck.*` convention) under a
- * directory, so the integration can warn when decks exist in src but none
- * surfaced in dist. */
+/** True when a deck file's frontmatter carries `published: false` — i.e. the
+ * deck is deliberately excluded from the build, so it will legitimately not
+ * appear in dist. Only the leading `---` frontmatter block is inspected, so a
+ * `published: false` mentioned in body prose can't false-negative. Anything
+ * else — no frontmatter, no `published` key, or `published: true` — is treated
+ * as a deck that should build. Mirrors astromotion's own build-time rule
+ * (published:false decks are dropped from the production build). */
+function isUnpublishedDeckSource(content: string): boolean {
+  const frontmatter = /^---\r?\n([\s\S]*?)\r?\n---/.exec(content);
+  if (!frontmatter) return false;
+  return /^\s*published:\s*false\s*(#.*)?$/m.test(frontmatter[1]);
+}
+
+/** Count source deck files (astromotion's `*.deck.*` convention) that are
+ * expected to build — i.e. excluding `published: false` decks — under a
+ * directory, so the integration can warn when a deck that *should* have
+ * rendered is missing from dist without false-positiving on decks that were
+ * intentionally left unpublished (e.g. a whole term's decks staged ahead). */
 export async function countSourceDecks(dir: string): Promise<number> {
   let entries;
   try {
@@ -50,8 +65,19 @@ export async function countSourceDecks(dir: string): Promise<number> {
   }
   let count = 0;
   for (const entry of entries) {
-    if (entry.isDirectory()) count += await countSourceDecks(join(dir, entry.name));
-    else if (/\.deck\.[^./]+$/.test(entry.name)) count += 1;
+    if (entry.isDirectory()) {
+      count += await countSourceDecks(join(dir, entry.name));
+    } else if (/\.deck\.[^./]+$/.test(entry.name)) {
+      // Read failure shouldn't silence the tripwire, so count the deck.
+      let content = "";
+      try {
+        content = await readFile(join(dir, entry.name), "utf-8");
+      } catch {
+        count += 1;
+        continue;
+      }
+      if (!isUnpublishedDeckSource(content)) count += 1;
+    }
   }
   return count;
 }
