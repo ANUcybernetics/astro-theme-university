@@ -27,6 +27,7 @@
     "virtual.d.ts",
     "link-checker.ts",
     "a11y-checker.ts",
+    "a11y-worker.mjs",
     "deck-checker.ts",
     "llms-txt.ts",
     "url.ts",

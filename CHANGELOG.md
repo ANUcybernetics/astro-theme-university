@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.6.3
+
+The post-build accessibility scan now runs across a pool of worker threads
+instead of one page at a time. axe-core walks each page's DOM synchronously and
+mutates globalThis to do it, so the old serial loop pinned a single core and a
+site of any size spent minutes in the `astro:build:done` hook; each page now
+runs in its own worker with its own JSDOM globals, cutting wall-clock roughly in
+proportion to core count (≈5x on a many-core machine). No API change --- the
+scan reports the same pages and violations, now sorted for stable output. The
+per-page half ships as `a11y-worker.mjs` so git-dep consumers can spawn it
+without a TypeScript-stripping step.
+
 ## 0.6.2
 
 The post-build deck-structure check no longer warns when a site's decks are all
