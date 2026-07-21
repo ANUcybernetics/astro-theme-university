@@ -86,8 +86,15 @@
       oklch(from var(--at-primary) 20% 0.01 h / 78%),
       oklch(from var(--at-primary) 95% 0.005 h / 78%)
     );
+
+    /* Light-mode alpha is higher than dark's: dark text at 56% over a near-white
+       surface lands at 4.0–4.1:1, under the WCAG AA 4.5:1 floor for body text,
+       while the dark-mode pairing clears it at 5.6–5.7:1. 62% brings the light
+       side to 4.9–5.0:1 across all three surfaces without lifting dark-mode
+       muted text (and flattening its hierarchy) to fix a bug it doesn't have.
+       Verified by contrast.test.ts. */
     --at-text-muted: light-dark(
-      oklch(from var(--at-primary) 20% 0.01 h / 56%),
+      oklch(from var(--at-primary) 20% 0.01 h / 62%),
       oklch(from var(--at-primary) 95% 0.005 h / 56%)
     );
     --at-heading: var(--at-primary);

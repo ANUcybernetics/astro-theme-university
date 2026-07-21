@@ -1,5 +1,30 @@
 # Changelog
 
+## 0.6.5
+
+Muted body text now meets WCAG AA in light mode. `--at-text-muted` used a 56%
+alpha in both modes; over a near-white surface that lands at 4.0–4.1:1, under
+the 4.5:1 floor for body text, while the dark-mode pairing was already fine at
+5.6–5.7:1. The light side moves to 62% (4.9–5.0:1 across all three surfaces) and
+dark is left alone, so dark-mode hierarchy is unchanged.
+
+This class of bug is invisible to browser-based scanners: **axe-core cannot
+evaluate contrast on oklch colours**, so pointing pa11y or Lighthouse at a site
+using this theme returns "needs further review" for every text element —
+thousands of non-verdicts and no signal. The palette is therefore verified on
+the token values themselves:
+
+- new `astro-theme-university/contrast` export: `oklchToSrgb`, `compositeOver`,
+  `relativeLuminance`, `contrastRatio`, `parseLightDarkOklchTokens`, and
+  `tokenContrast`
+- `contrast.test.ts` asserts every text token over every surface token, in both
+  modes, sampled across the hue wheel (the neutral ramp inherits hue from each
+  brand's `--at-primary`, so the guarantee has to hold for any brand)
+
+Brand packages that pin their own semantic tokens (`anu.css`, `slop.css`) should
+import these helpers and assert over their own values — the theme's defaults
+being AA-clean says nothing about a brand layer that overrides them.
+
 ## 0.6.4
 
 Markdown tables now render full-width, matching the deck stylesheet. The old
