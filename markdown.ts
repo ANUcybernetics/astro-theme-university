@@ -7,6 +7,7 @@ import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypeSlug from "rehype-slug";
 
 export { default as remarkCallout } from "./remark-callout.js";
+export { default as rehypeTableWrap } from "./rehype-table-wrap.js";
 
 // rehype-slug + a decorative, assistive-tech-hidden "#" appended to each
 // heading. Screen-reader and keyboard users navigate by heading directly, so

@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.6.4
+
+Markdown tables now render full-width, matching the deck stylesheet. The old
+`table { display: block; overflow-x: auto }` rule bought horizontal scrolling
+for wide tables (CSS ignores `overflow` on table boxes) at the cost of
+shrink-wrapping every narrow one to its content. The two behaviours are split
+across two elements instead: a new `rehypeTableWrap` plugin (also exported from
+`astro-theme-university/markdown` for consumers running their own processor)
+wraps each markdown table in a `.at-table-wrap` scroll container, and the table
+itself goes back to `display: table` with `width: 100%`. Wide tables still
+scroll in place on narrow screens; hand-authored tables outside a wrapper get
+the same full-width defaults.
+
 ## 0.6.3
 
 The post-build accessibility scan now runs across a pool of worker threads

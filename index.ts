@@ -19,6 +19,7 @@ import remarkCallout from "./remark-callout.js";
 import { headingAnchorPlugins } from "./markdown.js";
 import remarkDefaultLayout from "./remark-default-layout.js";
 import rehypeBaseLinks from "./rehype-base-links.js";
+import rehypeTableWrap from "./rehype-table-wrap.js";
 import { checkA11y } from "./a11y-checker.js";
 import { checkBaseLinks } from "./link-checker.js";
 import { checkDecks, countSourceDecks } from "./deck-checker.js";
@@ -223,6 +224,7 @@ export default function universityTheme(options: ThemeOptions = {}): AstroIntegr
               ],
               rehypePlugins: [
                 ...headingAnchorPlugins,
+                rehypeTableWrap,
                 ...(options.extraRehypePlugins ?? []),
                 // Last, so links produced by consumer rehype plugins are
                 // rewritten too. No-op when base is "/".

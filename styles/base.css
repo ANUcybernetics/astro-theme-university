@@ -297,12 +297,23 @@
     padding-block-end: var(--at-spacing-sm);
   }
 
+  /* Full-width tables, matching deck.css. Overflow is ignored on table boxes,
+     so horizontal scroll for wide tables comes from the .at-table-wrap div the
+     rehypeTableWrap plugin puts around every markdown table. Hand-authored
+     tables outside a wrapper still get sane width/margins from the bare rules. */
+  .at-table-wrap {
+    overflow-x: auto;
+    margin-block: 1em;
+  }
+
   table {
-    max-width: 100%;
+    width: 100%;
     border-collapse: collapse;
     margin-block: 1em;
-    display: block;
-    overflow-x: auto;
+  }
+
+  .at-table-wrap > table {
+    margin-block: 0;
   }
 
   thead {
