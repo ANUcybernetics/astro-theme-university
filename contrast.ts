@@ -73,6 +73,12 @@ export interface OklchToken {
   c: number;
   /** Fractional alpha; 1 when the token is opaque. */
   alpha: number;
+  /**
+   * Explicit hue in degrees, or undefined when the token inherits it from
+   * `--at-primary` (the core's `oklch(from var(--at-primary) …)` form). Brand
+   * layers that pin tokens tend to write a literal hue instead.
+   */
+  hue?: number;
 }
 
 export interface LightDarkToken {
@@ -81,34 +87,44 @@ export interface LightDarkToken {
 }
 
 /**
- * Parse `--at-*: light-dark(oklch(from var(--at-primary) L% C h / A%), …)`
- * declarations out of a stylesheet.
+ * Parse `--at-*: light-dark(oklch(…), oklch(…))` declarations out of a
+ * stylesheet, in both forms the ecosystem uses: the core's hue-inheriting
+ * `oklch(from var(--at-primary) L% C h / A%)` and the literal
+ * `oklch(L% C Hdeg / A%)` that brand layers pin.
  *
- * Hue is inherited from each brand's `--at-primary`, so it isn't captured here;
- * callers sample across hues instead (chroma is low enough in the neutral ramp
- * that luminance barely moves, but sampling proves it rather than assuming it).
+ * Tokens written in the inheriting form carry no hue; callers sample across the
+ * wheel instead (chroma in the neutral ramp is low enough that luminance barely
+ * moves, but sampling proves it rather than assuming it).
  */
 export function parseLightDarkOklchTokens(css: string): Map<string, LightDarkToken> {
-  const oklch = String.raw`oklch\(\s*from\s+var\(--at-primary\)\s+([\d.]+)%\s+([\d.]+)\s+h\s*(?:\/\s*([\d.]+)%\s*)?\)`;
+  const oklch = String.raw`oklch\(\s*(?:from\s+var\(--at-primary\)\s+)?([\d.]+)%\s+([\d.]+)\s+(h|[\d.]+)(?:deg)?\s*(?:\/\s*([\d.]+)%\s*)?\)`;
   const re = new RegExp(
     String.raw`(--at-[\w-]+)\s*:\s*light-dark\(\s*${oklch}\s*,\s*${oklch}\s*\)`,
     "g",
   );
 
+  const token = (l: string, c: string, h: string, a: string | undefined): OklchToken => ({
+    l: Number(l) / 100,
+    c: Number(c),
+    alpha: a === undefined ? 1 : Number(a) / 100,
+    hue: h === "h" ? undefined : Number(h),
+  });
+
   const tokens = new Map<string, LightDarkToken>();
   for (const m of css.matchAll(re)) {
-    const [, name, ll, lc, la, dl, dc, da] = m;
-    tokens.set(name, {
-      light: { l: Number(ll) / 100, c: Number(lc), alpha: la === undefined ? 1 : Number(la) / 100 },
-      dark: { l: Number(dl) / 100, c: Number(dc), alpha: da === undefined ? 1 : Number(da) / 100 },
-    });
+    const [, name, ll, lc, lh, la, dl, dc, dh, da] = m;
+    tokens.set(name, { light: token(ll, lc, lh, la), dark: token(dl, dc, dh, da) });
   }
   return tokens;
 }
 
-/** Contrast of a (possibly translucent) foreground token over a background token. */
+/**
+ * Contrast of a (possibly translucent) foreground token over a background
+ * token. `hue` is the fallback for tokens that inherit it from `--at-primary`;
+ * a token carrying its own hue uses that instead.
+ */
 export function tokenContrast(fg: OklchToken, bg: OklchToken, hue: number): number {
-  const bgRgb = oklchToSrgb(bg.l, bg.c, hue);
-  const fgRgb = oklchToSrgb(fg.l, fg.c, hue);
+  const bgRgb = oklchToSrgb(bg.l, bg.c, bg.hue ?? hue);
+  const fgRgb = oklchToSrgb(fg.l, fg.c, fg.hue ?? hue);
   return contrastRatio(compositeOver(fgRgb, fg.alpha, bgRgb), bgRgb);
 }

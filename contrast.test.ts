@@ -43,6 +43,29 @@ describe("palette contrast", () => {
     expect(failures, `\n${failures.join("\n")}\n`).toEqual([]);
   });
 
+  it("parses both the hue-inheriting core form and the literal brand-layer form", () => {
+    const tokens = parseLightDarkOklchTokens(`
+      :root {
+        --at-text: light-dark(
+          oklch(from var(--at-primary) 20% 0.01 h),
+          oklch(from var(--at-primary) 95% 0.005 h)
+        );
+        --at-text-muted: light-dark(oklch(20% 0.01 75deg / 62%), oklch(95% 0.005 75deg / 56%));
+      }
+    `);
+
+    // Core form: hue inherited from --at-primary, so left undefined.
+    expect(tokens.get("--at-text")).toEqual({
+      light: { l: 0.2, c: 0.01, alpha: 1, hue: undefined },
+      dark: { l: 0.95, c: 0.005, alpha: 1, hue: undefined },
+    });
+    // Brand-layer form: literal hue and alpha.
+    expect(tokens.get("--at-text-muted")).toEqual({
+      light: { l: 0.2, c: 0.01, alpha: 0.62, hue: 75 },
+      dark: { l: 0.95, c: 0.005, alpha: 0.56, hue: 75 },
+    });
+  });
+
   it("keeps the muted/secondary/body hierarchy visually distinct", async () => {
     // Guards the obvious way to "fix" a contrast failure: crank every alpha to
     // 1 and lose the de-emphasis the tokens exist to express.

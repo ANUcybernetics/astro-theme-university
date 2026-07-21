@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.6.6
+
+`parseLightDarkOklchTokens` now also reads the literal `oklch(L% C Hdeg / A%)`
+form, not just the core's hue-inheriting `oklch(from var(--at-primary) …)`.
+Brand layers pin their semantic tokens with literal values, so the 0.6.5 parser
+silently matched nothing in `anu.css` — the exact file the export exists to let
+brands verify. `OklchToken` gains an optional `hue` (undefined when inherited),
+and `tokenContrast` prefers a token's own hue over the sampled fallback.
+
 ## 0.6.5
 
 Muted body text now meets WCAG AA in light mode. `--at-text-muted` used a 56%
