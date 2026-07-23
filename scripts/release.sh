@@ -33,6 +33,13 @@ read -r behind ahead < <(git rev-list --left-right --count origin/main...HEAD)
 [[ "$behind" == "0" && "$ahead" == "0" ]] \
   || { echo "Local main is $behind behind / $ahead ahead of origin/main. Sync first." >&2; exit 1; }
 
+# A tag is immediately consumable by pinned consumers, so never cut one from
+# a commit that doesn't pass the full check suite.
+pnpm format:check
+pnpm lint
+pnpm typecheck
+pnpm test
+
 old="$(jq -r .version package.json)"
 pnpm version "$bump" --no-git-tag-version >/dev/null
 new="$(jq -r .version package.json)"

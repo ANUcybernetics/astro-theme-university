@@ -8,6 +8,7 @@
     "prebuild": "node --experimental-strip-types ../scripts/extract-props.ts",
     "build": "astro build",
     "preview": "astro preview",
+    "pretypecheck": "node --experimental-strip-types ../scripts/extract-props.ts",
     "typecheck": "astro check"
   },
   "dependencies": {
@@ -17,7 +18,7 @@
     "@iconify-json/iconoir": "^1.2.11",
     "astro": "^7.1.1",
     "astro-theme-university": "workspace:*",
-    "astromotion": "github:ANUcybernetics/astromotion",
+    "astromotion": "github:ANUcybernetics/astromotion#v0.16.1",
     "sharp": "^0.34.5",
     "svelte": "^5.55.10"
   },

@@ -22,6 +22,8 @@ minimumReleaseAgeExclude:
   - "@astrojs/svelte"
   - p5
 
-# Pin astromotion to the GitHub repo (no npm release).
+# Pin astromotion to the GitHub repo (no npm release), at an exact release
+# tag — a floating ref here freezes at whatever commit main pointed to when
+# the lockfile entry was first resolved, then silently never moves.
 overrides:
-  astromotion: github:ANUcybernetics/astromotion
+  astromotion: github:ANUcybernetics/astromotion#v0.16.1
