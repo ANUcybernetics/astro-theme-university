@@ -79,7 +79,15 @@ body.reveal-viewport {
   color: var(--r-link-color);
 }
 
-.reveal .slides section {
+/* The structural prefix is specificity-zeroed with :where() so these
+   content defaults (typography, lists, tables, slide classes) never
+   outgun a deck component's own single-class selectors — without it,
+   every component embedded in a slide has to re-assert its sizing under
+   a .reveal-prefixed block. Matching is unchanged: rules still apply
+   only inside .reveal .slides. Reveal core's unlayered CSS stays out of
+   the way (its section rules are positional/transitional only), and
+   brand CSS overrides only win more easily than before. */
+:where(.reveal .slides) section {
   font-weight: 400;
   text-align: left;
   padding: 4rem 5rem;
