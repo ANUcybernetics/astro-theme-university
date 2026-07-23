@@ -1,5 +1,8 @@
 import type { Root } from "mdast";
 import type { Plugin } from "unified";
+// Side-effect import for its mdast type augmentation (declaration merging),
+// not runtime exports — nothing to assign.
+// oxlint-disable-next-line import/no-unassigned-import
 import "mdast-util-directive";
 import { visit } from "unist-util-visit";
 

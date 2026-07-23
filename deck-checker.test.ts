@@ -1,7 +1,7 @@
 import { describe, expect, test } from "vitest";
 import { mkdir, writeFile } from "node:fs/promises";
 import { join } from "node:path";
-import { checkDeckHtml, collectDeckPages, checkDecks, countSourceDecks } from "./deck-checker.js";
+import { checkDeckHtml, checkDecks, collectDeckPages, countSourceDecks } from "./deck-checker.js";
 import { fsTest } from "./test-utils.js";
 
 const MINIMAL_DECK = `

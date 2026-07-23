@@ -1,7 +1,7 @@
-import { describe, test, expect } from "vitest";
+import { describe, expect, test } from "vitest";
 import { Project } from "ts-morph";
 import { extractDefaultsFromAST } from "../scripts/extract-props-lib.ts";
-import { writeFileSync, mkdtempSync } from "node:fs";
+import { mkdtempSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
 
@@ -18,6 +18,11 @@ function writeTmp(name: string, content: string): string {
   const p = join(tmpDir, name);
   writeFileSync(p, content);
   return p;
+}
+
+function makeSourceFile(code: string) {
+  const project = new Project({ useInMemoryFileSystem: true });
+  return project.createSourceFile("test.ts", code);
 }
 
 describe("extractAstroFrontmatter", () => {
@@ -65,11 +70,6 @@ describe("extractSvelteScript", () => {
 });
 
 describe("extractDefaultsFromAST", () => {
-  function makeSourceFile(code: string) {
-    const project = new Project({ useInMemoryFileSystem: true });
-    return project.createSourceFile("test.ts", code);
-  }
-
   test("extracts defaults from Astro.props destructuring", () => {
     const sf = makeSourceFile(
       'const { title, href, imageAlt = "", headingLevel = "h3" } = Astro.props;',

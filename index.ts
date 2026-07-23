@@ -1,6 +1,6 @@
 import type { AstroIntegration } from "astro";
 import { fontProviders } from "astro/config";
-import type { RemarkPlugin, RemarkPlugins, RehypePlugins } from "@astrojs/markdown-remark";
+import type { RehypePlugins, RemarkPlugin, RemarkPlugins } from "@astrojs/markdown-remark";
 import { unified } from "@astrojs/markdown-remark";
 import mdx from "@astrojs/mdx";
 import svelte from "@astrojs/svelte";
@@ -24,10 +24,10 @@ import { checkA11y } from "./a11y-checker.js";
 import { checkBaseLinks } from "./link-checker.js";
 import { checkDecks, countSourceDecks } from "./deck-checker.js";
 import {
-  readSiteEntries,
-  generateLlmsTxt,
-  generateLlmsFullTxt,
   findUnroutedEntries,
+  generateLlmsFullTxt,
+  generateLlmsTxt,
+  readSiteEntries,
 } from "./llms-txt.js";
 
 export type {

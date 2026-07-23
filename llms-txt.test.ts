@@ -2,14 +2,14 @@ import { describe, expect, test } from "vitest";
 import { mkdir, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import {
-  parseFrontmatter,
-  stripMdxSyntax,
   absolutiseLinks,
-  generateLlmsTxt,
+  findUnroutedEntries,
   generateLlmsFullTxt,
+  generateLlmsTxt,
+  parseFrontmatter,
   readContentEntries,
   readSiteEntries,
-  findUnroutedEntries,
+  stripMdxSyntax,
 } from "./llms-txt.js";
 import type { LlmsEntry, LlmsTxtOptions } from "./llms-txt.js";
 import { fsTest } from "./test-utils.js";
@@ -428,7 +428,7 @@ describe("readSiteEntries", () => {
     );
 
     const entries = await readSiteEntries(tmpDir);
-    const urls = entries.map((e) => e.url).sort();
+    const urls = entries.map((e) => e.url).toSorted();
     expect(urls).toEqual(["/crits/", "/topics/agents/"]);
   });
 
@@ -513,34 +513,34 @@ describe("full pipeline", () => {
   });
 });
 
-describe("findUnroutedEntries", () => {
-  const entry = (url: string): LlmsEntry => ({ url, title: "T", body: "" });
+const makeEntry = (url: string): LlmsEntry => ({ url, title: "T", body: "" });
 
+describe("findUnroutedEntries", () => {
   fsTest("passes entries whose page exists in directory format", async ({ tmpDir }) => {
     await mkdir(join(tmpDir, "guides", "setup"), { recursive: true });
     await writeFile(join(tmpDir, "index.html"), "<html></html>");
     await writeFile(join(tmpDir, "guides", "setup", "index.html"), "<html></html>");
 
-    expect(findUnroutedEntries(tmpDir, [entry("/"), entry("/guides/setup/")])).toEqual([]);
+    expect(findUnroutedEntries(tmpDir, [makeEntry("/"), makeEntry("/guides/setup/")])).toEqual([]);
   });
 
   fsTest("passes entries whose page exists in file format", async ({ tmpDir }) => {
     await mkdir(join(tmpDir, "guides"), { recursive: true });
     await writeFile(join(tmpDir, "guides", "setup.html"), "<html></html>");
 
-    expect(findUnroutedEntries(tmpDir, [entry("/guides/setup/")])).toEqual([]);
+    expect(findUnroutedEntries(tmpDir, [makeEntry("/guides/setup/")])).toEqual([]);
   });
 
   fsTest("reports entries with no built page", async ({ tmpDir }) => {
     await mkdir(join(tmpDir, "real"), { recursive: true });
     await writeFile(join(tmpDir, "real", "index.html"), "<html></html>");
 
-    expect(findUnroutedEntries(tmpDir, [entry("/real/"), entry("/orphaned/")])).toEqual([
+    expect(findUnroutedEntries(tmpDir, [makeEntry("/real/"), makeEntry("/orphaned/")])).toEqual([
       "/orphaned/",
     ]);
   });
 
   fsTest("reports the root URL when dist has no index.html", async ({ tmpDir }) => {
-    expect(findUnroutedEntries(tmpDir, [entry("/")])).toEqual(["/"]);
+    expect(findUnroutedEntries(tmpDir, [makeEntry("/")])).toEqual(["/"]);
   });
 });

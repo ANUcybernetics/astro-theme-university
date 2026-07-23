@@ -52,15 +52,21 @@ export function compositeOver(fg: Rgb, alpha: number, bg: Rgb): Rgb {
   return fg.map((c, i) => c * alpha + bg[i] * (1 - alpha)) as Rgb;
 }
 
+const srgbChannelToLinear = (c: number): number =>
+  c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+
 /** WCAG 2.1 relative luminance. */
 export function relativeLuminance([r, g, b]: Rgb): number {
-  const lin = (c: number) => (c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4);
-  return 0.2126 * lin(r) + 0.7152 * lin(g) + 0.0722 * lin(b);
+  return (
+    0.2126 * srgbChannelToLinear(r) +
+    0.7152 * srgbChannelToLinear(g) +
+    0.0722 * srgbChannelToLinear(b)
+  );
 }
 
 /** WCAG 2.1 contrast ratio between two opaque colours, 1–21. */
 export function contrastRatio(a: Rgb, b: Rgb): number {
-  const [hi, lo] = [relativeLuminance(a), relativeLuminance(b)].sort((x, y) => y - x);
+  const [hi, lo] = [relativeLuminance(a), relativeLuminance(b)].toSorted((x, y) => y - x);
   return (hi + 0.05) / (lo + 0.05);
 }
 
@@ -96,6 +102,13 @@ export interface LightDarkToken {
  * wheel instead (chroma in the neutral ramp is low enough that luminance barely
  * moves, but sampling proves it rather than assuming it).
  */
+const parseOklchToken = (l: string, c: string, h: string, a: string | undefined): OklchToken => ({
+  l: Number(l) / 100,
+  c: Number(c),
+  alpha: a === undefined ? 1 : Number(a) / 100,
+  hue: h === "h" ? undefined : Number(h),
+});
+
 export function parseLightDarkOklchTokens(css: string): Map<string, LightDarkToken> {
   const oklch = String.raw`oklch\(\s*(?:from\s+var\(--at-primary\)\s+)?([\d.]+)%\s+([\d.]+)\s+(h|[\d.]+)(?:deg)?\s*(?:\/\s*([\d.]+)%\s*)?\)`;
   const re = new RegExp(
@@ -103,17 +116,13 @@ export function parseLightDarkOklchTokens(css: string): Map<string, LightDarkTok
     "g",
   );
 
-  const token = (l: string, c: string, h: string, a: string | undefined): OklchToken => ({
-    l: Number(l) / 100,
-    c: Number(c),
-    alpha: a === undefined ? 1 : Number(a) / 100,
-    hue: h === "h" ? undefined : Number(h),
-  });
-
   const tokens = new Map<string, LightDarkToken>();
   for (const m of css.matchAll(re)) {
     const [, name, ll, lc, lh, la, dl, dc, dh, da] = m;
-    tokens.set(name, { light: token(ll, lc, lh, la), dark: token(dl, dc, dh, da) });
+    tokens.set(name, {
+      light: parseOklchToken(ll, lc, lh, la),
+      dark: parseOklchToken(dl, dc, dh, da),
+    });
   }
   return tokens;
 }

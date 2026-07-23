@@ -1,6 +1,6 @@
 import { existsSync } from "node:fs";
 import { readdir, readFile } from "node:fs/promises";
-import { join, relative, basename, extname } from "node:path";
+import { basename, extname, join, relative } from "node:path";
 import { parse as parseYaml } from "yaml";
 
 export interface LlmsEntry {
@@ -83,7 +83,7 @@ export function absolutiseLinks(body: string, siteUrl: string): string {
 }
 
 export function generateLlmsTxt(options: LlmsTxtOptions, entries: LlmsEntry[]): string {
-  const sorted = [...entries].sort((a, b) => a.url.localeCompare(b.url));
+  const sorted = [...entries].toSorted((a, b) => a.url.localeCompare(b.url));
   const lines: string[] = [];
 
   if (options.preamble) {
@@ -111,7 +111,7 @@ export function generateLlmsTxt(options: LlmsTxtOptions, entries: LlmsEntry[]): 
 }
 
 export function generateLlmsFullTxt(options: LlmsTxtOptions, entries: LlmsEntry[]): string {
-  const sorted = [...entries].sort((a, b) => a.url.localeCompare(b.url));
+  const sorted = [...entries].toSorted((a, b) => a.url.localeCompare(b.url));
   const sections = sorted.map((entry) => {
     const lines = [`# ${entry.title}`, ""];
     if (entry.description) {

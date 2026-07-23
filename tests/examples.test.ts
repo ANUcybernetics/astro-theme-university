@@ -3,14 +3,14 @@ import {
   cpSync,
   existsSync,
   mkdtempSync,
-  readFileSync,
   readdirSync,
+  readFileSync,
   rmSync,
   writeFileSync,
 } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
-import { describe, test, expect, afterAll } from "vitest";
+import { afterAll, describe, expect, test } from "vitest";
 
 const REPO_ROOT = resolve(import.meta.dirname, "..");
 const EXAMPLES_DIR = join(REPO_ROOT, "examples");

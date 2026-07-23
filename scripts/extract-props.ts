@@ -1,12 +1,12 @@
 import { mkdirSync, writeFileSync } from "node:fs";
-import { resolve, basename, dirname } from "node:path";
+import { basename, dirname, resolve } from "node:path";
 import { globSync } from "node:fs";
 import {
+  type ComponentProps,
   loadSharedTypes,
   processAstroFile,
   processSvelteFile,
   processTypeScriptFile,
-  type ComponentProps,
 } from "./extract-props-lib.ts";
 
 const root = resolve(import.meta.dirname, "..");

@@ -13,4 +13,4 @@ const filter = (process.argv[2] ?? "").toLowerCase();
 
 const matches = filter ? names.filter((n) => n.toLowerCase().includes(filter)) : names;
 
-if (matches.length > 0) console.log(matches.sort().join("\n"));
+if (matches.length > 0) console.log(matches.toSorted().join("\n"));

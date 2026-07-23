@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { matchCardItems, type CardItem } from "../match-card-items.js";
+  import { type CardItem, matchCardItems } from "../match-card-items.js";
   import { withBase } from "../url.js";
 
   type HeadingLevel = "h2" | "h3" | "h4";

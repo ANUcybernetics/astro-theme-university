@@ -1,4 +1,4 @@
-import { Project, SyntaxKind, Node, type PropertySignature, type SourceFile } from "ts-morph";
+import { Node, Project, type PropertySignature, type SourceFile, SyntaxKind } from "ts-morph";
 import { readFileSync } from "node:fs";
 
 export interface SharedInterface {

@@ -1,6 +1,6 @@
 import type { Root } from "mdast";
 import type { Plugin } from "unified";
-import { relative, dirname, sep } from "node:path";
+import { dirname, relative, sep } from "node:path";
 
 export interface RemarkDefaultLayoutOptions {
   layoutPath: string;

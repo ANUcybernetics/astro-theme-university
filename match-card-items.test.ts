@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { matchCardItems, type CardItem } from "./match-card-items.js";
+import { type CardItem, matchCardItems } from "./match-card-items.js";
 
 const items: CardItem[] = [
   {

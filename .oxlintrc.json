@@ -1,0 +1,76 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  // Shared baseline across the theme-family repos — keep in step with the
+  // other sites (the anu-theme-sync skill owns the canon). Repo-specific
+  // deltas go below the marked line.
+  "categories": {
+    "correctness": "error",
+    "suspicious": "error",
+    "perf": "error"
+  },
+  "plugins": ["typescript", "import", "unicorn"],
+  "env": {
+    "builtin": true,
+    "browser": true,
+    "node": true,
+    "es2024": true
+  },
+  "jsPlugins": [
+    "@e18e/eslint-plugin",
+    "eslint-plugin-no-only-tests",
+    "eslint-plugin-perfectionist",
+    "eslint-plugin-unused-imports"
+  ],
+  "rules": {
+    "eqeqeq": ["error", "always", { "null": "ignore" }],
+    "no-warning-comments": ["error", { "terms": ["@nocommit"] }],
+    "import/no-self-import": "error",
+    "no-only-tests/no-only-tests": "error",
+    "unused-imports/no-unused-imports": "error",
+    "perfectionist/sort-named-imports": "error",
+    "perfectionist/sort-heritage-clauses": "error",
+    "e18e/ban-dependencies": "error",
+    "e18e/prefer-includes": "error",
+    "e18e/prefer-array-at": "error",
+    "e18e/prefer-nullish-coalescing": "error",
+    "e18e/prefer-date-now": "error",
+    "e18e/prefer-regex-test": "error",
+    // --- repo-specific deltas below ---
+    // The post-build checkers (link-checker.ts, deck-checker.ts, llms-txt.ts)
+    // walk large dist/content trees recursively, reading one file per
+    // iteration; switching to Promise.all would change error-handling and
+    // fd-usage behaviour (recursive walks, try/catch per file) rather than
+    // being a same-behaviour autofix, so it's off repo-wide.
+    "eslint/no-await-in-loop": "off"
+  },
+  "overrides": [
+    {
+      "files": ["**/*.svelte"],
+      "rules": {
+        // imports used only in the template are invisible to the JS-block
+        // linter, so this rule false-positives on every component
+        "unused-imports/no-unused-imports": "off",
+        // svelte 5 `let x: T;` fields bound via `bind:` in the template are
+        // assigned by the framework, not visible to this rule's static
+        // analysis — known false positive, not a real unassigned var
+        "no-unassigned-vars": "off"
+      }
+    },
+    {
+      // Node worker_threads postMessage (parentPort.postMessage /
+      // Worker#postMessage) has no targetOrigin parameter at all — this rule
+      // is written for the browser Window/MessagePort postMessage API, so it
+      // false-positives on every call in these two files.
+      "files": ["a11y-checker.ts", "a11y-worker.mjs"],
+      "rules": {
+        "unicorn/require-post-message-target-origin": "off"
+      }
+    }
+  ],
+  "ignorePatterns": [
+    "dist/",
+    ".astro/",
+    "**/*.astro",
+    ".worktrees/" // repo-specific: git worktrees checked out alongside this repo
+  ]
+}
