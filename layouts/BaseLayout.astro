@@ -38,7 +38,7 @@ export interface BaseLayoutProps {
   heroTitle?: string;
   /** Hero background image (URL string or imported ImageMetadata). */
   heroImage?: string | ImageMetadata;
-  /** Alt text for the hero image. Required when heroImage is set. */
+  /** Alt text for the hero image. Omit (or pass "") for a decorative hero. */
   heroImageAlt?: string;
 
   /** Favicon. When omitted, no favicon link is emitted. */
@@ -175,7 +175,7 @@ if (typeof heroImage === 'string') {
     {description && <meta name="description" content={description} />}
     {unlisted && <meta name="robots" content="noindex" />}
     <meta name="generator" content={Astro.generator} />
-    {favicon && <link rel="icon" type="image/svg+xml" href={favicon.src} />}
+    {favicon && <link rel="icon" type={favicon.format === "svg" ? "image/svg+xml" : undefined} href={favicon.src} />}
     {llmsTxtHref && (
       <link rel="alternate" type="text/markdown" href={llmsTxtHref} title="llms.txt" />
     )}

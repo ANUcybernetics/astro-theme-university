@@ -21,7 +21,7 @@ acknowledgement section — but ships no institution's branding. Brands are data
 ## Usage
 
 ```bash
-pnpm add "git+https://github.com/ANUcybernetics/astro-theme-university.git#v0.1.0"
+pnpm add "git+https://github.com/ANUcybernetics/astro-theme-university.git#vX.Y.Z"  # pin the latest release tag
 ```
 
 ```ts

@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2844 1600">
+  <defs>
+    <linearGradient id="g1" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#a5b4fc"/>
+      <stop offset="1" stop-color="#4f46e5"/>
+    </linearGradient>
+    <linearGradient id="g2" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#fdba74"/>
+      <stop offset="1" stop-color="#c2410c"/>
+    </linearGradient>
+    <linearGradient id="g3" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#5eead4"/>
+      <stop offset="1" stop-color="#0f766e"/>
+    </linearGradient>
+  </defs>
+  <rect width="2844" height="1600" fill="#f4f2ef"/>
+  <g transform="rotate(-1 1422.0 800.0)">
+    <path d="M -200 516 C 512 880, 1194 438, 1479 607 S 2417 490, 3044 802 L 3044 1800 L -200 1800 Z" fill="url(#g1)" opacity="0.9"/>
+  </g>
+  <g transform="rotate(0.5 1422.0 800.0)">
+    <path d="M -200 1052 C 512 692, 1194 1202, 1479 1022 S 2417 1262, 3044 932 L 3044 1800 L -200 1800 Z" fill="url(#g2)" opacity="0.75"/>
+  </g>
+  <g transform="rotate(-0.3333333333333333 1422.0 800.0)">
+    <path d="M -200 1180 C 512 1488, 1194 1114, 1479 1257 S 2417 1158, 3044 1422 L 3044 1800 L -200 1800 Z" fill="url(#g3)" opacity="0.85"/>
+  </g>
+  <circle cx="2300" cy="280" r="110" fill="#c2410c" opacity="0.28"/>
+  <circle cx="400" cy="480" r="70" fill="#c2410c" opacity="0.28"/>
+</svg>

@@ -12,3 +12,6 @@ docs/src/data/props.json
 !.claude/skills/
 !.claude/skills/**
 .claude/settings.local.json
+
+# local design-tooling state
+.impeccable/

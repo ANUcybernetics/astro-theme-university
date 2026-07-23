@@ -113,6 +113,7 @@ export default function universityTheme(options: ThemeOptions = {}): AstroIntegr
   // Every registered font cssVariable (theme + site + other integrations),
   // resolved in astro:config:done once the config is final.
   let registeredFontVariables: string[] = [];
+  let projectRootUrl: URL | undefined;
 
   return {
     name: "astro-theme-university",
@@ -120,6 +121,7 @@ export default function universityTheme(options: ThemeOptions = {}): AstroIntegr
       "astro:config:setup": ({ updateConfig, config, injectRoute, injectScript, logger }) => {
         srcDir = fileURLToPath(config.srcDir);
         basePath = config.base;
+        projectRootUrl = config.root;
         // Deployed page URLs live under config.base, not at the site root.
         siteUrl = new URL(config.base, config.site || "https://example.com").href;
 
@@ -358,12 +360,23 @@ export default function universityTheme(options: ThemeOptions = {}): AstroIntegr
         }
 
         if (shouldSearch) {
-          try {
-            await execFileAsync("npx", ["pagefind", "--site", distPath]);
-            logger.info("Search index built.");
-          } catch (e) {
-            logger.warn(`Search index failed: ${e}`);
+          // Search is on by default, so check for the consumer's own pagefind
+          // bin up front (the exact thing npx will run): `npx` alone would
+          // silently download an unpinned version from the registry mid-build,
+          // and a failed index used to be a warning — a green build with
+          // search quietly broken. (pagefind's `exports` map blocks resolving
+          // its package.json, so the bin is the reliable install signal.)
+          const pagefindBins = ["pagefind", "pagefind.cmd"].map((bin) =>
+            fileURLToPath(new URL(`node_modules/.bin/${bin}`, projectRootUrl)),
+          );
+          if (projectRootUrl && !pagefindBins.some((bin) => existsSync(bin))) {
+            throw new Error(
+              "search is enabled but pagefind is not installed. " +
+                "Add pagefind as a devDependency, or pass `search: false` to universityTheme().",
+            );
           }
+          await execFileAsync("npx", ["pagefind", "--site", distPath]);
+          logger.info("Search index built.");
         }
 
         if (shouldCheckA11y) {

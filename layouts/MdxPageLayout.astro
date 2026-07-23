@@ -1,0 +1,52 @@
+---
+/**
+ * Layout for MDX pages wired up via the integration's `defaultLayout`
+ * option. A site's own wrapper layout stays tiny:
+ *
+ * ```astro
+ * ---
+ * import MdxPageLayout from "astro-theme-university/layouts/MdxPageLayout.astro";
+ * import { siteConfig } from "../site-config";
+ * ---
+ * <MdxPageLayout siteConfig={siteConfig} {...Astro.props}><slot /></MdxPageLayout>
+ * ```
+ *
+ * Frontmatter arrives via `Astro.props.frontmatter` (or as direct props when
+ * the layout is used outside MDX) and is forwarded to BaseLayout, with the
+ * page title joined to the site name. The frontmatter `description` renders
+ * as the page's lead paragraph — the same description-as-lead convention
+ * ContentLayout applies on detail routes — so the opening sentence is written
+ * once, in frontmatter. Pass `lead={false}` to opt out.
+ */
+import type { ImageMetadata } from "astro";
+import BaseLayout from "./BaseLayout.astro";
+
+interface Props {
+  /** The site's config object (name, nav, branding …), spread into BaseLayout. */
+  siteConfig: { name: string; [key: string]: unknown };
+  /** Render the frontmatter description as the page's lead paragraph. */
+  lead?: boolean;
+  /** Frontmatter, supplied automatically when the page is MDX. */
+  frontmatter?: Record<string, unknown>;
+}
+
+const { siteConfig, lead = true, frontmatter, ...direct } = Astro.props;
+const props = frontmatter ?? direct;
+const { title, description, heroImage, ...rest } = props as {
+  title: string;
+  description?: string;
+  heroImage?: string | ImageMetadata;
+  [key: string]: unknown;
+};
+---
+
+<BaseLayout
+  title={`${title} — ${siteConfig.name}`}
+  description={description}
+  {...siteConfig}
+  {...rest}
+  heroImage={heroImage}
+>
+  {lead && description && <p class="lead">{description}</p>}
+  <slot />
+</BaseLayout>

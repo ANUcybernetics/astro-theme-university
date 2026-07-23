@@ -1,0 +1,40 @@
+---
+title: MdxPageLayout
+description: The layout to hand to the integration's defaultLayout option — frontmatter unwrapping, title joining, and the description-as-lead convention in one place.
+section: layouts
+order: 4
+heroImage: ../../../assets/images/hero/abstract-04.svg
+---
+
+import PropsTable from "../../../components/PropsTable.astro";
+
+MdxPageLayout is the layout behind the integration's `defaultLayout` option.
+It unwraps `Astro.props.frontmatter`, joins the page title to the site name
+(`Page — Site`), forwards everything else to BaseLayout, and renders the
+frontmatter `description` as the page's lead paragraph — the same
+description-as-lead convention ContentLayout applies on detail routes, so the
+opening sentence is written once, in frontmatter.
+
+A site's own wrapper layout stays tiny:
+
+```astro
+---
+// src/layouts/PageLayout.astro
+import MdxPageLayout from "astro-theme-university/layouts/MdxPageLayout.astro";
+import { siteConfig } from "../site-config";
+---
+
+<MdxPageLayout siteConfig={siteConfig} {...Astro.props}><slot /></MdxPageLayout>
+```
+
+```ts
+// astro.config.ts
+universityTheme({
+  defaultLayout: "src/layouts/PageLayout.astro",
+});
+```
+
+Pass `lead={false}` in the wrapper to opt out of the lead paragraph while
+keeping the description in the page's meta tags.
+
+<PropsTable component="layouts/MdxPageLayout" />
