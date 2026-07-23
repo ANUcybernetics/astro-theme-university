@@ -28,8 +28,8 @@ export function checkBaseLinksHtml(html: string, page: string, base: string): Ba
   const { document } = parseHTML(html);
   const violations: BaseLinkViolation[] = [];
   const candidates = [
-    ...[...document.querySelectorAll("a[href]")].map((el) => el.getAttribute("href")),
-    ...[...document.querySelectorAll("img[src]")].map((el) => el.getAttribute("src")),
+    ...Array.from(document.querySelectorAll("a[href]"), (el) => el.getAttribute("href")),
+    ...Array.from(document.querySelectorAll("img[src]"), (el) => el.getAttribute("src")),
   ];
   for (const link of candidates) {
     if (!link || !link.startsWith("/") || link.startsWith("//")) continue;

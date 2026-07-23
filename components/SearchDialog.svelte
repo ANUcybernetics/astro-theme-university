@@ -80,7 +80,7 @@
 
   function handleInput() {
     clearTimeout(debounceTimer);
-    debounceTimer = setTimeout(() => search(query), 250);
+    debounceTimer = setTimeout(search, 250, query);
   }
 
   function handleInputKeydown(e: KeyboardEvent) {
