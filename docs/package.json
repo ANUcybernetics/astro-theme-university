@@ -19,7 +19,7 @@
     "astro": "^7.1.1",
     "astro-theme-university": "workspace:*",
     "astromotion": "github:ANUcybernetics/astromotion#v0.16.1",
-    "sharp": "^0.34.5",
+    "sharp": "^0.35.0",
     "svelte": "^5.55.10"
   },
   "devDependencies": {
