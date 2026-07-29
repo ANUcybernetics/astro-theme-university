@@ -1,0 +1,42 @@
+version: 2
+
+# Dependabot alerts were already firing on this repo (see the security-floor
+# overrides in pnpm-workspace.yaml) but nothing was opening version-update PRs,
+# so the CI actions quietly fell three majors behind.
+updates:
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: monthly
+    groups:
+      actions:
+        patterns: ["*"]
+    commit-message:
+      prefix: "ci"
+
+  # The root lockfile covers both workspace members (. and docs);
+  # examples/base is deliberately outside the workspace, so it needs its own
+  # entry to be seen at all.
+  - package-ecosystem: npm
+    directories:
+      - "/"
+      - "/examples/base"
+    schedule:
+      interval: monthly
+    open-pull-requests-limit: 5
+    groups:
+      dev-tooling:
+        patterns: ["oxlint", "oxfmt", "stylelint*", "eslint-plugin-*", "@e18e/*"]
+      astro:
+        patterns: ["astro", "@astrojs/*"]
+    commit-message:
+      prefix: "deps"
+    ignore:
+      # Family git deps are pinned to release tags and propagated deliberately
+      # by the anu-theme-sync workflow — a bot bumping them races that process.
+      - dependency-name: "astromotion"
+      - dependency-name: "astro-theme-university"
+      # TypeScript 7 (the native compiler) is blocked until the Astro tooling
+      # follows: @astrojs/check peers ^5 || ^6. Drop this once it widens.
+      - dependency-name: "typescript"
+        update-types: ["version-update:semver-major"]
