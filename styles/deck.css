@@ -31,12 +31,15 @@
      light scheme and render light-mode values on a dark deck. */
     color-scheme: dark;
 
-    /* Semantic tokens deck.css itself consumes (tables), declared here so
-     the standalone contract holds without tokens.css — the values mirror
-     tokens.css's dark-arm derivations. */
+    /* Semantic tokens deck.css itself consumes (tables, blockquotes),
+     declared here so the standalone contract holds without tokens.css — the
+     values mirror tokens.css's dark-arm derivations. */
     --at-divider: oklch(from var(--at-primary) 95% 0.005 h / 12%);
     --at-table-header-bg: var(--at-primary);
     --at-table-header-text: var(--at-white);
+    --at-text-secondary: oklch(from var(--at-primary) 95% 0.005 h / 78%);
+    --at-accent: var(--at-primary);
+    --at-spacing-sm: 0.5rem;
 
     /* Reveal.js variables */
     --r-background-color: var(--at-dark-grey);
@@ -125,6 +128,29 @@ body.reveal-viewport {
     display: block;
     margin-inline-start: 1.5rem;
     list-style: disc;
+  }
+
+  /* Quotes carry the same accent-dash overbar as the web side (base.css):
+     a short hairline rather than a full rule, so it reads as a quote mark
+     and not a section divider, with the text flush left on the slide's own
+     measure and set off by weight. Without this a bare blockquote falls
+     back to the UA's 40px inline margins, which reads as a stray indent
+     beside flush-left body copy. `.quote` slides draw their own wider rule
+     and opt out of the dash below. */
+  blockquote {
+    margin-inline: 0;
+    color: var(--at-text-secondary);
+    font-weight: 300;
+    hanging-punctuation: first last;
+    text-wrap: pretty;
+  }
+
+  blockquote::before {
+    content: "";
+    display: block;
+    inline-size: 3rem;
+    border-block-start: 1px solid var(--at-accent);
+    padding-block-end: var(--at-spacing-sm);
   }
 
   a {
@@ -297,6 +323,13 @@ body.reveal-viewport {
       text-align: start;
       padding-block-start: 1rem;
       color: var(--at-white);
+      font-weight: 400;
+
+      /* This slide type draws its own 80% rule, so the bare blockquote's
+         accent dash would stack a second hairline above it. */
+      &::before {
+        content: none;
+      }
 
       p {
         font-size: 2.75rem;
