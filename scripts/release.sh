@@ -53,7 +53,16 @@ fi
 
 echo "astro-theme-university: $old -> $new (tag: $tag)"
 
-git add package.json
+# examples/base is what a new consumer copies, so its self-pin has to name the
+# tag being cut. tests/examples.test.ts rewrites the dep to file:$REPO_ROOT
+# before building, so a stale pin here breaks nothing and nothing catches it —
+# it sat on v0.7.0 for three minors. Bump it as part of the release instead.
+example_pkg="examples/base/package.json"
+jq --arg spec "git+https://github.com/ANUcybernetics/astro-theme-university.git#${tag}" \
+  '.dependencies["astro-theme-university"] = $spec' "$example_pkg" > "$example_pkg.tmp"
+mv "$example_pkg.tmp" "$example_pkg"
+
+git add package.json "$example_pkg"
 git commit -m "chore(release): astro-theme-university $tag"
 
 msg="astro-theme-university $new"
