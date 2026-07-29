@@ -282,7 +282,20 @@ body.reveal-viewport {
   }
 
   &.impact {
-    background: var(--at-primary);
+    /* A flat brand fill by default, with artwork optional: a theme can print
+       an image over it via --at-deck-impact-bg-image, sized like a `cover`
+       background. Use the property for a URL that needs no bundler
+       resolution (a public/ path, an absolute URL, a data URI); for an asset
+       sitting beside the theme file set `background-image` directly on
+       `.reveal section.impact`, since a relative url() inside a custom
+       property resolves against wherever the var() is used, not where it's
+       declared. Nothing dims or scrims the image, so it's the caller's job
+       to supply artwork this slide's white text stays legible over. */
+    background-color: var(--at-primary);
+    background-image: var(--at-deck-impact-bg-image, none);
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
     color: var(--at-white);
     place-content: center;
     text-align: center;

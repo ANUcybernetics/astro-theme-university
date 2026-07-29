@@ -79,3 +79,25 @@ A quick reference — the [example deck](/decks/astromotion) demonstrates each o
 - **QR codes**: `![qr](https://example.com)`
 
 Co-locate background and other deck images under `src/decks/assets/` and reference them with a relative path. astromotion copies everything under `src/decks/` (except the deck and CSS files) into the build output, so co-located assets resolve in production; images elsewhere in `src/` won't be copied.
+
+## Artwork behind every impact slide
+
+`![bg](…)` dresses one slide at a time. To give _every_ `impact` slide the same full-bleed artwork instead of the flat brand fill, set it once in your deck stylesheet. For an asset sitting beside that stylesheet, declare `background-image` on the class directly, so your bundler hashes and base-prefixes it like any other deck asset:
+
+```css
+.reveal section.impact {
+  background-image: url("./assets/impact-bg.avif");
+}
+```
+
+For a URL that needs no bundler resolution --- a `public/` path, an absolute URL, a data URI --- use the custom property instead:
+
+```css
+:root {
+  --at-deck-impact-bg-image: url("/decks/impact-bg.avif");
+}
+```
+
+(The two forms exist for the same reason as astromotion's whiteboard background: a relative `url()` inside a custom property resolves against wherever the `var()` is _used_, not where it's declared, which lightningcss rejects as ambiguous.)
+
+The image is sized like a `cover` background and nothing dims or scrims it, so it's on you to supply artwork that impact slides' white text stays legible over --- a dark or low-contrast ground, or a mostly-empty field with the motif kept to a corner.

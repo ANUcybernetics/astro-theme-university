@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.9.2
+
+`impact` slides can carry full-bleed artwork instead of the flat brand fill. The
+shorthand `background: var(--at-primary)` splits into longhands, adding
+`background-image: var(--at-deck-impact-bg-image, none)` sized like a `cover`
+background. Set the custom property for a URL needing no bundler resolution, or
+declare `background-image` on `.reveal section.impact` for an asset beside your
+deck stylesheet --- the same two-form arrangement as astromotion's whiteboard
+background, and for the same lightningcss reason. Nothing dims the image, so
+legibility over the slide's white text is the caller's problem. Consumers that
+set neither see no change.
+
 ## 0.9.0
 
 Card and Hero take an `imageFormat` prop, defaulting to a new `imageFormat`
