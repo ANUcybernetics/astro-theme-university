@@ -41,6 +41,24 @@ export default getViteConfig(
           return null;
         },
       },
+      // And the images virtual module. "webp" matches the integration
+      // default, so Card and Hero render the same srcset a site that never
+      // sets imageFormat would get.
+      {
+        name: "test:astro-theme-university-images-stub",
+        resolveId(id: string) {
+          if (id === "virtual:astro-theme-university/images") {
+            return "\0virtual:astro-theme-university/images";
+          }
+          return null;
+        },
+        load(id: string) {
+          if (id === "\0virtual:astro-theme-university/images") {
+            return 'export const imageFormat = "webp";\n';
+          }
+          return null;
+        },
+      },
     ],
     test: {
       server: {

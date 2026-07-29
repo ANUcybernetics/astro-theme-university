@@ -47,6 +47,7 @@ describe("extract-props", () => {
       "imageAlt",
       "imageWidths",
       "imageSizes",
+      "imageFormat",
       "headingLevel",
     ]);
     expect(card.props[0]).toMatchObject({
@@ -128,6 +129,7 @@ describe("extract-props", () => {
       "icon",
       "fonts",
       "preloadFonts",
+      "imageFormat",
       "brandCss",
       "extraRemarkPluginsBefore",
       "extraRemarkPlugins",

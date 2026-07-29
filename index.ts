@@ -1,4 +1,4 @@
-import type { AstroIntegration } from "astro";
+import type { AstroIntegration, ImageOutputFormat } from "astro";
 import { fontProviders } from "astro/config";
 import type { RehypePlugins, RemarkPlugin, RemarkPlugins } from "@astrojs/markdown-remark";
 import { unified } from "@astrojs/markdown-remark";
@@ -80,6 +80,12 @@ export interface ThemeOptions {
    *  fonts and any fonts the site registers via the top-level `fonts` config.
    *  (default: ["--font-public-sans"], the theme body font) */
   preloadFonts?: string[];
+  /** Output format for the images the theme's own components render (Card,
+   *  Hero). AVIF is roughly half the bytes of WebP for the same quality but
+   *  around 8x slower to encode, so it only pays off where the build caches
+   *  image transforms between runs. Individual call sites can still override
+   *  this with an `imageFormat` prop. (default: "webp") */
+  imageFormat?: ImageOutputFormat;
   /** Module specifier(s) of brand CSS to import globally on every page,
    *  e.g. "astro-theme-anu/anu.css". The theme's own palette declarations
    *  are layered (`@layer at.tokens`), so unlayered brand declarations win
@@ -106,6 +112,7 @@ export default function universityTheme(options: ThemeOptions = {}): AstroIntegr
   const shouldAddIcon = options.icon !== false;
   const shouldAddFonts = options.fonts !== false;
   const preloadFonts = options.preloadFonts ?? ["--font-public-sans"];
+  const imageFormat: ImageOutputFormat = options.imageFormat ?? "webp";
 
   let srcDir: string;
   let siteUrl: string;
@@ -320,6 +327,28 @@ export default function universityTheme(options: ThemeOptions = {}): AstroIntegr
                       ? `${basePath.replace(/\/?$/, "/")}llms.txt`
                       : null;
                     return `export const llmsTxtHref = ${JSON.stringify(llmsTxtHref)};\n`;
+                  }
+                  return null;
+                },
+              },
+              // The output format Card and Hero pass to <Image>. A virtual
+              // module rather than a prop threaded through every layout: the
+              // components sit three or four levels below the pages that use
+              // them, so a prop would have to be repeated at every call site
+              // (and remembered at every new one) to change one build-wide
+              // decision. Per-call-site overrides still work via the
+              // `imageFormat` prop.
+              {
+                name: "astro-theme-university:images",
+                resolveId(id: string) {
+                  if (id === "virtual:astro-theme-university/images") {
+                    return "\0virtual:astro-theme-university/images";
+                  }
+                  return null;
+                },
+                load(id: string) {
+                  if (id === "\0virtual:astro-theme-university/images") {
+                    return `export const imageFormat = ${JSON.stringify(imageFormat)};\n`;
                   }
                   return null;
                 },

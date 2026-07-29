@@ -1,5 +1,26 @@
 # Changelog
 
+## 0.9.0
+
+Card and Hero take an `imageFormat` prop, defaulting to a new `imageFormat`
+integration option, itself `"webp"`. A build-wide format is a build-wide
+decision — the components sit three or four levels below the pages that use
+them, so exposing it only as a prop would mean repeating it at every call site
+and remembering it at every new one. It reaches them through a
+`virtual:astro-theme-university/images` module, the same mechanism as the fonts
+and llms.txt options.
+
+The point is AVIF: roughly half the bytes of WebP at the same quality, but
+around 8x slower to encode, so it only pays off on a build that caches image
+transforms between runs. Consumers that don't set the option keep WebP and see
+no change.
+
+Both srcset ladders drop from four widths to three — Card `[320, 480, 640, 960]`
+→ `[320, 640, 960]`, Hero `[768, 1280, 1920, 2560]` → `[768, 1536, 2560]`. The
+dropped rungs sat close enough to their neighbours to be worth less than the
+encode time and dist bytes they cost. Sites that want the old ladders can pass
+`imageWidths` explicitly.
+
 ## 0.6.6
 
 `parseLightDarkOklchTokens` now also reads the literal `oklch(L% C Hdeg / A%)`

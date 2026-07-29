@@ -1,6 +1,7 @@
 ---
 import { Image } from "astro:assets";
-import type { ImageMetadata } from "astro";
+import type { ImageMetadata, ImageOutputFormat } from "astro";
+import { imageFormat as themeImageFormat } from "virtual:astro-theme-university/images";
 
 export interface HeroProps {
   /** The hero heading text, rendered as an h1. */
@@ -11,6 +12,9 @@ export interface HeroProps {
   imageAlt: string;
   /** Srcset widths (px) for the hero image. The default covers full-bleed display up to 2x DPR. */
   imageWidths?: number[];
+  /** Output format for the hero image. Defaults to the `imageFormat` integration
+   *  option, itself `"webp"` unless the site opts into something else. */
+  imageFormat?: ImageOutputFormat;
   /** View transition name for the heading element. */
   transitionName?: string;
 }
@@ -21,7 +25,8 @@ const {
   title,
   image,
   imageAlt,
-  imageWidths = [768, 1280, 1920, 2560],
+  imageWidths = [768, 1536, 2560],
+  imageFormat = themeImageFormat,
   transitionName,
 } = Astro.props;
 const heroWidths = imageWidths.filter((w) => w <= image.width);
@@ -35,6 +40,7 @@ const heroFallbackWidth = Math.min(Math.max(...imageWidths), image.width);
     widths={heroWidths}
     sizes="100vw"
     width={heroFallbackWidth}
+    format={imageFormat}
     loading="eager"
     fetchpriority="high"
     class="at-hero-image"
