@@ -14,7 +14,16 @@ export default defineConfig({
   site: process.env.SITE_URL,
   base: process.env.BASE_PATH,
   integrations: [
-    universityTheme({ llmsTxt: true, extraRemarkPlugins: deckRemarkPlugins }),
+    // Every image on this site is an SVG, and Astro 7 refuses to rasterise one
+    // into the theme's default webp unless `image.dangerouslyProcessSVG` lets
+    // sharp loose on it. Passing them through unchanged is both the safe
+    // option and the better output: these are vector hero illustrations, so
+    // rasterising them was only ever a downgrade.
+    universityTheme({
+      llmsTxt: true,
+      extraRemarkPlugins: deckRemarkPlugins,
+      imageFormat: "svg",
+    }),
     astromotion({
       theme: "./src/decks/theme.css",
       fontVariables: ["--font-public-sans"],
