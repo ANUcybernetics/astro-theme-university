@@ -1,5 +1,24 @@
 # Changelog
 
+## 0.9.4
+
+Two follow-ups to 0.9.3's SVG passthrough.
+
+`Card` and `Hero` no longer hand Astro `widths` or `sizes` for an SVG source. A
+srcset is meaningless for art that scales losslessly, and Astro took each width
+literally: a hero SVG shipped one byte-identical copy of itself per entry, seven
+files for one 1.4 kB asset. Asking for no sizing costs two (the passthrough plus
+the untransformed original Astro emits beside it) and no srcset. The `img` still
+carries `width` and `height`, now read from the source's own metadata rather
+than capped at the largest configured width.
+
+The footer's acknowledgement logo also gets `width` and `height`. It has always
+been an `ImageMetadata`, and the component was rendering `logo.src` while
+dropping the dimensions sitting next to it. The dark band pins logo height in
+CSS either way, so this changes nothing visible — it just stops the markup
+throwing away what it's holding. Partnership logos stay as they are: they arrive
+from branding packages as resolved `src` strings, with no dimensions to pass on.
+
 ## 0.9.3
 
 `Card` and `Hero` pass an SVG source through unrasterised instead of forcing it

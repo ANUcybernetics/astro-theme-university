@@ -125,6 +125,13 @@ describe("example builds", () => {
       const fontPreloads = indexHtml.match(/as="font"/g) ?? [];
       expect(fontPreloads.length).toBeGreaterThanOrEqual(2);
 
+      // The home page's hero is a raster source, and stays on the optimised
+      // path the SVG branch above sits beside: converted to the configured
+      // format, with a srcset to pick from.
+      const rasterHero = indexHtml.match(/<img[^>]*class="at-hero-image"[^>]*>/)?.[0] ?? "";
+      expect(rasterHero).toMatch(/src="[^"]*\.(webp|avif)"/);
+      expect(rasterHero).toMatch(/srcset="[^"]*\dw/);
+
       // The about page's hero is an SVG. Astro cannot rasterise one into the
       // theme's `imageFormat` without `image.dangerouslyProcessSVG`, so the
       // components pass a vector source through untouched instead — get that
@@ -133,6 +140,17 @@ describe("example builds", () => {
       const heroSrc = aboutHtml.match(/<img[^>]*class="at-hero-image"[^>]*>/)?.[0] ?? "";
       expect(heroSrc).toMatch(/src="[^"]*hero-vector[^"]*\.svg"/);
       expect(heroSrc).not.toMatch(/\.(webp|avif|png|jpe?g)"/);
+      // No srcset either: vector art scales losslessly, and Astro takes every
+      // width it's given literally, emitting a byte-identical copy of the
+      // source for each one (this hero used to ship seven). Two files is what
+      // asking for no sizing costs — the passthrough plus the untransformed
+      // original Astro emits alongside it. If that ever drops to one, Astro
+      // stopped emitting the original and this number should follow.
+      expect(heroSrc).not.toContain("srcset");
+      const emitted = readdirSync(join(tempDir, "dist", "_astro")).filter((f) =>
+        f.startsWith("hero-vector"),
+      );
+      expect(emitted).toHaveLength(2);
     });
   }
 });

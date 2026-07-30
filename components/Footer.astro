@@ -149,6 +149,8 @@ import Icon from "./Icon.astro";
         {acknowledgement?.logo && (
           <img
             src={acknowledgement.logo.src}
+            width={acknowledgement.logo.width}
+            height={acknowledgement.logo.height}
             alt={acknowledgement.logoAlt ?? ""}
             class="at-footer-band-logo"
           />

@@ -37,16 +37,22 @@ const heroFallbackWidth = Math.min(Math.max(...imageWidths), image.width);
 // the build fails outright. Passing vector art through unchanged is both the
 // safe answer and the better one, so an SVG source overrides the format rather
 // than the format rejecting the source.
-const resolvedFormat = image.format === "svg" ? "svg" : imageFormat;
+const isVector = image.format === "svg";
+const resolvedFormat = isVector ? "svg" : imageFormat;
+// A srcset is meaningless for art that scales losslessly, and Astro takes the
+// sizing literally: every width it's given emits another byte-identical copy of
+// the source. Handing it none leaves the asset alone, and the img still gets
+// its intrinsic width and height from the source's own metadata.
+const sizing = isVector
+  ? {}
+  : { widths: heroWidths, sizes: "100vw", width: heroFallbackWidth };
 ---
 
 <section class="at-hero" aria-label={title}>
   <Image
     src={image}
     alt={imageAlt}
-    widths={heroWidths}
-    sizes="100vw"
-    width={heroFallbackWidth}
+    {...sizing}
     format={resolvedFormat}
     loading="eager"
     fetchpriority="high"

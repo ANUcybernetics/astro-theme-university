@@ -46,8 +46,12 @@ const resolvedImageAlt = imageAlt ?? (image ? title : "");
 const cardWidths = image ? imageWidths.filter((w) => w <= image.width) : [];
 const cardFallbackWidth = image ? Math.min(Math.max(...imageWidths), image.width) : undefined;
 // An SVG source overrides the format rather than the format rejecting the
-// source — see Hero.astro for why Astro can't rasterise one on its own.
-const resolvedFormat = image?.format === "svg" ? "svg" : imageFormat;
+// source, and skips the srcset — see Hero.astro for both.
+const isVector = image?.format === "svg";
+const resolvedFormat = isVector ? "svg" : imageFormat;
+const sizing = isVector
+  ? {}
+  : { widths: cardWidths, sizes: imageSizes, width: cardFallbackWidth };
 const href = rawHref ? withBase(rawHref) : undefined;
 const Tag = href ? "a" : "div";
 const Heading = headingLevel;
@@ -63,9 +67,7 @@ const transitionName = href
         <Image
           src={image}
           alt={resolvedImageAlt}
-          widths={cardWidths}
-          sizes={imageSizes}
-          width={cardFallbackWidth}
+          {...sizing}
           format={resolvedFormat}
           class="at-card-image"
           loading="lazy"
