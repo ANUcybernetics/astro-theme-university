@@ -124,6 +124,15 @@ describe("example builds", () => {
       expect(indexHtml).toContain("Lora");
       const fontPreloads = indexHtml.match(/as="font"/g) ?? [];
       expect(fontPreloads.length).toBeGreaterThanOrEqual(2);
+
+      // The about page's hero is an SVG. Astro cannot rasterise one into the
+      // theme's `imageFormat` without `image.dangerouslyProcessSVG`, so the
+      // components pass a vector source through untouched instead — get that
+      // wrong and this build fails outright rather than producing a bad image.
+      const aboutHtml = readFileSync(join(tempDir, "dist", "about", "index.html"), "utf-8");
+      const heroSrc = aboutHtml.match(/<img[^>]*class="at-hero-image"[^>]*>/)?.[0] ?? "";
+      expect(heroSrc).toMatch(/src="[^"]*hero-vector[^"]*\.svg"/);
+      expect(heroSrc).not.toMatch(/\.(webp|avif|png|jpe?g)"/);
     });
   }
 });

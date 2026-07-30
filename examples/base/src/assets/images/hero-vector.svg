@@ -1,0 +1,16 @@
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  width="960"
+  height="540"
+  viewBox="0 0 960 540"
+  role="img"
+  aria-label="Abstract overlapping arcs"
+>
+  <rect width="960" height="540" fill="#0f2b30" />
+  <g fill="none" stroke="#4aa89b" stroke-width="18" stroke-linecap="round">
+    <path d="M120 460 A 260 260 0 0 1 640 460" opacity="0.9" />
+    <path d="M300 460 A 200 200 0 0 1 700 460" opacity="0.65" />
+    <path d="M470 460 A 140 140 0 0 1 750 460" opacity="0.4" />
+  </g>
+  <circle cx="800" cy="140" r="54" fill="#c9a227" />
+</svg>

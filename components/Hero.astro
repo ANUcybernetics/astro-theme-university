@@ -13,7 +13,8 @@ export interface HeroProps {
   /** Srcset widths (px) for the hero image. The default covers full-bleed display up to 2x DPR. */
   imageWidths?: number[];
   /** Output format for the hero image. Defaults to the `imageFormat` integration
-   *  option, itself `"webp"` unless the site opts into something else. */
+   *  option, itself `"webp"` unless the site opts into something else. Ignored
+   *  for an SVG source, which is always passed through unrasterised. */
   imageFormat?: ImageOutputFormat;
   /** View transition name for the heading element. */
   transitionName?: string;
@@ -31,6 +32,12 @@ const {
 } = Astro.props;
 const heroWidths = imageWidths.filter((w) => w <= image.width);
 const heroFallbackWidth = Math.min(Math.max(...imageWidths), image.width);
+// Astro 7 won't rasterise an SVG source into a raster format unless the site
+// sets `image.dangerouslyProcessSVG` and hands sharp arbitrary SVG; without it
+// the build fails outright. Passing vector art through unchanged is both the
+// safe answer and the better one, so an SVG source overrides the format rather
+// than the format rejecting the source.
+const resolvedFormat = image.format === "svg" ? "svg" : imageFormat;
 ---
 
 <section class="at-hero" aria-label={title}>
@@ -40,7 +47,7 @@ const heroFallbackWidth = Math.min(Math.max(...imageWidths), image.width);
     widths={heroWidths}
     sizes="100vw"
     width={heroFallbackWidth}
-    format={imageFormat}
+    format={resolvedFormat}
     loading="eager"
     fetchpriority="high"
     class="at-hero-image"

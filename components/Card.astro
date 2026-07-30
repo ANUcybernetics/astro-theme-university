@@ -23,7 +23,8 @@ export interface CardProps {
    *  (full content column below the content breakpoint, ~24rem columns above it). */
   imageSizes?: string;
   /** Output format for the card image. Defaults to the `imageFormat` integration
-   *  option, itself `"webp"` unless the site opts into something else. */
+   *  option, itself `"webp"` unless the site opts into something else. Ignored
+   *  for an SVG source, which is always passed through unrasterised. */
   imageFormat?: ImageOutputFormat;
   /** HTML heading level for the card title. */
   headingLevel?: HeadingLevel;
@@ -44,6 +45,9 @@ const {
 const resolvedImageAlt = imageAlt ?? (image ? title : "");
 const cardWidths = image ? imageWidths.filter((w) => w <= image.width) : [];
 const cardFallbackWidth = image ? Math.min(Math.max(...imageWidths), image.width) : undefined;
+// An SVG source overrides the format rather than the format rejecting the
+// source — see Hero.astro for why Astro can't rasterise one on its own.
+const resolvedFormat = image?.format === "svg" ? "svg" : imageFormat;
 const href = rawHref ? withBase(rawHref) : undefined;
 const Tag = href ? "a" : "div";
 const Heading = headingLevel;
@@ -62,7 +66,7 @@ const transitionName = href
           widths={cardWidths}
           sizes={imageSizes}
           width={cardFallbackWidth}
-          format={imageFormat}
+          format={resolvedFormat}
           class="at-card-image"
           loading="lazy"
         />

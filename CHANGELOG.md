@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.9.3
+
+`Card` and `Hero` pass an SVG source through unrasterised instead of forcing it
+into the configured `imageFormat`. Astro 7 refuses to rasterise an SVG unless
+the site sets `image.dangerouslyProcessSVG` and hands sharp arbitrary SVG, so
+until now a vector hero or card image didn't degrade --- it failed the build,
+with an error naming the asset but not the reason the theme had asked for the
+impossible. Vector art was never a candidate for WebP anyway, so the source
+format wins over the configured one, and a per-call `imageFormat` prop no longer
+applies to an SVG.
+
+Sites already working around this with `imageFormat: "svg"` can drop it, unless
+they set it for some other reason: raster sources still honour the option.
+
 ## 0.9.2
 
 `impact` slides can carry full-bleed artwork instead of the flat brand fill. The

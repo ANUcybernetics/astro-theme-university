@@ -84,7 +84,9 @@ export interface ThemeOptions {
    *  Hero). AVIF is roughly half the bytes of WebP for the same quality but
    *  around 8x slower to encode, so it only pays off where the build caches
    *  image transforms between runs. Individual call sites can still override
-   *  this with an `imageFormat` prop. (default: "webp") */
+   *  this with an `imageFormat` prop. An SVG source ignores all of that and is
+   *  passed through unrasterised, since Astro can only rasterise one with
+   *  `image.dangerouslyProcessSVG` set. (default: "webp") */
   imageFormat?: ImageOutputFormat;
   /** Module specifier(s) of brand CSS to import globally on every page,
    *  e.g. "astro-theme-anu/anu.css". The theme's own palette declarations

@@ -1,6 +1,9 @@
 ---
 title: About
-description: A short description of the site, used in the page meta and as a lead for search and link previews.
+description:
+  A short description of the site, used in the page meta and as a lead for
+  search and link previews.
+heroImage: /src/assets/images/hero-vector.svg
 ---
 
 Replace this file with your own about page content.
@@ -15,20 +18,14 @@ page script to list all entries programmatically.
 The theme supports four callout variants via the container directive syntax —
 `info`, `tip`, `warning`, and `error`. No imports needed:
 
-:::info
-Callouts work inside any markdown or MDX file.
+:::info Callouts work inside any markdown or MDX file. :::
+
+:::tip Use `tip` for success states, positive notes, or "pro tips". :::
+
+:::warning Use `warning` to flag things that need attention but aren't errors.
 :::
 
-:::tip
-Use `tip` for success states, positive notes, or "pro tips".
-:::
-
-:::warning
-Use `warning` to flag things that need attention but aren't errors.
-:::
-
-:::error
-Use `error` for hard failures, breaking changes, and things to avoid.
+:::error Use `error` for hard failures, breaking changes, and things to avoid.
 :::
 
 ## Code blocks
