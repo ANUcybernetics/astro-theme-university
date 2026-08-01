@@ -13,7 +13,7 @@ jobs:
       # node and pnpm both come from mise.toml — re-declaring them with
       # setup-node + pnpm/action-setup meant two places to bump and a pnpm
       # version ("11") that only agreed with mise's "latest" by luck.
-      - uses: jdx/mise-action@v4
+      - uses: jdx/mise-action@v4.2.3
       - uses: actions/cache@v6
         with:
           path: ~/.local/share/pnpm/store
