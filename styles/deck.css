@@ -113,6 +113,25 @@ body.reveal-viewport {
   padding: 4rem 5rem;
   align-content: start;
 
+  /* Flow spacing: the slide owns the gaps between its children, so anything
+     dropped onto one --- a markdown table, a figure, a framework component's
+     root element --- gets the deck's rhythm without having to declare a
+     margin of its own. The typed rules below still tune their own spacing;
+     this is only the default, and at zero specificity (`> *` beats nothing),
+     so a child that genuinely owns its geometry --- a full-bleed layer, an
+     absolutely positioned overlay --- overrides it with any ordinary rule.
+     Block layout collapses adjacent margins, so this never doubles up with a
+     following element's own margin-block-start. */
+  > * {
+    margin-block-end: 1.5rem;
+  }
+
+  /* Trailing space at the end of a slide buys nothing, and on a centred slide
+     it pulls the content visibly off-centre. */
+  > :last-child {
+    margin-block-end: 0;
+  }
+
   :is(h1, h2, h3, h4, h5, h6) {
     text-align: left;
   }
@@ -208,14 +227,9 @@ body.reveal-viewport {
     font-size: 1.6rem;
   }
 
-  /* Block-end margin only: reveal core's `.reveal table` zeroes the inline
-     margins at a higher specificity than this zeroed selector, and the
-     table was the one block element here with no trailing space, so a
-     paragraph following one sat flush against the last row's rule. */
   table {
     width: 100%;
     border-collapse: collapse;
-    margin-block-end: 1.5rem;
     font-size: 1.8rem;
 
     th,
