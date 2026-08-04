@@ -208,9 +208,14 @@ body.reveal-viewport {
     font-size: 1.6rem;
   }
 
+  /* Block-end margin only: reveal core's `.reveal table` zeroes the inline
+     margins at a higher specificity than this zeroed selector, and the
+     table was the one block element here with no trailing space, so a
+     paragraph following one sat flush against the last row's rule. */
   table {
     width: 100%;
     border-collapse: collapse;
+    margin-block-end: 1.5rem;
     font-size: 1.8rem;
 
     th,
