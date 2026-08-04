@@ -101,3 +101,17 @@ For a URL that needs no bundler resolution --- a `public/` path, an absolute URL
 (The two forms exist for the same reason as astromotion's whiteboard background: a relative `url()` inside a custom property resolves against wherever the `var()` is _used_, not where it's declared, which lightningcss rejects as ambiguous.)
 
 The image is sized like a `cover` background and nothing dims or scrims it, so it's on you to supply artwork that impact slides' white text stays legible over --- a dark or low-contrast ground, or a mostly-empty field with the motif kept to a corner.
+
+## Table headers
+
+Decks style tables from their own tokens rather than the `--at-table-header-*` pair the web side uses. The web treatment is a solid brand fill with white text, which works on a light page but on a near-black slide becomes the highest-contrast object on it. Decks instead tint the header cells and colour the text with the brand colour:
+
+```css
+:root {
+  --at-deck-table-header-bg: rgb(from var(--at-primary) r g b / 14%);
+  --at-deck-table-header-text: var(--at-primary);
+  --at-deck-table-header-rule: rgb(from var(--at-primary) r g b / 55%);
+}
+```
+
+The tint applies to every `th`, not just the ones in `thead`. A matrix --- a table whose body rows carry `<th scope="row">` labels, like a grid of counts with words down the side and across the top --- has two header axes that mean the same thing, and filling only the top one implies a hierarchy the markup doesn't have. Ordinary tables are unaffected, since they have no body headers; the `--at-deck-table-header-rule` underline is what still marks a true header row.

@@ -35,11 +35,22 @@
      declared here so the standalone contract holds without tokens.css — the
      values mirror tokens.css's dark-arm derivations. */
     --at-divider: oklch(from var(--at-primary) 95% 0.005 h / 12%);
-    --at-table-header-bg: var(--at-primary);
-    --at-table-header-text: var(--at-white);
     --at-text-secondary: oklch(from var(--at-primary) 95% 0.005 h / 78%);
     --at-accent: var(--at-primary);
     --at-spacing-sm: 0.5rem;
+
+    /* Table headers are deck-scoped rather than the --at-table-header-*
+     tokens base.css uses, for two reasons. Cascade: tokens.css declares
+     those in this same layer, and a deck page loads both files, so which
+     one won would come down to import order. Design: the web side's solid
+     brand fill is a light-surface treatment — on a near-black slide the
+     same fill is the highest-contrast object on it, out-shouting the
+     heading above, and white-on-primary is only ~3:1 for a mid-lightness
+     brand colour. A tint plus brand-coloured text reads as a header at
+     projection distance without becoming the subject of the slide. */
+    --at-deck-table-header-bg: rgb(from var(--at-primary) r g b / 14%);
+    --at-deck-table-header-text: var(--at-primary);
+    --at-deck-table-header-rule: rgb(from var(--at-primary) r g b / 55%);
 
     /* Reveal.js variables */
     --r-background-color: var(--at-dark-grey);
@@ -202,13 +213,21 @@ body.reveal-viewport {
       text-align: start;
     }
 
-    thead {
-      background: var(--at-table-header-bg);
-      color: var(--at-table-header-text);
+    /* Every `th` is a header, wherever it sits. A matrix table — one whose
+       body rows carry `<th scope="row">` labels — has two header axes that
+       mean the same thing, so filling only the column axis invents a
+       hierarchy that isn't in the markup. Tinting all of them costs an
+       ordinary table nothing (it has no body headers) and makes a matrix
+       read symmetrically. The rule under thead is what still marks a true
+       header row where there is one. */
+    :is(thead, tbody) th {
+      background: var(--at-deck-table-header-bg);
+      color: var(--at-deck-table-header-text);
+      font-weight: 600;
     }
 
     thead th {
-      font-weight: 600;
+      border-block-end: 2px solid var(--at-deck-table-header-rule);
     }
 
     tbody td {
