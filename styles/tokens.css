@@ -98,6 +98,21 @@
       oklch(from var(--at-primary) 95% 0.005 h / 56%)
     );
     --at-heading: var(--at-primary);
+
+    /* Ink for text sitting ON a brand fill, picked by the brand colour's own
+       lightness rather than assumed to be white: near-black once the fill is
+       light enough that white would drop under 4.5:1, white below that. The
+       clamp bounds are the two inks — 0.16 is --at-dark-grey's lightness, 1 is
+       white — and the multiplier just makes the switch snap rather than ramp.
+       A mid-lightness brand colour (both golds this theme is used with, for
+       instance) puts white at ~3.3:1, which is why this isn't a constant. */
+    --at-on-primary: oklch(from var(--at-primary) clamp(0.16, (0.58 - l) * 1000, 1) 0 h);
+    --at-on-accent: oklch(from var(--at-accent) clamp(0.16, (0.58 - l) * 1000, 1) 0 h);
+
+    /* The other ink, for anything that has to separate itself from text
+       already sitting on a brand fill (deck impact slides use it for emphasis
+       and links). Same switch, opposite sense. */
+    --at-on-primary-alt: oklch(from var(--at-primary) clamp(0.16, (l - 0.58) * 1000, 1) 0 h);
     --at-accent: var(--at-primary);
     --at-accent-hover: var(--at-primary-hover);
     --at-accent-soft: light-dark(
@@ -119,7 +134,7 @@
       oklch(from var(--at-primary) 95% 0.005 h / 12%)
     );
     --at-table-header-bg: var(--at-primary);
-    --at-table-header-text: var(--at-white);
+    --at-table-header-text: var(--at-on-primary);
     --at-table-stripe: light-dark(
       rgb(from var(--at-primary) r g b / 6%),
       rgb(from var(--at-primary) r g b / 8%)

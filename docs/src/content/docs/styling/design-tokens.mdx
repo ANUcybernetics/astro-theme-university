@@ -110,26 +110,29 @@ distinct left-hand mark).
 
 These semantic colour tokens adapt between light and dark mode, and every one of them derives from the brand palette --- backgrounds and text are neutrals tinted toward the primary hue, while accents, links, and borders use the primary colour directly. Use these in your own styles rather than hard-coding colour values.
 
-| Token                    | Derivation                                              |
-| ------------------------ | ------------------------------------------------------- |
-| `--at-bg`                | near-white / near-black, tinted toward the primary hue  |
-| `--at-bg-alt`            | slightly darker (light) / lighter (dark) than `--at-bg` |
-| `--at-bg-elevated`       | surface for cards and panels                            |
-| `--at-text`              | near-black / near-white, tinted toward the primary hue  |
-| `--at-text-secondary`    | `--at-text` at 78% opacity                              |
-| `--at-text-muted`        | `--at-text` at 56% opacity                              |
-| `--at-heading`           | `var(--at-primary)`                                     |
-| `--at-accent`            | `var(--at-primary)`                                     |
-| `--at-accent-hover`      | `var(--at-primary-hover)`                               |
-| `--at-accent-soft`       | `--at-primary` at 10% (light) / 14% (dark) opacity      |
-| `--at-link`              | `--at-primary`, darkened in light mode for contrast     |
-| `--at-link-hover`        | `--at-primary` (light) / `--at-primary-hover` (dark)    |
-| `--at-border`            | `--at-primary` at 30% (light) / 40% (dark) opacity      |
-| `--at-divider`           | `--at-text` hue at 12% opacity                          |
-| `--at-code-bg`           | `--at-text` hue at 6% (light) / 12% (dark) opacity      |
-| `--at-table-header-bg`   | `var(--at-primary)`                                     |
-| `--at-table-header-text` | `var(--at-white)`                                       |
-| `--at-table-stripe`      | `--at-primary` at 6% (light) / 8% (dark) opacity        |
+| Token                    | Derivation                                                    |
+| ------------------------ | ------------------------------------------------------------- |
+| `--at-bg`                | near-white / near-black, tinted toward the primary hue        |
+| `--at-bg-alt`            | slightly darker (light) / lighter (dark) than `--at-bg`       |
+| `--at-bg-elevated`       | surface for cards and panels                                  |
+| `--at-text`              | near-black / near-white, tinted toward the primary hue        |
+| `--at-text-secondary`    | `--at-text` at 78% opacity                                    |
+| `--at-text-muted`        | `--at-text` at 56% opacity                                    |
+| `--at-heading`           | `var(--at-primary)`                                           |
+| `--at-accent`            | `var(--at-primary)`                                           |
+| `--at-accent-hover`      | `var(--at-primary-hover)`                                     |
+| `--at-accent-soft`       | `--at-primary` at 10% (light) / 14% (dark) opacity            |
+| `--at-link`              | `--at-primary`, darkened in light mode for contrast           |
+| `--at-link-hover`        | `--at-primary` (light) / `--at-primary-hover` (dark)          |
+| `--at-border`            | `--at-primary` at 30% (light) / 40% (dark) opacity            |
+| `--at-divider`           | `--at-text` hue at 12% opacity                                |
+| `--at-code-bg`           | `--at-text` hue at 6% (light) / 12% (dark) opacity            |
+| `--at-on-primary`        | near-black or white, whichever has contrast on `--at-primary` |
+| `--at-on-primary-alt`    | the other one of that pair                                    |
+| `--at-on-accent`         | the same switch, applied to `--at-accent`                     |
+| `--at-table-header-bg`   | `var(--at-primary)`                                           |
+| `--at-table-header-text` | `var(--at-on-primary)`                                        |
+| `--at-table-stripe`      | `--at-primary` at 6% (light) / 8% (dark) opacity              |
 
 Light and dark values are resolved with [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark), keyed off the active `color-scheme`. Because the derivations use relative colour syntax, they re-derive automatically when a brand overrides the palette.
 

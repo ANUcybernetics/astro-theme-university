@@ -39,6 +39,12 @@
     --at-accent: var(--at-primary);
     --at-spacing-sm: 0.5rem;
 
+    /* Ink on a brand fill, and its counterpart for emphasis. Mirrors
+       tokens.css (which carries the full explanation); repeated here because
+       deck.css is usable standalone. */
+    --at-on-primary: oklch(from var(--at-primary) clamp(0.16, (0.58 - l) * 1000, 1) 0 h);
+    --at-on-primary-alt: oklch(from var(--at-primary) clamp(0.16, (l - 0.58) * 1000, 1) 0 h);
+
     /* Table headers are deck-scoped rather than the --at-table-header-*
      tokens base.css uses, for two reasons. Cascade: tokens.css declares
      those in this same layer, and a deck page loads both files, so which
@@ -117,7 +123,7 @@ body.reveal-viewport {
     margin: 0 0 1rem;
     display: inline;
     background-color: var(--at-primary);
-    color: var(--at-white);
+    color: var(--at-on-primary);
     padding: 0.1em 0.3em;
     box-decoration-break: clone;
     font-weight: 400;
@@ -309,18 +315,19 @@ body.reveal-viewport {
        `.reveal section.impact`, since a relative url() inside a custom
        property resolves against wherever the var() is used, not where it's
        declared. Nothing dims or scrims the image, so it's the caller's job
-       to supply artwork this slide's white text stays legible over. */
+       to supply artwork this slide's text stays legible over — and which ink
+       that is depends on the brand colour (see --at-on-primary). */
     background-color: var(--at-primary);
     background-image: var(--at-deck-impact-bg-image, none);
     background-position: center;
     background-size: cover;
     background-repeat: no-repeat;
-    color: var(--at-white);
+    color: var(--at-on-primary);
     place-content: center;
     text-align: center;
 
     :is(h1, h2, h3, h4, h5, h6) {
-      color: var(--at-white);
+      color: var(--at-on-primary);
     }
 
     :is(p, li) {
@@ -328,19 +335,24 @@ body.reveal-viewport {
       line-height: 1.4;
     }
 
+    /* Emphasis and links take the other ink, which is what set them apart from
+       body copy before this was brand-dependent — the pairing survives whether
+       the slide reads dark-on-light or light-on-dark. Links underline as well,
+       so they don't rest on colour alone. */
     strong,
     em {
-      color: var(--at-dark-grey);
+      color: var(--at-on-primary-alt);
     }
 
     code {
-      background: var(--at-dark-grey);
-      color: var(--at-white);
-      border-color: var(--at-dark-grey);
+      background: var(--at-on-primary);
+      color: var(--at-primary);
+      border-color: var(--at-on-primary);
     }
 
     a {
-      color: var(--at-dark-grey);
+      color: var(--at-on-primary-alt);
+      text-decoration: underline;
     }
   }
 

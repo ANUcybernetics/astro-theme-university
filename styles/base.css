@@ -42,7 +42,7 @@
 
   ::selection {
     background: var(--at-primary);
-    color: var(--at-white);
+    color: var(--at-on-primary);
   }
 
   /*

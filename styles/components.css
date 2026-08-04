@@ -756,7 +756,7 @@
     border: 2px solid var(--at-accent);
     border-radius: var(--at-border-radius);
     background: var(--at-accent);
-    color: var(--at-white);
+    color: var(--at-on-accent);
     font: inherit;
     font-size: var(--at-font-size-sm);
     font-weight: 600;
@@ -773,7 +773,7 @@
   .at-button:hover {
     background: var(--at-accent-hover);
     border-color: var(--at-accent-hover);
-    color: var(--at-white);
+    color: var(--at-on-accent);
   }
 
   .at-button:active {
