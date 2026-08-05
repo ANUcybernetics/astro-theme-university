@@ -127,8 +127,12 @@ body.reveal-viewport {
   }
 
   /* Trailing space at the end of a slide buys nothing, and on a centred slide
-     it pulls the content visibly off-centre. */
-  > :last-child {
+     it pulls the content visibly off-centre. Speaker notes compile to a
+     display:none `aside.notes` that is itself the last child, so on any slide
+     carrying notes --- most of them --- the last visible element needs the
+     reset too. */
+  > :last-child,
+  > :has(+ aside.notes:last-child) {
     margin-block-end: 0;
   }
 
