@@ -231,6 +231,22 @@ body.reveal-viewport {
     font-size: 1.6rem;
   }
 
+  /* Syntax highlighting. The integration configures shiki with
+     `defaultColor: false`, so every token ships `--shiki-light`/`--shiki-dark`
+     inline and a stylesheet has to pick an arm; the rule that does it for site
+     pages lives in base.css, which deck pages never load. Without this, the
+     `pre code { color: inherit }` above wins and a code block renders entirely
+     in the body colour. Deck pages are dark-only, so take the dark arm
+     unconditionally — there's no `[data-theme]` attribute here to key off.
+     Class-specificity beats the zeroed `:where()` prefix these rules sit
+     under, which is what lets it override `pre code`. */
+  :is(.astro-code, .astro-code span) {
+    color: var(--shiki-dark);
+    background-color: transparent;
+    font-style: var(--shiki-dark-font-style);
+    font-weight: var(--shiki-dark-font-weight);
+  }
+
   table {
     width: 100%;
     border-collapse: collapse;
