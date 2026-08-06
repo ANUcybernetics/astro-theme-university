@@ -163,6 +163,27 @@ body.reveal-viewport {
     margin: 0 0 1rem;
   }
 
+  /* Paragraphs get more air than list items, because a deck written in prose
+     leans on them the way a bulleted one leans on <li>: at the shared 1rem the
+     band between two paragraphs came to only about twice the leading within
+     one, so consecutive paragraphs read as a single block. 0.85em lands on the
+     slide's own 1.5rem flow gap at body size, and being em rather than rem it
+     scales with the type --- the large-text variants (.impact sets 3.25rem)
+     previously took the same fixed 16px and looked correspondingly cramped.
+     Same specificity as the rule above, so it wins on source order; keep it
+     below. */
+  p {
+    margin-block-end: 0.85em;
+  }
+
+  /* A lead-in belongs with the list it introduces, so it keeps the tighter
+     gap: the wider paragraph spacing above is for separating prose blocks,
+     and applying it here would float the sentence away from the items it
+     sets up. `:has()` outranks the rule above on specificity. */
+  p:has(+ :is(ul, ol)) {
+    margin-block-end: 1rem;
+  }
+
   ul,
   ol {
     display: block;
