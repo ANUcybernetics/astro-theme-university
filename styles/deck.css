@@ -184,10 +184,22 @@ body.reveal-viewport {
     margin-block-end: 1rem;
   }
 
+  /* Reveal zeroes the margins on both list types (and their `display`) inside
+     its scaled slide, so the indent has to be restored here. The marker does
+     not: nothing resets it, so each type keeps its UA default unless we say
+     otherwise. Declaring `list-style: disc` for the pair --- as this rule used
+     to --- therefore didn't normalise anything, it silently overrode `ol`'s
+     decimal with bullets, throwing away the one thing that distinguishes an
+     ordered list from an unordered one. An `ol` on a slide is nearly always a
+     procedure the presenter walks through in order, and the author wrote `1.`
+     because the sequence carries meaning. */
   ul,
   ol {
     display: block;
     margin-inline-start: 1.5rem;
+  }
+
+  ul {
     list-style: disc;
   }
 
