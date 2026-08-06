@@ -12,18 +12,18 @@
     "typecheck": "astro check"
   },
   "dependencies": {
-    "@astrojs/markdown-satteri": "^0.3.1",
-    "@astrojs/mdx": "^7.0.0",
+    "@astrojs/markdown-satteri": "^0.3.5",
+    "@astrojs/mdx": "^7.0.5",
     "@astrojs/svelte": "^9.0.0",
     "@iconify-json/iconoir": "^1.2.11",
-    "astro": "^7.1.1",
+    "astro": "^7.1.6",
     "astro-theme-university": "workspace:*",
     "astromotion": "github:ANUcybernetics/astromotion#v0.20.1",
     "sharp": "^0.35.3",
     "svelte": "^5.55.10"
   },
   "devDependencies": {
-    "@astrojs/check": "^0.9.9",
+    "@astrojs/check": "^0.9.10",
     "lightningcss": "^1.32.0",
     "pagefind": "^1.5.2",
     "svelte-check": "^4.4.8",
