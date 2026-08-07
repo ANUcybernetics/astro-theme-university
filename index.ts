@@ -123,6 +123,7 @@ export default function universityTheme(options: ThemeOptions = {}): AstroIntegr
   // resolved in astro:config:done once the config is final.
   let registeredFontVariables: string[] = [];
   let projectRootUrl: URL | undefined;
+  let cacheDirPath: string | undefined;
 
   return {
     name: "astro-theme-university",
@@ -361,6 +362,12 @@ export default function universityTheme(options: ThemeOptions = {}): AstroIntegr
       },
       "astro:config:done": ({ config, logger }) => {
         registeredFontVariables = (config.fonts ?? []).map((f) => f.cssVariable);
+        // The a11y scan caches per-page results under Astro's own cacheDir
+        // (node_modules/.astro by default), namespaced to this package —
+        // consumers that persist that directory across CI runs (as they
+        // already do for the image transform cache) get incremental scans
+        // for free.
+        cacheDirPath = join(fileURLToPath(config.cacheDir), "astro-theme-university");
         // Only validate an explicit preloadFonts list — the default entry is
         // legitimately absent under fonts: false.
         if (options.preloadFonts) {
@@ -411,9 +418,10 @@ export default function universityTheme(options: ThemeOptions = {}): AstroIntegr
         }
 
         if (shouldCheckA11y) {
-          const { checked, violations } = await checkA11y(distPath);
+          const { checked, reused, violations } = await checkA11y(distPath, cacheDirPath);
           if (violations.length === 0) {
-            logger.info(`Checked ${checked} pages — no accessibility violations.`);
+            const reuse = reused > 0 ? ` (${reused} unchanged, reused from cache)` : "";
+            logger.info(`Checked ${checked} pages${reuse} — no accessibility violations.`);
           } else {
             const lines = violations.slice(0, 30).map((v) => {
               const docUrl = `https://dequeuniversity.com/rules/axe/4.11/${v.id}`;
