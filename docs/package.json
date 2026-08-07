@@ -16,7 +16,7 @@
     "@astrojs/mdx": "^7.0.0",
     "@astrojs/svelte": "^9.0.0",
     "@iconify-json/iconoir": "^1.2.11",
-    "astro": "^7.1.1",
+    "astro": "^7.2.0",
     "astro-theme-university": "workspace:*",
     "astromotion": "github:ANUcybernetics/astromotion#v0.20.1",
     "sharp": "^0.35.3",
