@@ -24,7 +24,7 @@
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.9",
-    "lightningcss": "^1.32.0",
+    "lightningcss": "^1.33.0",
     "pagefind": "^1.5.2",
     "svelte-check": "^4.4.8",
     "typescript": "^6.0.3"
