@@ -107,4 +107,35 @@ describe("BaseLayout", () => {
     });
     expect(html).toMatch(/<head>[\s\S]*custom-head-marker[\s\S]*<\/head>/);
   });
+
+  test("an http(s) heroImage string renders a hero with that URL", async () => {
+    const container = await createContainer();
+    const html = await container.renderToString(BaseLayout, {
+      props: {
+        title: "Test",
+        heroTitle: "Remote Hero",
+        heroImage: "https://img.example.com/heroes/page.avif",
+        heroImageAlt: "",
+      },
+    });
+    expect(html).toContain('src="https://img.example.com/heroes/page.avif"');
+    expect(html).toContain('class="at-hero-image"');
+    // A bare URL carries no ladder, so no srcset — and no NaN/undefined
+    // artefacts from the metadata sizing math it must not enter.
+    expect(html).not.toContain("srcset=");
+    expect(html).not.toContain("NaN");
+  });
+
+  test("an unresolvable heroImage string drops the hero rather than rendering it broken", async () => {
+    const container = await createContainer();
+    const html = await container.renderToString(BaseLayout, {
+      props: {
+        title: "Test",
+        heroTitle: "Missing Hero",
+        heroImage: "/src/assets/does-not-exist.avif",
+        heroImageAlt: "",
+      },
+    });
+    expect(html).not.toContain("at-hero-image");
+  });
 });

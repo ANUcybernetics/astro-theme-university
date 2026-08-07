@@ -1,6 +1,7 @@
 ---
 import BaseLayout, { type BaseLayoutProps } from "./BaseLayout.astro";
 import Hero from "../components/Hero.astro";
+import { resolveHeroImage } from "../images.js";
 
 export interface ContentLayoutProps extends BaseLayoutProps {
   /** Lead text displayed below the title. */
@@ -12,17 +13,26 @@ export interface ContentLayoutProps extends BaseLayoutProps {
 type Props = ContentLayoutProps;
 
 const { title, description, heroImage, heroImageAlt, ...baseProps } = Astro.props;
+// Resolve string forms (/src/assets paths, http(s) URLs) before handing the
+// image to Hero, whose props don't admit bare strings.
+const resolvedHeroImage = resolveHeroImage(heroImage);
 const transitionName = `card-title-${Astro.url.pathname.replace(/^\/|\/$/g, "").replace(/\//g, "-")}`;
 ---
 
 <BaseLayout title={title} {...baseProps}>
   <slot name="head" slot="head" />
   {
-    heroImage && (
-      <Hero slot="hero" title={title} image={heroImage} imageAlt={heroImageAlt ?? ""} transitionName={transitionName} />
+    resolvedHeroImage && (
+      <Hero
+        slot="hero"
+        title={title}
+        image={resolvedHeroImage}
+        imageAlt={heroImageAlt ?? ""}
+        transitionName={transitionName}
+      />
     )
   }
-  {!heroImage && <h1 transition:name={transitionName}>{title}</h1>}
+  {!resolvedHeroImage && <h1 transition:name={transitionName}>{title}</h1>}
   {description && <p class="lead">{description}</p>}
   <slot />
 </BaseLayout>

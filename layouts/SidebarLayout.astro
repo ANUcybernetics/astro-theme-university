@@ -2,6 +2,7 @@
 import BaseLayout, { type BaseLayoutProps } from "./BaseLayout.astro";
 import Hero from "../components/Hero.astro";
 import Sidebar, { type SidebarSection } from "../components/Sidebar.astro";
+import { resolveHeroImage } from "../images.js";
 import "astro-theme-university/styles/sidebar.css";
 
 export interface SidebarLayoutProps extends BaseLayoutProps {
@@ -27,14 +28,21 @@ const {
 } = Astro.props;
 
 const hasSidebar = sidebar && sidebar.length > 0;
+// Resolve string forms (/src/assets paths, http(s) URLs) before handing the
+// image to Hero, whose props don't admit bare strings.
+const resolvedHeroImage = resolveHeroImage(heroImage);
 ---
 
 <BaseLayout title={title} description={description} {...baseProps}>
   <slot name="head" slot="head" />
-  {heroImage && <Hero slot="hero" title={title} image={heroImage} imageAlt={heroImageAlt ?? ""} />}
+  {
+    resolvedHeroImage && (
+      <Hero slot="hero" title={title} image={resolvedHeroImage} imageAlt={heroImageAlt ?? ""} />
+    )
+  }
   {hasSidebar && <Sidebar sections={sidebar} currentPath={currentPath} label={sidebarLabel} />}
   <article class="at-sidebar-content">
-    {!heroImage && <h1>{title}</h1>}
+    {!resolvedHeroImage && <h1>{title}</h1>}
     <slot />
   </article>
 </BaseLayout>

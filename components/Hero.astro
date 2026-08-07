@@ -2,16 +2,23 @@
 import { Image } from "astro:assets";
 import type { ImageMetadata, ImageOutputFormat } from "astro";
 import { imageFormat as themeImageFormat } from "virtual:astro-theme-university/images";
+import { isRemoteImage } from "../images.js";
+import type { RemoteImage } from "../types.js";
 
 export interface HeroProps {
   /** The hero heading text, rendered as an h1. */
   title: string;
-  /** Hero background image. Pass an imported image for pipeline optimisation. */
-  image: ImageMetadata;
+  /** Hero background image. Pass an imported image for pipeline optimisation,
+   *  or a `RemoteImage` for a pre-encoded external source rendered as a plain
+   *  `<img>`. */
+  image: ImageMetadata | RemoteImage;
   /** Alt text for the hero image. Describes the image for screen reader users. */
   imageAlt: string;
   /** Srcset widths (px) for the hero image. The default covers full-bleed display up to 2x DPR. */
   imageWidths?: number[];
+  /** The `sizes` attribute paired with the srcset. The default matches the
+   *  hero's full-bleed layout. */
+  imageSizes?: string;
   /** Output format for the hero image. Defaults to the `imageFormat` integration
    *  option, itself `"webp"` unless the site opts into something else. Ignored
    *  for an SVG source, which is always passed through unrasterised. */
@@ -27,17 +34,22 @@ const {
   image,
   imageAlt,
   imageWidths = [768, 1536, 2560],
+  imageSizes = "100vw",
   imageFormat = themeImageFormat,
   transitionName,
 } = Astro.props;
-const heroWidths = imageWidths.filter((w) => w <= image.width);
-const heroFallbackWidth = Math.min(Math.max(...imageWidths), image.width);
+const remoteImage = isRemoteImage(image) ? image : undefined;
+const localImage = remoteImage ? undefined : (image as ImageMetadata);
+const heroWidths = localImage ? imageWidths.filter((w) => w <= localImage.width) : [];
+const heroFallbackWidth = localImage
+  ? Math.min(Math.max(...imageWidths), localImage.width)
+  : undefined;
 // Astro 7 won't rasterise an SVG source into a raster format unless the site
 // sets `image.dangerouslyProcessSVG` and hands sharp arbitrary SVG; without it
 // the build fails outright. Passing vector art through unchanged is both the
 // safe answer and the better one, so an SVG source overrides the format rather
 // than the format rejecting the source.
-const isVector = image.format === "svg";
+const isVector = localImage?.format === "svg";
 const resolvedFormat = isVector ? "svg" : imageFormat;
 // A srcset is meaningless for art that scales losslessly, and Astro takes the
 // sizing literally: every width it's given emits another byte-identical copy of
@@ -45,19 +57,38 @@ const resolvedFormat = isVector ? "svg" : imageFormat;
 // its intrinsic width and height from the source's own metadata.
 const sizing = isVector
   ? {}
-  : { widths: heroWidths, sizes: "100vw", width: heroFallbackWidth };
+  : { widths: heroWidths, sizes: imageSizes, width: heroFallbackWidth };
 ---
 
 <section class="at-hero" aria-label={title}>
-  <Image
-    src={image}
-    alt={imageAlt}
-    {...sizing}
-    format={resolvedFormat}
-    loading="eager"
-    fetchpriority="high"
-    class="at-hero-image"
-  />
+  {
+    localImage && (
+      <Image
+        src={localImage}
+        alt={imageAlt}
+        {...sizing}
+        format={resolvedFormat}
+        loading="eager"
+        fetchpriority="high"
+        class="at-hero-image"
+      />
+    )
+  }
+  {
+    remoteImage && (
+      <img
+        src={remoteImage.src}
+        srcset={remoteImage.srcset}
+        sizes={remoteImage.srcset ? (remoteImage.sizes ?? imageSizes) : undefined}
+        width={remoteImage.width}
+        height={remoteImage.height}
+        alt={imageAlt}
+        loading="eager"
+        fetchpriority="high"
+        class="at-hero-image"
+      />
+    )
+  }
   <div class="at-hero-content">
     <h1 class="at-hero-title" transition:name={transitionName}>{title}</h1>
   </div>

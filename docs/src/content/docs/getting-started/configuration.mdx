@@ -64,6 +64,17 @@ heroTitle: About us
 
 This avoids the need for explicit `import` statements in every MDX file. The path must start with `/src/assets/` and point to an image file within the `src/assets/` directory tree.
 
+An absolute `http(s)://` URL also works, for images hosted outside the site (a CDN or object-store bucket). A remote hero bypasses Astro's image pipeline and renders as a plain `<img>` — the hero's CSS handles layout, so no dimensions are needed:
+
+```mdx
+---
+heroImage: https://img.example.com/heroes/campus.avif
+heroTitle: About us
+---
+```
+
+For remote images with responsive variants, pass a `RemoteImage` object (`{ src, width?, height?, srcset?, sizes? }`) to the layout's `heroImage` prop from a page's own frontmatter-free code instead.
+
 ### LLM content
 
 When `llmsTxt: true` is set, the theme generates `/llms.txt` and `/llms-full.txt` at build time. The page index is auto-generated from your content collections, but the preamble at the top of `llms.txt` is hand-written.

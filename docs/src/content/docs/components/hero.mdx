@@ -25,7 +25,7 @@ import bannerImage from "../assets/images/banner.avif";
 </BaseLayout>
 ```
 
-The `image` prop accepts an imported image (`ImageMetadata`), which is processed through Astro's image pipeline for optimisation.
+The `image` prop accepts an imported image (`ImageMetadata`), which is processed through Astro's image pipeline for optimisation, or a `RemoteImage` object (`{ src, width?, height?, srcset?, sizes? }`) for a pre-encoded external source — a CDN or object-store URL — rendered as a plain `<img>` with no build-time processing.
 
 ## Props
 

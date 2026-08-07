@@ -20,7 +20,7 @@
  */
 import type { ImageMetadata } from "astro";
 import BaseLayout from "./BaseLayout.astro";
-import type { SiteConfig } from "../types.js";
+import type { RemoteImage, SiteConfig } from "../types.js";
 
 interface Props {
   /** The site's config object (name, nav, branding …), spread into BaseLayout. */
@@ -36,7 +36,7 @@ const props = frontmatter ?? direct;
 const { title, description, heroImage, ...rest } = props as {
   title: string;
   description?: string;
-  heroImage?: string | ImageMetadata;
+  heroImage?: string | ImageMetadata | RemoteImage;
   [key: string]: unknown;
 };
 ---

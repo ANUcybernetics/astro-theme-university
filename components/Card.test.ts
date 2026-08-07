@@ -63,4 +63,67 @@ describe("Card", () => {
 
     expect(html).not.toContain("<img ");
   });
+
+  test("renders a remote image as a plain img, outside the asset pipeline", async () => {
+    const container = await AstroContainer.create();
+    const html = await container.renderToString(Card, {
+      props: {
+        title: "Remote Card",
+        image: {
+          src: "https://img.example.com/thumbs/entry-960.avif",
+          width: 960,
+          height: 540,
+          srcset:
+            "https://img.example.com/thumbs/entry-320.avif 320w, " +
+            "https://img.example.com/thumbs/entry-640.avif 640w, " +
+            "https://img.example.com/thumbs/entry-960.avif 960w",
+        },
+        imageAlt: "A remote thumb",
+      },
+    });
+
+    expect(html).toContain('src="https://img.example.com/thumbs/entry-960.avif"');
+    expect(html).toContain('srcset="https://img.example.com/thumbs/entry-320.avif 320w');
+    // srcset present, no per-image sizes → the component's default sizes apply.
+    expect(html).toContain('sizes="(min-width: 48rem) 24rem, 100vw"');
+    expect(html).toContain('width="960"');
+    expect(html).toContain('height="540"');
+    expect(html).toContain('alt="A remote thumb"');
+    expect(html).toContain('class="at-card-image"');
+    expect(html).toContain('loading="lazy"');
+    expect(html).not.toContain("/_astro/");
+  });
+
+  test("remote image sizes field overrides the component default", async () => {
+    const container = await AstroContainer.create();
+    const html = await container.renderToString(Card, {
+      props: {
+        title: "Remote Card",
+        image: {
+          src: "https://img.example.com/t-640.avif",
+          srcset:
+            "https://img.example.com/t-320.avif 320w, https://img.example.com/t-640.avif 640w",
+          sizes: "9rem",
+        },
+      },
+    });
+
+    expect(html).toContain('sizes="9rem"');
+  });
+
+  test("minimal remote image emits no srcset, sizes, or dimension attrs", async () => {
+    const container = await AstroContainer.create();
+    const html = await container.renderToString(Card, {
+      props: {
+        title: "Bare Remote",
+        image: { src: "https://img.example.com/bare.avif" },
+      },
+    });
+
+    expect(html).toContain('src="https://img.example.com/bare.avif"');
+    expect(html).not.toContain("srcset=");
+    expect(html).not.toContain("sizes=");
+    expect(html).not.toContain("width=");
+    expect(html).not.toContain("height=");
+  });
 });

@@ -12,7 +12,7 @@ heroImage: ../../../assets/images/hero/abstract-02.svg
 
 ### The fast path: `definePageCollection`
 
-For a standard page-style collection (`title`, optional `description`, optional `heroImage`, `published` flag) the theme ships a helper:
+For a standard page-style collection (`title`, optional `description`, optional `heroImage`, `published` flag) the theme ships a helper. `heroImage` accepts a relative image path (validated and optimised through Astro's image pipeline) or an absolute `http(s)://` URL for a remote, pre-encoded hero:
 
 ```ts
 // src/content.config.ts

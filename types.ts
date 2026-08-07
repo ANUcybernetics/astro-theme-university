@@ -7,6 +7,25 @@
 
 import type { ImageMetadata } from "astro";
 
+/**
+ * An image served from elsewhere — a CDN or object-store bucket — already
+ * encoded by whoever put it there. Accepted by `Card` and `Hero` alongside
+ * `ImageMetadata`; a remote source bypasses the build-time image pipeline
+ * entirely and renders as a plain `<img>`.
+ */
+export interface RemoteImage {
+  /** Absolute URL of the image (the `src` fallback when `srcset` is set). */
+  src: string;
+  /** Intrinsic width in px. Emitted as the `width` attribute when present. */
+  width?: number;
+  /** Intrinsic height in px. Emitted as the `height` attribute when present. */
+  height?: number;
+  /** Pre-computed `srcset`, derived by the caller from its encoded variants. */
+  srcset?: string;
+  /** `sizes` for the srcset. Overrides the component's own default when set. */
+  sizes?: string;
+}
+
 export interface NavLink {
   /** Display text for the link. */
   text: string;

@@ -30,7 +30,11 @@ export function pageSchema(ctx: SchemaContext) {
   return z.object({
     title: z.string(),
     description: z.string().optional(),
-    heroImage: ctx.image().optional(),
+    // URL-first: an absolute http(s) URL is a remote hero (passed through as a
+    // string for the layouts to resolve) and must never reach ctx.image(),
+    // which would try to resolve it as a local file path. Relative paths fail
+    // z.url() and fall through to ctx.image() exactly as before.
+    heroImage: z.url().or(ctx.image()).optional(),
     published: z.boolean().default(true),
   });
 }

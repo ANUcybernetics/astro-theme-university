@@ -9,11 +9,13 @@ import Hero from "../components/Hero.astro";
 import Footer from "../components/Footer.astro";
 import "astro-theme-university/styles/base.css";
 import "astro-theme-university/styles/components.css";
+import { resolveHeroImage } from "../images.js";
 import type {
   NavLink,
   SocialLink,
   ContactInfo,
   AcknowledgementInfo,
+  RemoteImage,
 } from "../types.js";
 
 export interface BaseLayoutProps {
@@ -36,8 +38,9 @@ export interface BaseLayoutProps {
 
   /** Hero section heading text. When provided, renders a Hero component. */
   heroTitle?: string;
-  /** Hero background image (URL string or imported ImageMetadata). */
-  heroImage?: string | ImageMetadata;
+  /** Hero background image: imported ImageMetadata, a `RemoteImage`, an
+   *  absolute http(s) URL, or a `/src/assets/...` string path. */
+  heroImage?: string | ImageMetadata | RemoteImage;
   /** Alt text for the hero image. Omit (or pass "") for a decorative hero. */
   heroImageAlt?: string;
 
@@ -121,32 +124,7 @@ const {
 
 const { class: mainClass, ...mainRest } = mainAttrs;
 
-const imageModules = import.meta.glob<{ default: ImageMetadata }>(
-  '/src/assets/**/*.{avif,png,jpg,jpeg,webp,gif,svg}',
-  { eager: true }
-);
-
-let resolvedHeroImage: ImageMetadata | undefined;
-if (typeof heroImage === 'string') {
-  if (heroImage.startsWith('/src/')) {
-    const mod = imageModules[heroImage];
-    if (mod) {
-      resolvedHeroImage = mod.default;
-    } else {
-      console.warn(
-        `[astro-theme-university] heroImage "${heroImage}" could not be resolved. ` +
-          `String paths must start with "/src/assets/" and point to an existing image file.`,
-      );
-    }
-  } else {
-    console.warn(
-      `[astro-theme-university] heroImage "${heroImage}" is not a supported string path. ` +
-        `Use an imported ImageMetadata or a "/src/assets/..." path.`,
-    );
-  }
-} else if (heroImage) {
-  resolvedHeroImage = heroImage;
-}
+const resolvedHeroImage = resolveHeroImage(heroImage);
 ---
 
 <!doctype html>

@@ -34,6 +34,7 @@ export type {
   NavLink,
   SocialLink,
   ContactInfo,
+  RemoteImage,
   SiteConfig,
   SidebarItem,
   SidebarSection,

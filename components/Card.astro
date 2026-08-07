@@ -2,6 +2,8 @@
 import { Image } from "astro:assets";
 import type { ImageMetadata, ImageOutputFormat } from "astro";
 import { imageFormat as themeImageFormat } from "virtual:astro-theme-university/images";
+import { isRemoteImage } from "../images.js";
+import type { RemoteImage } from "../types.js";
 import { withBase } from "../url.js";
 
 export type HeadingLevel = "h2" | "h3" | "h4";
@@ -13,8 +15,10 @@ export interface CardProps {
    *  Internal absolute paths (starting with `/`) are automatically prefixed
    *  with `import.meta.env.BASE_URL`. */
   href?: string;
-  /** Optional card image displayed above the body. Pass an imported image for pipeline optimisation. */
-  image?: ImageMetadata;
+  /** Optional card image displayed above the body. Pass an imported image for
+   *  pipeline optimisation, or a `RemoteImage` for a pre-encoded external
+   *  source rendered as a plain `<img>`. */
+  image?: ImageMetadata | RemoteImage;
   /** Alt text for the card image. Set to a meaningful description if the image conveys information. */
   imageAlt?: string;
   /** Srcset widths (px) for the card image. The default covers the card grids up to 2x DPR. */
@@ -43,11 +47,15 @@ const {
   headingLevel = "h3",
 } = Astro.props;
 const resolvedImageAlt = imageAlt ?? (image ? title : "");
-const cardWidths = image ? imageWidths.filter((w) => w <= image.width) : [];
-const cardFallbackWidth = image ? Math.min(Math.max(...imageWidths), image.width) : undefined;
+const remoteImage = image && isRemoteImage(image) ? image : undefined;
+const localImage = image && !isRemoteImage(image) ? image : undefined;
+const cardWidths = localImage ? imageWidths.filter((w) => w <= localImage.width) : [];
+const cardFallbackWidth = localImage
+  ? Math.min(Math.max(...imageWidths), localImage.width)
+  : undefined;
 // An SVG source overrides the format rather than the format rejecting the
 // source, and skips the srcset — see Hero.astro for both.
-const isVector = image?.format === "svg";
+const isVector = localImage?.format === "svg";
 const resolvedFormat = isVector ? "svg" : imageFormat;
 const sizing = isVector
   ? {}
@@ -62,13 +70,32 @@ const transitionName = href
 
 <Tag class="at-card" {...href ? { href } : {}}>
   {
-    image && (
+    localImage && (
       <div class="at-card-image-frame">
         <Image
-          src={image}
+          src={localImage}
           alt={resolvedImageAlt}
           {...sizing}
           format={resolvedFormat}
+          class="at-card-image"
+          loading="lazy"
+        />
+      </div>
+    )
+  }
+  {
+    remoteImage && (
+      <div class="at-card-image-frame">
+        {/* Already encoded elsewhere: a plain img, no build-time pipeline.
+            `sizes` only means anything alongside a srcset, and the frame's CSS
+            (aspect-ratio + object-fit) pins layout even without dimensions. */}
+        <img
+          src={remoteImage.src}
+          srcset={remoteImage.srcset}
+          sizes={remoteImage.srcset ? (remoteImage.sizes ?? imageSizes) : undefined}
+          width={remoteImage.width}
+          height={remoteImage.height}
+          alt={resolvedImageAlt}
           class="at-card-image"
           loading="lazy"
         />
