@@ -80,8 +80,8 @@
   "dependencies": {
     "@astro-community/astro-embed-youtube": "^0.5.10",
     "@astrojs/markdown-remark": "^7.2.2",
-    "@astrojs/markdown-satteri": "^0.3.1",
-    "@astrojs/mdx": "^7.0.0",
+    "@astrojs/markdown-satteri": "^0.3.5",
+    "@astrojs/mdx": "^7.0.5",
     "@astrojs/svelte": "^9.0.0",
     "@types/jsdom": "^28.0.3",
     "astro-broken-links-checker": "^1.1.0",
