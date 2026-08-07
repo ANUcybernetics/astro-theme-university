@@ -20,7 +20,7 @@
     "astro-theme-university": "workspace:*",
     "astromotion": "github:ANUcybernetics/astromotion#v0.20.1",
     "sharp": "^0.35.3",
-    "svelte": "^5.55.10"
+    "svelte": "^5.56.8"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.9",
