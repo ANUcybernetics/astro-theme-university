@@ -20,10 +20,10 @@ importers:
         specifier: ^7.2.2
         version: 7.2.2(supports-color@10.2.2)
       '@astrojs/markdown-satteri':
-        specifier: ^0.3.1
+        specifier: ^0.3.5
         version: 0.3.5
       '@astrojs/mdx':
-        specifier: ^7.0.0
+        specifier: ^7.0.5
         version: 7.0.5(@astrojs/markdown-satteri@0.3.5)(astro@7.2.0(@astrojs/markdown-remark@7.2.2(supports-color@10.2.2))(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.3)(@types/node@26.1.2)(yaml@2.9.0))(supports-color@10.2.2)
       '@astrojs/svelte':
         specifier: ^9.0.0
@@ -53,7 +53,7 @@ importers:
         specifier: ^1.32.0
         version: 1.33.0
       linkedom:
-        specifier: ^0.18.12
+        specifier: ^0.18.13
         version: 0.18.13
       p5:
         specifier: ^2.3.0
@@ -156,10 +156,10 @@ importers:
   docs:
     dependencies:
       '@astrojs/markdown-satteri':
-        specifier: ^0.3.1
+        specifier: ^0.3.5
         version: 0.3.5
       '@astrojs/mdx':
-        specifier: ^7.0.0
+        specifier: ^7.0.5
         version: 7.0.5(@astrojs/markdown-satteri@0.3.5)(astro@7.2.0(@astrojs/markdown-remark@7.2.2(supports-color@10.2.2))(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.3)(@types/node@26.1.2)(yaml@2.9.0))(supports-color@10.2.2)
       '@astrojs/svelte':
         specifier: ^9.0.0
@@ -180,14 +180,14 @@ importers:
         specifier: ^0.35.3
         version: 0.35.3(@types/node@26.1.2)
       svelte:
-        specifier: ^5.55.10
+        specifier: ^5.56.8
         version: 5.56.8(@typescript-eslint/types@8.66.0)
     devDependencies:
       '@astrojs/check':
-        specifier: ^0.9.9
+        specifier: ^0.9.10
         version: 0.9.10(prettier@3.9.6)(typescript@6.0.3)
       lightningcss:
-        specifier: ^1.32.0
+        specifier: ^1.33.0
         version: 1.33.0
       pagefind:
         specifier: ^1.5.2
