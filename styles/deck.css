@@ -39,6 +39,11 @@
     --at-accent: var(--at-primary);
     --at-spacing-sm: 0.5rem;
 
+    /* The slide gutter, as a token rather than a literal because two rules
+       need it (the slide itself and a split layout's content column) and the
+       print-view restoration at the end of this file needs a third copy. */
+    --at-slide-padding: 4rem 5rem;
+
     /* Ink on a brand fill, and its counterpart for emphasis. Mirrors
        tokens.css (which carries the full explanation); repeated here because
        deck.css is usable standalone. */
@@ -110,7 +115,7 @@ body.reveal-viewport {
 :where(.reveal .slides) section {
   font-weight: 400;
   text-align: left;
-  padding: 4rem 5rem;
+  padding: var(--at-slide-padding);
   align-content: start;
 
   /* Flow spacing: the slide owns the gaps between its children, so anything
@@ -474,7 +479,7 @@ body.reveal-viewport {
   }
 
   .split-content {
-    padding: 4rem 5rem;
+    padding: var(--at-slide-padding);
   }
 
   .qr-code {
@@ -544,5 +549,39 @@ body.reveal-viewport {
     to {
       opacity: 1;
     }
+  }
+}
+
+/* Reveal's print view (?print-pdf, which stamps `reveal-print` on <html>)
+   flattens every slide into a fixed-size .pdf-page: pdf.scss forces
+   `display: block`, `margin: 0` and `padding: 0` on each section, and
+   printview.js sizes it by setting `width` inline while leaving the height to
+   the content. That suits a theme whose slides lay out in normal flow, but
+   this one gives the section three jobs the print view takes away --- the
+   gutter, the grid box `place-content` aligns against on .hero / .centered,
+   and a full-height box for that alignment to mean anything. Without them a
+   hero title lands hard in the page corner with its glyphs shaved, so every
+   PDF export (presenter guides included) disagrees with what the presenter saw
+   on screen.
+
+   So restore the browser geometry rather than restyle for print. The section
+   is absolutely positioned inside .pdf-page, which is position: relative, so
+   `height: 100%` resolves to exactly one page. `top` has to come back to 0
+   because printview.js offsets it inline to centre a slide it measured as
+   short --- the same slide that is full-height again by the time it paints.
+   `display: grid` mirrors astromotion's Reveal `display` config, which the
+   rules above already assume. */
+@media print {
+  html.reveal-print .reveal .slides section:not(.stack) {
+    display: grid !important;
+    height: 100% !important;
+    top: 0 !important;
+    padding: var(--at-slide-padding) !important;
+  }
+
+  /* The one slide class that deliberately runs edge to edge. Restated because
+     the !important above outguns its ordinary declaration. */
+  html.reveal-print .reveal .slides section.logo-slide {
+    padding: 0 !important;
   }
 }
