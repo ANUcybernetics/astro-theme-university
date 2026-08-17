@@ -48,6 +48,7 @@ const { title, description, heroImage, ...rest } = props as {
   {...rest}
   heroImage={heroImage}
 >
+  <slot name="head" slot="head" />
   {lead && description && <p class="lead">{description}</p>}
   <slot />
 </BaseLayout>
