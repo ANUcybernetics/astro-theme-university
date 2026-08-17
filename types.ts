@@ -120,6 +120,13 @@ export interface SiteConfig {
   logoCompactDark?: ImageMetadata;
   /** Favicon. When omitted, no favicon link is emitted. */
   favicon?: ImageMetadata;
+  /** Default card image for link previews (Open Graph / Twitter), used by
+   *  every page that doesn't set its own `socialImage`. A local image is
+   *  encoded to a JPEG card at build time, because card scrapers largely
+   *  don't decode AVIF or WebP. Omit it and pages emit no `og:image`. */
+  socialImage?: string | ImageMetadata | RemoteImage;
+  /** Alt text paired with `socialImage`. */
+  socialImageAlt?: string;
   /** Footer legal links. */
   legalLinks?: LegalLink[];
   /** Footer partnership logo links, shown in the dark band. */

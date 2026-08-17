@@ -66,9 +66,41 @@ BaseLayout renders the complete HTML document. Inside, it provides:
 - a `<main>` element that receives the default slot content
 - the `Footer` component with contact info, social links, acknowledgement, and licence
 - a favicon link, but only when you pass a `favicon` image --- there's no default
+- Open Graph and Twitter card meta for link previews (see [social cards](#social-cards) below)
 - an inline script that reads the user's theme preference from [`localStorage`](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) and applies it before first paint, preventing a flash of the wrong theme
 
 The layout also imports `base.css` and `components.css` from the theme, so you don't need to add those yourself.
+
+## Social cards
+
+Every page emits Open Graph and Twitter card meta, so a link pasted into Slack, Discord or a social feed renders as a card rather than a bare URL. Title, description and site name come from props you already pass; `og:url` and a canonical link are added when your Astro config declares a `site`.
+
+The one piece with no fallback is the image. Scrapers derive `og:title` from `<title>` and `og:description` from the meta description, but a page with no `og:image` gets no card at all --- so set one:
+
+```js
+// src/site-config.ts
+import card from "./assets/card.png";
+
+export const siteConfig = defineSiteConfig({
+  name: "Your University",
+  socialImage: card,
+  socialImageAlt: "The Your University wordmark on a deep teal field",
+});
+```
+
+Any page can override it, and MDX pages can do so from frontmatter:
+
+```yaml
+---
+title: Annual report
+socialImage: /src/assets/reports/annual-2027-card.png
+socialImageAlt: The 2027 annual report cover
+---
+```
+
+A local image is encoded to a **JPEG** card 1200px wide at build time, because card scrapers largely don't decode AVIF or WebP --- so pointing `socialImage` at the same AVIF you use for a hero is fine. A pre-encoded card hosted elsewhere can be passed as a `RemoteImage` instead, and is used as-is. Pages with no image still emit the text tags and declare `twitter:card` as `summary` rather than `summary_large_image`.
+
+Use `socialType` for pages that aren't ordinary pages --- `"article"` for posts and news, `"profile"` for people.
 
 ## Site config pattern
 

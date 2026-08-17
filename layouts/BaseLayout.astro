@@ -9,7 +9,8 @@ import Hero from "../components/Hero.astro";
 import Footer from "../components/Footer.astro";
 import "astro-theme-university/styles/base.css";
 import "astro-theme-university/styles/components.css";
-import { resolveHeroImage } from "../images.js";
+import OpenGraph from "../components/OpenGraph.astro";
+import { resolveHeroImage, resolveSocialImage } from "../images.js";
 import type {
   NavLink,
   SocialLink,
@@ -43,6 +44,15 @@ export interface BaseLayoutProps {
   heroImage?: string | ImageMetadata | RemoteImage;
   /** Alt text for the hero image. Omit (or pass "") for a decorative hero. */
   heroImageAlt?: string;
+
+  /** Card image for link previews (Open Graph / Twitter). Falls back to the
+   *  site-wide `socialImage`; when neither is set the page emits no
+   *  `og:image`, and so gets no card. Accepts the same forms as `heroImage`. */
+  socialImage?: string | ImageMetadata | RemoteImage;
+  /** Alt text for the social card image. */
+  socialImageAlt?: string;
+  /** `og:type` for this page; use "article" for posts, "profile" for people. */
+  socialType?: "website" | "article" | "profile";
 
   /** Favicon. When omitted, no favicon link is emitted. */
   favicon?: ImageMetadata;
@@ -103,6 +113,10 @@ const {
   heroImage,
   heroImageAlt,
 
+  socialImage,
+  socialImageAlt,
+  socialType,
+
   favicon,
   logo,
   logoDark,
@@ -125,6 +139,7 @@ const {
 const { class: mainClass, ...mainRest } = mainAttrs;
 
 const resolvedHeroImage = resolveHeroImage(heroImage);
+const resolvedSocialImage = resolveSocialImage(socialImage);
 ---
 
 <!doctype html>
@@ -152,6 +167,14 @@ const resolvedHeroImage = resolveHeroImage(heroImage);
     <title>{title}</title>
     {description && <meta name="description" content={description} />}
     {unlisted && <meta name="robots" content="noindex" />}
+    <OpenGraph
+      title={title}
+      description={description}
+      name={name}
+      type={socialType}
+      image={resolvedSocialImage}
+      imageAlt={socialImageAlt}
+    />
     <meta name="generator" content={Astro.generator} />
     {favicon && <link rel="icon" type={favicon.format === "svg" ? "image/svg+xml" : undefined} href={favicon.src} />}
     {llmsTxtHref && (

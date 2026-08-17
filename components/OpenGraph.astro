@@ -1,0 +1,67 @@
+---
+import type { ImageMetadata } from "astro";
+import { getImage } from "astro:assets";
+import { isRemoteImage } from "../images.js";
+import type { RemoteImage } from "../types.js";
+
+/**
+ * Per-page Open Graph and Twitter card meta, rendered into BaseLayout's head.
+ *
+ * The card image is the part with no fallback: scrapers derive `og:title` from
+ * `<title>` and `og:description` from the meta description when those tags are
+ * missing, but a page with no `og:image` gets no card at all.
+ */
+export interface OpenGraphProps {
+  /** Page title. Used for `og:title`. */
+  title: string;
+  /** Page description. Used for `og:description`. */
+  description?: string;
+  /** Site name, for `og:site_name`. */
+  name?: string;
+  /** `og:type`; use "article" for posts and news, "profile" for people. */
+  type?: "website" | "article" | "profile";
+  /** Card image: a local image (encoded to a JPEG card at build time) or a
+   *  pre-encoded `RemoteImage`. */
+  image?: ImageMetadata | RemoteImage;
+  /** Alt text for the card image. */
+  imageAlt?: string;
+}
+
+type Props = OpenGraphProps;
+
+const { title, description, name, type = "website", image, imageAlt } = Astro.props;
+
+// A site that declares no `site` in its Astro config has no way to know its
+// own origin at build time, and Astro.url is then the dev server's localhost.
+// Baking that into a canonical or og:url is worse than saying nothing, so
+// those two tags are skipped and the card URL stays site-root-relative.
+const canonical = Astro.site ? new URL(Astro.url.pathname, Astro.site) : undefined;
+const absolute = (href: string) => (Astro.site ? new URL(href, Astro.site).href : href);
+
+// Card scrapers largely don't decode AVIF or WebP; serve the card as JPEG. For
+// local images, encode here at quality 70 rather than the default 80: these are
+// one-per-page 1200px cards only ever seen scaled down in a social embed.
+// Remote cards arrive pre-encoded by whoever put them there and pass straight
+// through.
+const card = !image
+  ? undefined
+  : isRemoteImage(image)
+    ? { href: absolute(image.src), width: image.width, height: image.height }
+    : await getImage({ src: image, width: 1200, format: "jpeg", quality: 70 }).then((r) => ({
+        href: absolute(r.src),
+        width: r.attributes.width as number | undefined,
+        height: r.attributes.height as number | undefined,
+      }));
+---
+
+{canonical && <link rel="canonical" href={canonical.href} />}
+<meta property="og:type" content={type} />
+<meta property="og:title" content={title} />
+{description && <meta property="og:description" content={description} />}
+{canonical && <meta property="og:url" content={canonical.href} />}
+{name && <meta property="og:site_name" content={name} />}
+{card && <meta property="og:image" content={card.href} />}
+{card?.width && <meta property="og:image:width" content={String(card.width)} />}
+{card?.height && <meta property="og:image:height" content={String(card.height)} />}
+{card && imageAlt && <meta property="og:image:alt" content={imageAlt} />}
+<meta name="twitter:card" content={card ? "summary_large_image" : "summary"} />
