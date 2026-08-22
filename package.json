@@ -84,7 +84,7 @@
     "@astrojs/mdx": "^7.0.5",
     "@types/jsdom": "^28.0.3",
     "astro-broken-links-checker": "^1.1.0",
-    "astro-icon": "^1.1.5",
+    "astro-icon": "^1.2.0",
     "axe-core": "^4.11.4",
     "jsdom": "^29.1.1",
     "linkedom": "^0.18.13",

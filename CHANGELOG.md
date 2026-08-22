@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.13.1
+
+`astro-icon` now starts at 1.2.0. That release replaces its vulnerable
+`extract-zip` dependency path and also requires Node 22.12 or newer; the theme
+already requires Node 24, so consumers gain the security fix without a runtime
+floor change here.
+
 ## 0.13.0
 
 The theme no longer requires or auto-registers Svelte. Search and
