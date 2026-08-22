@@ -8,7 +8,7 @@ heroImage: ../../../assets/images/hero/abstract-06.svg
 
 import PropsTable from "../../../components/PropsTable.astro";
 import Example from "../../../components/Example.astro";
-import FilterableCardGrid from "astro-theme-university/components/FilterableCardGrid.svelte";
+import FilterableCardGrid from "astro-theme-university/components/FilterableCardGrid.astro";
 
 The FilterableCardGrid component renders a list of items as cards with a searchbox above the grid. Typing into the searchbox filters the visible cards live by matching against the item's title, description, tags, and badges. It is designed as a drop-in replacement for `CardGrid` + `Card` on collection listing pages.
 
@@ -16,7 +16,7 @@ Each item can carry two kinds of metadata beyond its title and description: `tag
 
 ```astro
 ---
-import FilterableCardGrid from "astro-theme-university/components/FilterableCardGrid.svelte";
+import FilterableCardGrid from "astro-theme-university/components/FilterableCardGrid.astro";
 
 const items = [
   { title: "Installation", href: "/install/", description: "Get up and running in minutes." },
@@ -25,7 +25,7 @@ const items = [
 ];
 ---
 
-<FilterableCardGrid client:load {items} columns={2} label="Filter docs" />
+<FilterableCardGrid {items} columns={2} label="Filter docs" />
 ```
 
 ## Props
@@ -36,7 +36,6 @@ const items = [
 
 <Example label="With summaries and tags">
   <FilterableCardGrid
-    client:load
     columns={2}
     label="Filter components"
     items={[
@@ -59,11 +58,11 @@ const items = [
         tags: ["content"],
       },
       {
-        title: "Countdown",
-        href: "/docs/components/countdown/",
-        description: "Live countdown timer for deadlines.",
-        tags: ["content", "interactive"],
-        badges: ["Svelte"],
+        title: "YouTubeEmbed",
+        href: "/docs/components/youtube-embed/",
+        description: "A privacy-conscious, click-to-load video embed.",
+        tags: ["content", "media"],
+        badges: ["Progressive enhancement"],
       },
     ]}
   />
@@ -88,6 +87,9 @@ The query is split on whitespace into tokens. Every token must appear (substring
 
 ## Notes
 
-Because this is a Svelte component, you must use a [`client:*` directive](https://docs.astro.build/en/guides/framework-components/#hydrating-interactive-components) to hydrate it. `client:load` is recommended so the searchbox is interactive immediately on page load.
+The component server-renders every card and progressively enhances the grid
+with a small native browser script. Do not add a `client:*` directive: links
+and content remain available before JavaScript runs, while filtering becomes
+interactive as soon as the module loads.
 
 Internal absolute paths (starting with `/`) in `href` are automatically prefixed with the site's base path, matching the behaviour of the `Card` component.

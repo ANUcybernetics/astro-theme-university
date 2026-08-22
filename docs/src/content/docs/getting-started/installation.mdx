@@ -8,13 +8,13 @@ heroImage: ../../../assets/images/hero/abstract-06.svg
 
 ## Install the package
 
-The theme is distributed as an [npm](https://www.npmjs.com/) package. Install it alongside the required peer dependencies using [pnpm](https://pnpm.io/):
+The theme is distributed from exact tagged releases of its public Git repository. Install it alongside the required peer dependencies using [pnpm](https://pnpm.io/):
 
 ```bash
-pnpm add astro astro-theme-university @astrojs/mdx @astrojs/svelte svelte sharp pagefind lightningcss @iconify-json/iconoir
+pnpm add astro "git+https://github.com/ANUcybernetics/astro-theme-university.git#vX.Y.Z" @astrojs/mdx sharp pagefind lightningcss @iconify-json/iconoir
 ```
 
-The theme requires [Astro](https://astro.build/) ^7.0.0 and [Svelte](https://svelte.dev/) ^5.0.0 as peer dependencies. `@astrojs/mdx` and `@astrojs/svelte` are needed so Astro can resolve the renderer entry points from your project root — the theme auto-registers both integrations at build time, but the packages have to be installed locally for Vite to bundle them. `lightningcss` is required because the theme configures Vite's CSS transformer to use it; Vite resolves that package from your project root, not from inside the theme. `@iconify-json/iconoir` ships the iconoir icon set; `astro-icon` resolves iconify-set packages from the consumer's `package.json` (not the theme's), so the set has to live as a direct dep.
+The theme requires [Astro](https://astro.build/) ^7.0.0. `@astrojs/mdx` is needed so Astro can resolve the renderer entry point from your project root; the theme auto-registers the integration at build time. `lightningcss` is required because the theme configures Vite's CSS transformer to use it; Vite resolves that package from your project root, not from inside the theme. `@iconify-json/iconoir` ships the iconoir icon set; `astro-icon` resolves iconify-set packages from the consumer's `package.json` (not the theme's), so the set has to live as a direct dep. The theme's interactive controls use native browser APIs and add no UI-framework dependency.
 
 :::tip
 
@@ -62,13 +62,16 @@ export default defineConfig({
 
 The theme integration automatically:
 
-- registers `@astrojs/svelte` and `@astrojs/mdx` (set `svelte: false` / `mdx: false` to opt out)
+- registers `@astrojs/mdx` (set `mdx: false` to opt out)
 - adds Google font providers for Public Sans and Roboto Mono with the theme's CSS variable names (set `fonts: false` to opt out)
 - configures [Lightning CSS](https://lightningcss.dev/) as the CSS transformer
 - wires up remark/rehype plugins for callouts, heading IDs, autolinked headings, and smart typography
-- runs a suite of post-build checks: broken-link checker, axe-core accessibility audit, deck structure check, and an optional `/llms.txt` generator
+- runs broken-link and axe-core accessibility checks, with optional `/llms.txt` generation; astromotion owns deck-specific checks when installed
 
-If you're coming from an older template that listed `svelte()` / `mdx()` / the font config inline, you can delete all of that — `universityTheme()` handles it now.
+If you're coming from an older template that installed Svelte only for the
+theme, remove `svelte`, `@astrojs/svelte`, `svelte-check`, and the explicit
+`svelte()` integration. Keep an independently chosen framework when your own
+site components use it.
 
 ## Create your first page
 

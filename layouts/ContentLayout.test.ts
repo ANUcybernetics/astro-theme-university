@@ -1,12 +1,9 @@
 import { experimental_AstroContainer as AstroContainer } from "astro/container";
-import svelteRenderer from "@astrojs/svelte/server.js";
 import { describe, expect, test } from "vitest";
 import ContentLayout from "./ContentLayout.astro";
 
 async function createContainer() {
-  const container = await AstroContainer.create();
-  container.addServerRenderer({ renderer: svelteRenderer });
-  return container;
+  return AstroContainer.create();
 }
 
 describe("ContentLayout", () => {

@@ -1,7 +1,7 @@
 // Semantic CSS linting — oxfmt owns formatting, so the standard rules that
 // contest it (comment/custom-property spacing, keyword case, import notation)
 // are off, along with the naming patterns the theme's --at-* tokens and
-// BEM-ish class names don't follow. Scoped <style> blocks in .astro/.svelte
+// BEM-ish class names don't follow. Scoped <style> blocks in .astro
 // components are out of scope (no customSyntax parser). Shared baseline
 // across the theme-family repos — repo-specific deltas below the marked line.
 export default {

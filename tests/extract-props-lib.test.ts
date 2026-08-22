@@ -5,12 +5,7 @@ import { mkdtempSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
 
-import {
-  extractAstroFrontmatter,
-  extractSvelteScript,
-  processAstroFile,
-  processSvelteFile,
-} from "../scripts/extract-props-lib.ts";
+import { extractAstroFrontmatter, processAstroFile } from "../scripts/extract-props-lib.ts";
 
 let tmpDir: string;
 
@@ -48,62 +43,34 @@ describe("extractAstroFrontmatter", () => {
   });
 });
 
-describe("extractSvelteScript", () => {
-  test("extracts script from a standard svelte file", () => {
-    const p = writeTmp(
-      "Normal.svelte",
-      '<script lang="ts">\n  let { x }: Props = $props();\n</script>\n<div>{x}</div>\n',
-    );
-    const result = extractSvelteScript(p);
-    expect(result).toBe("\n  let { x }: Props = $props();\n");
-  });
-
-  test("returns empty string when no script tag", () => {
-    const p = writeTmp("NoScript.svelte", "<div>static</div>\n");
-    expect(extractSvelteScript(p)).toBe("");
-  });
-
-  test("returns empty string for non-ts script", () => {
-    const p = writeTmp("JsScript.svelte", "<script>\n  let x = 1;\n</script>\n");
-    expect(extractSvelteScript(p)).toBe("");
-  });
-});
-
 describe("extractDefaultsFromAST", () => {
   test("extracts defaults from Astro.props destructuring", () => {
     const sf = makeSourceFile(
       'const { title, href, imageAlt = "", headingLevel = "h3" } = Astro.props;',
     );
-    const defaults = extractDefaultsFromAST(sf, "Astro.props");
+    const defaults = extractDefaultsFromAST(sf);
     expect(defaults).toEqual({ imageAlt: '""', headingLevel: '"h3"' });
-  });
-
-  test("extracts defaults from $props() destructuring", () => {
-    const sf = makeSourceFile('let { deadline, label = "Due" }: Props = $props();');
-    const defaults = extractDefaultsFromAST(sf, "$props()");
-    expect(defaults).toEqual({ label: '"Due"' });
   });
 
   test("returns empty object when no defaults", () => {
     const sf = makeSourceFile("const { a, b, c } = Astro.props;");
-    expect(extractDefaultsFromAST(sf, "Astro.props")).toEqual({});
+    expect(extractDefaultsFromAST(sf)).toEqual({});
   });
 
   test("returns empty object when no matching props call", () => {
     const sf = makeSourceFile("const { a = 1 } = someOtherThing();");
-    expect(extractDefaultsFromAST(sf, "Astro.props")).toEqual({});
-    expect(extractDefaultsFromAST(sf, "$props()")).toEqual({});
+    expect(extractDefaultsFromAST(sf)).toEqual({});
   });
 
   test("handles numeric and array defaults", () => {
     const sf = makeSourceFile("const { columns = 3, items = [] } = Astro.props;");
-    const defaults = extractDefaultsFromAST(sf, "Astro.props");
+    const defaults = extractDefaultsFromAST(sf);
     expect(defaults).toEqual({ columns: "3", items: "[]" });
   });
 
   test("handles complex default expressions", () => {
     const sf = makeSourceFile('const { config = { a: 1, b: "x" } } = Astro.props;');
-    const defaults = extractDefaultsFromAST(sf, "Astro.props");
+    const defaults = extractDefaultsFromAST(sf);
     expect(defaults.config).toBe('{ a: 1, b: "x" }');
   });
 });
@@ -144,72 +111,5 @@ describe("processAstroFile", () => {
   test("returns null when no Props interface", () => {
     const p = writeTmp("NoProps.astro", "---\nconst x = 1;\n---\n<div />\n");
     expect(processAstroFile(p)).toBeNull();
-  });
-});
-
-describe("processSvelteFile", () => {
-  test("processes svelte component with explicit Props interface", () => {
-    const p = writeTmp(
-      "Explicit.svelte",
-      [
-        '<script lang="ts">',
-        "  interface Props {",
-        "    /** The name. */",
-        "    name: string;",
-        "    greeting?: string;",
-        "  }",
-        '  let { name, greeting = "Hello" }: Props = $props();',
-        "</script>",
-        "<p>{greeting} {name}</p>",
-      ].join("\n"),
-    );
-    const result = processSvelteFile(p);
-    expect(result).not.toBeNull();
-    expect(result!.props).toHaveLength(2);
-    expect(result!.props[0]).toMatchObject({
-      name: "name",
-      type: "string",
-      required: true,
-      description: "The name.",
-    });
-    expect(result!.props[1]).toMatchObject({
-      name: "greeting",
-      default: '"Hello"',
-    });
-  });
-
-  test("processes svelte component with inline type literal", () => {
-    const p = writeTmp(
-      "Inline.svelte",
-      [
-        '<script lang="ts">',
-        "  let { x, y = 0 }: { x: string; y?: number } = $props();",
-        "</script>",
-        "<p>{x}{y}</p>",
-      ].join("\n"),
-    );
-    const result = processSvelteFile(p);
-    expect(result).not.toBeNull();
-    expect(result!.props).toHaveLength(2);
-    expect(result!.props[0]).toMatchObject({ name: "x", type: "string", required: true });
-    expect(result!.props[1]).toMatchObject({
-      name: "y",
-      type: "number",
-      required: false,
-      default: "0",
-    });
-  });
-
-  test("returns null when no $props() call", () => {
-    const p = writeTmp(
-      "NoProps.svelte",
-      '<script lang="ts">\n  let x = $state(0);\n</script>\n<p>{x}</p>\n',
-    );
-    expect(processSvelteFile(p)).toBeNull();
-  });
-
-  test("returns null when no script tag", () => {
-    const p = writeTmp("Static.svelte", "<p>static</p>\n");
-    expect(processSvelteFile(p)).toBeNull();
   });
 });

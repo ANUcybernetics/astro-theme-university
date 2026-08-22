@@ -3,7 +3,6 @@ import { fontProviders } from "astro/config";
 import type { RehypePlugins, RemarkPlugin, RemarkPlugins } from "@astrojs/markdown-remark";
 import { unified } from "@astrojs/markdown-remark";
 import mdx from "@astrojs/mdx";
-import svelte from "@astrojs/svelte";
 import icon from "astro-icon";
 import { execFile } from "node:child_process";
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
@@ -22,7 +21,6 @@ import rehypeBaseLinks from "./rehype-base-links.js";
 import rehypeTableWrap from "./rehype-table-wrap.js";
 import { checkA11y } from "./a11y-checker.js";
 import { checkBaseLinks } from "./link-checker.js";
-import { checkDecks, countSourceDecks } from "./deck-checker.js";
 import {
   findUnroutedEntries,
   generateLlmsFullTxt,
@@ -62,13 +60,9 @@ export interface ThemeOptions {
   checkLinks?: boolean;
   /** Check for accessibility violations after build (default: true) */
   checkA11y?: boolean;
-  /** Check deck slide structure after build (default: true) */
-  checkDecks?: boolean;
   /** Generate /llms.txt and /llms-full.txt from content collections and
    *  src/pages markdown (default: false) */
   llmsTxt?: boolean;
-  /** Auto-register the @astrojs/svelte integration (default: true) */
-  svelte?: boolean;
   /** Auto-register the @astrojs/mdx integration (default: true) */
   mdx?: boolean;
   /** Auto-register the astro-icon integration so consumers can use <Icon> from
@@ -90,7 +84,7 @@ export interface ThemeOptions {
    *  `image.dangerouslyProcessSVG` set. (default: "webp") */
   imageFormat?: ImageOutputFormat;
   /** Module specifier(s) of brand CSS to import globally on every page,
-   *  e.g. "astro-theme-anu/anu.css". The theme's own palette declarations
+   *  e.g. "my-university-brand/brand.css". The theme's own palette declarations
    *  are layered (`@layer at.tokens`), so unlayered brand declarations win
    *  the cascade regardless of load order. */
   brandCss?: string | string[];
@@ -108,9 +102,7 @@ export default function universityTheme(options: ThemeOptions = {}): AstroIntegr
   const shouldSearch = options.search !== false;
   const shouldCheckLinks = options.checkLinks !== false;
   const shouldCheckA11y = options.checkA11y !== false;
-  const shouldCheckDecks = options.checkDecks !== false;
   const shouldGenerateLlmsTxt = options.llmsTxt === true;
-  const shouldAddSvelte = options.svelte !== false;
   const shouldAddMdx = options.mdx !== false;
   const shouldAddIcon = options.icon !== false;
   const shouldAddFonts = options.fonts !== false;
@@ -142,9 +134,6 @@ export default function universityTheme(options: ThemeOptions = {}): AstroIntegr
 
         const existingIntegrationNames = new Set(config.integrations.map((i) => i.name));
         const extraIntegrations: AstroIntegration[] = [];
-        if (shouldAddSvelte && !existingIntegrationNames.has("@astrojs/svelte")) {
-          extraIntegrations.push(svelte());
-        }
         if (shouldAddMdx && !existingIntegrationNames.has("@astrojs/mdx")) {
           extraIntegrations.push(mdx());
         }
@@ -382,13 +371,7 @@ export default function universityTheme(options: ThemeOptions = {}): AstroIntegr
         }
       },
       "astro:build:done": async ({ dir, logger }) => {
-        if (
-          !shouldSearch &&
-          !shouldCheckA11y &&
-          !shouldCheckDecks &&
-          !shouldCheckLinks &&
-          !shouldGenerateLlmsTxt
-        )
+        if (!shouldSearch && !shouldCheckA11y && !shouldCheckLinks && !shouldGenerateLlmsTxt)
           return;
         let distPath: string;
         try {
@@ -450,34 +433,6 @@ export default function universityTheme(options: ThemeOptions = {}): AstroIntegr
             throw new Error(
               `Found ${violations.length} link(s) outside the configured base path (root-absolute links are always site-internal; use a full URL for same-domain pages outside the base):\n${lines.join("\n")}`,
             );
-          }
-        }
-
-        if (shouldCheckDecks) {
-          const { checked, violations } = await checkDecks(distPath);
-          if (violations.length === 0) {
-            if (checked === 0) {
-              // Zero decks found and zero violations look identical in the
-              // happy-path log, so distinguish "site has no decks" from "the
-              // decks didn't surface in dist" — the latter means the checks
-              // silently ran on nothing.
-              const sourceDecks = await countSourceDecks(srcDir);
-              if (sourceDecks > 0) {
-                logger.warn(
-                  `Found ${sourceDecks} published source deck(s) under srcDir but no built deck pages (.reveal slides) in dist — deck structure checks did not run. Check the deck route configuration.`,
-                );
-              } else {
-                logger.info("Checked 0 decks — none to build.");
-              }
-            } else {
-              logger.info(`Checked ${checked} deck(s) — no structural violations.`);
-            }
-          } else {
-            const lines = violations
-              .slice(0, 30)
-              .map((v) => `  ${v.page}: ${v.rule} — ${v.detail}`);
-            if (violations.length > 30) lines.push(`  ... and ${violations.length - 30} more`);
-            throw new Error(`Found ${violations.length} deck violation(s):\n${lines.join("\n")}`);
           }
         }
 

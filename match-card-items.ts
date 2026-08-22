@@ -14,6 +14,14 @@ export interface CardItem {
   badges?: string[] | null;
 }
 
+/** Normalized searchable text shared by the pure matcher and the progressively
+ * enhanced card-grid component. */
+export function cardSearchText(item: CardItem): string {
+  return [item.title, item.description ?? "", ...(item.tags ?? []), ...(item.badges ?? [])]
+    .join(" ")
+    .toLowerCase();
+}
+
 /**
  * Filter an array of {@link CardItem} by a free-text query.
  *
@@ -26,14 +34,7 @@ export function matchCardItems<T extends CardItem>(items: T[], query: string): T
   const tokens = query.toLowerCase().trim().split(/\s+/).filter(Boolean);
   if (tokens.length === 0) return [...items];
   return items.filter((item) => {
-    const haystack = [
-      item.title,
-      item.description ?? "",
-      ...(item.tags ?? []),
-      ...(item.badges ?? []),
-    ]
-      .join(" ")
-      .toLowerCase();
+    const haystack = cardSearchText(item);
     return tokens.every((token) => haystack.includes(token));
   });
 }

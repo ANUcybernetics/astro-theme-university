@@ -17,16 +17,13 @@ minimumReleaseAgeExclude:
   - astro
   - "@astrojs/internal-helpers"
   - "@astrojs/markdown-remark"
-  - "@astrojs/markdown-satteri"
   - "@astrojs/mdx"
-  - "@astrojs/svelte"
-  - p5
 
 # Pin astromotion to the GitHub repo (no npm release), at an exact release
 # tag — a floating ref here freezes at whatever commit main pointed to when
 # the lockfile entry was first resolved, then silently never moves.
 overrides:
-  astromotion: github:ANUcybernetics/astromotion#v0.21.1
+  astromotion: github:ANUcybernetics/astromotion#v0.22.0
   # Security floors for transitives the time-based resolver keeps on
   # vulnerable versions (Dependabot alerts). Scoped to the vulnerable range so
   # e.g. svgo@3 (iconify's major) is untouched; drop each entry once the

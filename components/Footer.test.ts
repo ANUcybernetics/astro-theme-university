@@ -22,7 +22,7 @@ describe("Footer", () => {
       props: {
         name: "Test Site",
         acknowledgement: {
-          title: "Acknowledgement of Country",
+          title: "Community acknowledgement",
           text: "Test University acknowledges the traditional owners.",
           logo: { src: "/test-lockup.svg", width: 200, height: 60, format: "svg" },
           logoAlt: "Test University",
@@ -35,7 +35,7 @@ describe("Footer", () => {
 
     expect(html).toContain("at-footer-band");
     expect(html).toContain('alt="Test University"');
-    expect(html).toContain("Acknowledgement of Country");
+    expect(html).toContain("Community acknowledgement");
     expect(html).toContain("traditional owners");
     expect(html).toContain('aria-label="Partner"');
     expect(html).toContain("Privacy");

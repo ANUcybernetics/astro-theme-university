@@ -1,9 +1,9 @@
 import { describe, expect, test } from "vitest";
-import anuTheme from "./index.js";
+import universityTheme from "./index.js";
 
-describe("anuTheme integration", () => {
-  test("astro:config:setup registers astro-icon alongside svelte and mdx", async () => {
-    const integration = anuTheme();
+describe("universityTheme integration", () => {
+  test("astro:config:setup registers astro-icon and mdx", async () => {
+    const integration = universityTheme();
 
     const addedIntegrations: string[] = [];
     const fakeUpdateConfig = (cfg: { integrations?: { name: string }[] }) => {
@@ -26,7 +26,7 @@ describe("anuTheme integration", () => {
     } as never);
 
     expect(addedIntegrations).toContain("astro-icon");
-    expect(addedIntegrations).toContain("@astrojs/svelte");
     expect(addedIntegrations).toContain("@astrojs/mdx");
+    expect(addedIntegrations).not.toContain("@astrojs/svelte");
   });
 });

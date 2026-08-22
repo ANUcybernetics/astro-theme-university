@@ -70,7 +70,7 @@ export interface PartnershipLink {
 export interface AcknowledgementInfo {
   /** Heading above the acknowledgement text. */
   title?: string;
-  /** The acknowledgement text (e.g. an Acknowledgement of Country). */
+  /** Institutional acknowledgement text supplied by the active brand. */
   text: string;
   /** Institutional logo shown in the footer's dark band. */
   logo?: ImageMetadata;

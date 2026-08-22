@@ -1,5 +1,24 @@
 # Changelog
 
+## 0.13.0
+
+The theme no longer requires or auto-registers Svelte. Search and
+`FilterableCardGrid` are now Astro components with small native browser scripts:
+they server-render useful HTML first, progressively add interaction, survive
+Astro view transitions without duplicate listeners, and no longer force every
+consumer to install a UI framework it may not otherwise use. Imports move from
+`.svelte` to `.astro` and must drop their `client:*` directive.
+
+Three unused teaching-demo islands (`Countdown`, `FillInTheBlank`, and
+`P5Sketch`) are removed along with p5 and the Svelte toolchain. The `svelte`
+integration option is also removed; sites with their own Svelte components
+register that integration themselves.
+
+Deck route and generated-markup knowledge now lives in astromotion 0.22.0,
+where it protects every deck consumer. The duplicate theme checker and
+`checkDecks` option are removed. `@astrojs/markdown-satteri`, an unused direct
+dependency, is removed as well.
+
 ## 0.9.4
 
 Two follow-ups to 0.9.3's SVG passthrough.

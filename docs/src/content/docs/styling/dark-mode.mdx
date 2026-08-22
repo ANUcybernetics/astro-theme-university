@@ -6,7 +6,7 @@ order: 3
 heroImage: ../../../assets/images/hero/abstract-01.svg
 ---
 
-The theme ships with full dark mode support. Light mode is the default, and users can toggle between modes using the ThemeToggle component in the navigation bar.
+The theme ships with full dark mode support. Light mode is the default, and users can toggle between modes using the native button in the footer.
 
 ## How it works
 
@@ -29,9 +29,9 @@ BaseLayout includes an inline script in the `<head>` that runs before any conten
 
 This reads the stored preference, or falls back to the system's [`prefers-color-scheme`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-color-scheme) media query, and sets `data-theme` immediately. Because the script is inline and synchronous, the browser never flashes the wrong theme.
 
-## ThemeToggle component
+## Theme toggle
 
-The `ThemeToggle` component is a [Svelte 5](https://svelte.dev/) island embedded in the Nav. It renders a button that switches between light and dark modes. You don't need to add it yourself --- it's included automatically when you use BaseLayout.
+The footer renders a progressively enhanced button that switches between light and dark modes. You don't need to add it yourself --- it's included automatically when you use BaseLayout.
 
 The component updates both the `data-theme` attribute and the `localStorage` value when clicked.
 
@@ -63,9 +63,12 @@ If your site should only use one mode, you can set the `data-theme` attribute di
 }
 
 /* Hide the theme toggle button */
-.at-theme-toggle {
+.at-footer-theme-toggle {
   display: none;
 }
 ```
 
-The inline script in BaseLayout will still run, but if you set `data-theme="light"` in your own inline script (placed before BaseLayout's), it will take effect. Alternatively, override the dark token values to match the light ones so the toggle has no visual effect.
+Prefer `<BaseLayout colorScheme="light">` or `"dark"`: that fixes the
+`data-theme` value, skips preference detection, and tells the footer not to
+render the toggle. The CSS override above is useful only in a layout that
+controls the document shell itself.

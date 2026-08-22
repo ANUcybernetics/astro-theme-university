@@ -5,7 +5,6 @@ import {
   type ComponentProps,
   loadSharedTypes,
   processAstroFile,
-  processSvelteFile,
   processTypeScriptFile,
 } from "./extract-props-lib.ts";
 
@@ -14,15 +13,13 @@ const pkgDir = root;
 const sharedTypes = loadSharedTypes(resolve(pkgDir, "types.ts"));
 
 function componentName(filePath: string): string {
-  return basename(filePath).replace(/\.(astro|svelte)$/, "");
+  return basename(filePath).replace(/\.astro$/, "");
 }
 
 const astroFiles = [
   ...globSync(resolve(pkgDir, "components/*.astro")),
   ...globSync(resolve(pkgDir, "layouts/*.astro")),
 ];
-
-const svelteFiles = globSync(resolve(pkgDir, "components/*.svelte"));
 
 const output: Record<string, ComponentProps> = {};
 
@@ -32,13 +29,6 @@ for (const file of astroFiles) {
     const name = componentName(file);
     const category = dirname(file).endsWith("layouts") ? "layouts" : "components";
     output[`${category}/${name}`] = result;
-  }
-}
-
-for (const file of svelteFiles) {
-  const result = processSvelteFile(file);
-  if (result) {
-    output[`components/${componentName(file)}`] = result;
   }
 }
 

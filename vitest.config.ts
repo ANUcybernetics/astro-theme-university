@@ -1,11 +1,9 @@
 import { getViteConfig } from "astro/config";
-import { svelte } from "@sveltejs/vite-plugin-svelte";
 import icon from "astro-icon";
 
 export default getViteConfig(
   {
     plugins: [
-      svelte(),
       // Container tests render BaseLayout outside the integration, so the
       // fonts virtual module (normally provided by universityTheme()) is
       // stubbed empty — no <Font> rendering, matching a fonts: false setup.

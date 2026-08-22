@@ -1,8 +1,8 @@
 # astro-theme-university
 
-An Astro 7 + Svelte 5 theme package for university-style static sites — layouts,
-components, content-collection helpers, post-build checks (accessibility, broken
-links, deck structure), Pagefind search, and a Reveal.js deck theme for
+An Astro 7 theme package for university-style static sites — layouts,
+progressively enhanced components, content helpers, post-build checks
+(accessibility and broken links), Pagefind search, and a Reveal.js deck theme for
 [astromotion](https://github.com/ANUcybernetics/astromotion) slide decks.
 
 The theme is deliberately institutional in feel — sticky nav with logo or text
@@ -56,6 +56,7 @@ documentation site) and `examples/` as workspace members.
 pnpm install
 pnpm test        # package unit tests
 pnpm typecheck   # integration surface + docs astro check
+pnpm test:examples # fresh-consumer and base-path builds
 pnpm dev         # docs site
 ```
 

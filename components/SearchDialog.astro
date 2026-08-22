@@ -1,0 +1,242 @@
+---
+export interface Props {
+  /** Site base path used to load the generated Pagefind index. */
+  basePath?: string;
+}
+
+const { basePath = "/" } = Astro.props;
+const pagefindBase = basePath.endsWith("/") ? basePath : `${basePath}/`;
+---
+
+<dialog class="at-search-dialog" data-at-search-dialog data-pagefind-base={pagefindBase}>
+  <div class="at-search-panel">
+    <div class="at-search-header">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="20"
+        height="20"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.5"
+        aria-hidden="true"
+      >
+        <path
+          fill="none"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="1.5"
+          d="m17 17 4 4M3 11a8 8 0 1 0 16 0 8 8 0 0 0-16 0"
+        ></path>
+      </svg>
+      <input
+        type="search"
+        placeholder="Search..."
+        class="at-search-input"
+        aria-label="Search"
+        autocomplete="off"
+        data-at-search-input
+      />
+      <kbd class="at-search-kbd">Esc</kbd>
+    </div>
+    <ul
+      class="at-search-results"
+      role="listbox"
+      aria-label="Search results"
+      data-at-search-results
+      hidden
+    ></ul>
+    <p class="at-search-empty" data-at-search-status hidden></p>
+  </div>
+</dialog>
+
+<script>
+  interface PagefindResult {
+    url: string;
+    meta: { title?: string };
+    excerpt: string;
+  }
+
+  interface PagefindSearchHit {
+    data(): Promise<PagefindResult>;
+  }
+
+  interface PagefindApi {
+    init(): Promise<void>;
+    search(query: string): Promise<{ results: PagefindSearchHit[] }>;
+  }
+
+  function initializeSearchDialog(dialog: HTMLDialogElement) {
+    if (dialog.dataset.atSearchInitialized === "true") return;
+    dialog.dataset.atSearchInitialized = "true";
+
+    const input = dialog.querySelector<HTMLInputElement>("[data-at-search-input]");
+    const results = dialog.querySelector<HTMLUListElement>("[data-at-search-results]");
+    const status = dialog.querySelector<HTMLElement>("[data-at-search-status]");
+    if (!input || !results || !status) return;
+
+    const base = dialog.dataset.pagefindBase ?? "/";
+    let pagefind: PagefindApi | null = null;
+    let loadFailed = false;
+    let selectedIndex = 0;
+    let debounceTimer: ReturnType<typeof setTimeout>;
+    let searchSequence = 0;
+
+    async function loadPagefind(): Promise<PagefindApi | null> {
+      if (pagefind) return pagefind;
+      if (loadFailed) return null;
+      try {
+        const moduleUrl = `${base}pagefind/pagefind.js`;
+        const module = (await import(/* @vite-ignore */ moduleUrl)) as PagefindApi;
+        await module.init();
+        pagefind = module;
+        return pagefind;
+      } catch {
+        loadFailed = true;
+        return null;
+      }
+    }
+
+    function links(): HTMLAnchorElement[] {
+      return [...results.querySelectorAll<HTMLAnchorElement>("a")];
+    }
+
+    function select(index: number) {
+      const items = links();
+      if (items.length === 0) {
+        selectedIndex = 0;
+        return;
+      }
+      selectedIndex = Math.max(0, Math.min(index, items.length - 1));
+      items.forEach((link, itemIndex) => {
+        const selected = itemIndex === selectedIndex;
+        link.classList.toggle("at-search-result--selected", selected);
+        link.parentElement?.setAttribute("aria-selected", String(selected));
+      });
+      items[selectedIndex]?.scrollIntoView({ block: "nearest" });
+    }
+
+    function showStatus(message: string) {
+      results.replaceChildren();
+      results.hidden = true;
+      status.textContent = message;
+      status.hidden = false;
+    }
+
+    function render(found: PagefindResult[]) {
+      const fragment = document.createDocumentFragment();
+      for (const result of found) {
+        const item = document.createElement("li");
+        item.setAttribute("role", "option");
+        const link = document.createElement("a");
+        link.href = result.url;
+        link.className = "at-search-result";
+        const title = document.createElement("span");
+        title.className = "at-search-result-title";
+        title.textContent = result.meta.title ?? result.url;
+        const excerpt = document.createElement("span");
+        excerpt.className = "at-search-result-excerpt";
+        // Pagefind generates this marked-up excerpt from the site's own index.
+        excerpt.innerHTML = result.excerpt;
+        link.append(title, excerpt);
+        item.append(link);
+        fragment.append(item);
+      }
+      results.replaceChildren(fragment);
+      results.hidden = false;
+      status.hidden = true;
+      select(0);
+    }
+
+    async function search(query: string) {
+      const sequence = ++searchSequence;
+      const trimmed = query.trim();
+      if (!trimmed) {
+        results.replaceChildren();
+        results.hidden = true;
+        status.hidden = true;
+        return;
+      }
+      showStatus("Searching…");
+      const api = await loadPagefind();
+      if (sequence !== searchSequence) return;
+      if (!api) {
+        showStatus("Search index not available.");
+        return;
+      }
+      const response = await api.search(trimmed);
+      const found = await Promise.all(response.results.slice(0, 10).map((hit) => hit.data()));
+      if (sequence !== searchSequence) return;
+      if (found.length === 0) showStatus(`No results for “${trimmed}”`);
+      else render(found);
+    }
+
+    function reset() {
+      searchSequence += 1;
+      clearTimeout(debounceTimer);
+      input.value = "";
+      selectedIndex = 0;
+      results.replaceChildren();
+      results.hidden = true;
+      status.hidden = true;
+    }
+
+    dialog.addEventListener("at-search-show", () => {
+      if (!dialog.open) dialog.showModal();
+      requestAnimationFrame(() => input.focus());
+    });
+    dialog.addEventListener("close", reset);
+    input.addEventListener("input", () => {
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(() => void search(input.value), 250);
+    });
+    input.addEventListener("keydown", (event) => {
+      if (event.key === "ArrowDown") {
+        event.preventDefault();
+        select(selectedIndex + 1);
+      } else if (event.key === "ArrowUp") {
+        event.preventDefault();
+        select(selectedIndex - 1);
+      } else if (event.key === "Enter") {
+        const selected = links()[selectedIndex];
+        if (selected) {
+          event.preventDefault();
+          window.location.href = selected.href;
+        }
+      } else if (event.key === "Escape") {
+        event.preventDefault();
+        dialog.close();
+      }
+    });
+  }
+
+  function initializeSearchDialogs() {
+    document.querySelectorAll<HTMLDialogElement>("[data-at-search-dialog]").forEach((dialog) =>
+      initializeSearchDialog(dialog),
+    );
+  }
+
+  function activeSearchDialog(): HTMLDialogElement | null {
+    return document.querySelector<HTMLDialogElement>("[data-at-search-dialog]");
+  }
+
+  if (document.documentElement.dataset.atSearchGlobalInitialized !== "true") {
+    document.documentElement.dataset.atSearchGlobalInitialized = "true";
+    document.addEventListener("keydown", (event) => {
+      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
+        const dialog = activeSearchDialog();
+        if (!dialog) return;
+        event.preventDefault();
+        if (dialog.open) dialog.close();
+        else dialog.dispatchEvent(new CustomEvent("at-search-show"));
+      }
+    });
+    document.addEventListener("at-search-open", () => {
+      activeSearchDialog()?.dispatchEvent(new CustomEvent("at-search-show"));
+    });
+  }
+
+  initializeSearchDialogs();
+  document.addEventListener("astro:page-load", initializeSearchDialogs);
+</script>

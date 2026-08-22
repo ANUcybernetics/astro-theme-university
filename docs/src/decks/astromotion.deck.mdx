@@ -22,7 +22,7 @@ who should I yell at?
 
 ## What is astromotion?
 
-- Astro + Svelte + Animotion (Reveal.js)
+- Astro + Reveal.js directly
 - Marp-inspired markdown syntax
 - slides separated by `---` thematic breaks
 - brand-matched deck theme out of the box
@@ -128,7 +128,7 @@ const greeting = "hello world";
 import { astromotion } from "astromotion";
 
 export default defineConfig({
-  integrations: [svelte(), astromotion({ theme: "./src/decks/theme.css" })],
+  integrations: [astromotion({ theme: "./src/decks/theme.css" })],
 });
 ```
 

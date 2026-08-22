@@ -1,7 +1,7 @@
 ---
 import { ClientRouter } from "astro:transitions";
 import Icon from "../components/Icon.astro";
-import SearchDialog from "../components/SearchDialog.svelte";
+import SearchDialog from "../components/SearchDialog.astro";
 import "astro-theme-university/styles/base.css";
 import "astro-theme-university/styles/components.css";
 ---
@@ -37,15 +37,21 @@ import "astro-theme-university/styles/components.css";
           Search
         </button>
       </div>
-      <SearchDialog basePath={import.meta.env.BASE_URL} client:idle />
+      <SearchDialog basePath={import.meta.env.BASE_URL} />
     </main>
 
     <script>
-      for (const trigger of document.querySelectorAll("[data-search-trigger]")) {
-        trigger.addEventListener("click", function () {
-          document.dispatchEvent(new CustomEvent("at-search-open"));
-        });
+      function setupSearchTrigger() {
+        for (const trigger of document.querySelectorAll("[data-search-trigger]")) {
+          if (trigger.hasAttribute("data-at-search-trigger-initialized")) continue;
+          trigger.setAttribute("data-at-search-trigger-initialized", "true");
+          trigger.addEventListener("click", function () {
+            document.dispatchEvent(new CustomEvent("at-search-open"));
+          });
+        }
       }
+      setupSearchTrigger();
+      document.addEventListener("astro:page-load", setupSearchTrigger);
     </script>
 
     <style>

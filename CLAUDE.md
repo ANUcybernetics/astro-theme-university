@@ -1,16 +1,18 @@
 # astro-theme-university
 
-Astro 7 + Svelte 5 theme package for university-style static sites. The package
+Astro 7 theme package for university-style static sites. Interactive theme
+controls use progressively enhanced native browser APIs, so consumers do not
+inherit a client-framework runtime. The package
 lives at the **repo root** (astromotion-style layout); `docs/` is the
 documentation site and `examples/base` is a standalone example workspace (not a
 root-workspace member — the examples test copies it to a temp dir and rewrites
 the theme dep to `file:` the repo root).
 
-Extracted from the `astro-theme-anu` monorepo (ANU GitLab), which continues as
-the data-only ANU branding companion (`branding/anu.css` + `anuBranding`). This
-repo must stay free of ANU trademarks: no ANU logos/lockups/crests, no
-"Australian National University" text, no Acknowledgement of Country text, no
-TEQSA/CRICOS identifiers. Branding is data supplied by consumers.
+Extracted from an institution-specific monorepo whose private data-only brand
+package continues separately. This repo must stay free of institutional
+trademarks: no logos, lockups, crests, legal identifiers, official
+acknowledgement text, or institution-specific defaults. Branding is data
+supplied by consumers.
 
 ## Brand architecture
 
@@ -44,3 +46,5 @@ TEQSA/CRICOS identifiers. Branding is data supplied by consumers.
   publishing may come later; the name is reserved-by-availability)
 - CSS in `@layer at.tokens / at.base / at.components`; `--at-` prefix for all
   custom properties
+- deck route injection and generated-markup checks belong to astromotion; the
+  theme owns only the shared deck stylesheet

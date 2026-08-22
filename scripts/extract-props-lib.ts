@@ -30,21 +30,7 @@ export function extractAstroFrontmatter(filePath: string): string {
   return content.slice(open.length, closeIdx);
 }
 
-export function extractSvelteScript(filePath: string): string {
-  const content = readFileSync(filePath, "utf-8");
-  const openTag = '<script lang="ts">';
-  const startIdx = content.indexOf(openTag);
-  if (startIdx === -1) return "";
-  const bodyStart = startIdx + openTag.length;
-  const closeIdx = content.indexOf("</script>", bodyStart);
-  if (closeIdx === -1) return "";
-  return content.slice(bodyStart, closeIdx);
-}
-
-export function extractDefaultsFromAST(
-  sourceFile: SourceFile,
-  propsCall: "Astro.props" | "$props()",
-): Record<string, string> {
+export function extractDefaultsFromAST(sourceFile: SourceFile): Record<string, string> {
   const defaults: Record<string, string> = {};
 
   for (const varDecl of sourceFile.getDescendantsOfKind(SyntaxKind.VariableDeclaration)) {
@@ -52,8 +38,7 @@ export function extractDefaultsFromAST(
     if (!initializer) continue;
 
     const initText = initializer.getText();
-    if (propsCall === "Astro.props" ? initText !== "Astro.props" : initText !== "$props()")
-      continue;
+    if (initText !== "Astro.props") continue;
 
     const nameNode = varDecl.getNameNode();
     if (!Node.isObjectBindingPattern(nameNode)) continue;
@@ -102,35 +87,6 @@ function extractPropsFromInterface(
     if (desc) info.description = desc;
     return info;
   });
-}
-
-function findPropsInterface(sourceFile: SourceFile, project: Project) {
-  const explicit = sourceFile.getInterface("Props");
-  if (explicit) return explicit;
-
-  for (const varDecl of sourceFile.getDescendantsOfKind(SyntaxKind.VariableDeclaration)) {
-    const init = varDecl.getInitializer();
-    if (!init || init.getText() !== "$props()") continue;
-
-    const typeNode = varDecl.getTypeNode();
-    if (!typeNode) continue;
-
-    if (Node.isTypeReference(typeNode)) {
-      const typeName = typeNode.getText();
-      return sourceFile.getInterface(typeName);
-    }
-
-    if (Node.isTypeLiteral(typeNode)) {
-      const syntheticSource = project.createSourceFile(
-        "synthetic.ts",
-        `interface Props ${typeNode.getText()}`,
-      );
-      return syntheticSource.getInterface("Props");
-    }
-    break;
-  }
-
-  return undefined;
 }
 
 function resolveAstroPropsInterface(sourceFile: SourceFile) {
@@ -196,7 +152,7 @@ export function processAstroFile(
   const resolved = resolveAstroPropsInterface(sourceFile);
   if (!resolved) return null;
 
-  const defaults = extractDefaultsFromAST(sourceFile, "Astro.props");
+  const defaults = extractDefaultsFromAST(sourceFile);
   const props = extractPropsFromInterface(resolved.intf, defaults);
 
   const supportingTypes: Record<string, PropInfo[]> = {
@@ -213,22 +169,6 @@ export function processAstroFile(
     result.supportingTypes = supportingTypes;
   }
   return result;
-}
-
-export function processSvelteFile(filePath: string): ComponentProps | null {
-  const script = extractSvelteScript(filePath);
-  if (!script.includes("$props()")) return null;
-
-  const project = new Project({ useInMemoryFileSystem: true });
-  const sourceFile = project.createSourceFile("component.ts", script);
-
-  const propsInterface = findPropsInterface(sourceFile, project);
-  if (!propsInterface) return null;
-
-  const defaults = extractDefaultsFromAST(sourceFile, "$props()");
-  const props = extractPropsFromInterface(propsInterface, defaults);
-
-  return { props };
 }
 
 export function processTypeScriptFile(

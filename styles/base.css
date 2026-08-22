@@ -35,7 +35,6 @@
   code,
   kbd,
   .at-pagination,
-  .at-countdown,
   [data-nums="tabular"] {
     font-variant-numeric: tabular-nums lining-nums;
   }

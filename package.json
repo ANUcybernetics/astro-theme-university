@@ -1,7 +1,7 @@
 {
   "name": "astro-theme-university",
   "version": "0.12.0",
-  "description": "Astro 7 + Svelte 5 theme package for university-style sites — layouts, components, content-collection helpers, post-build checks, and a Reveal.js deck theme. Re-brandable via CSS custom properties and data-only branding props.",
+  "description": "Astro 7 theme package for university-style sites — layouts, progressively enhanced components, content helpers, post-build checks, and a Reveal.js deck theme. Re-brandable via CSS custom properties and data-only branding props.",
   "keywords": [
     "astro-component",
     "astro-integration",
@@ -30,7 +30,6 @@
     "a11y-checker.ts",
     "a11y-worker.mjs",
     "contrast.ts",
-    "deck-checker.ts",
     "llms-txt.ts",
     "url.ts",
     "rehype-base-links.ts",
@@ -82,16 +81,13 @@
   "dependencies": {
     "@astro-community/astro-embed-youtube": "^0.5.10",
     "@astrojs/markdown-remark": "^7.2.2",
-    "@astrojs/markdown-satteri": "^0.3.5",
     "@astrojs/mdx": "^7.0.5",
-    "@astrojs/svelte": "^9.0.0",
     "@types/jsdom": "^28.0.3",
     "astro-broken-links-checker": "^1.1.0",
     "astro-icon": "^1.1.5",
     "axe-core": "^4.11.4",
     "jsdom": "^29.1.1",
     "linkedom": "^0.18.13",
-    "p5": "^2.3.0",
     "rehype-autolink-headings": "^7.1.0",
     "rehype-slug": "^6.0.0",
     "remark-custom-heading-id": "^2.0.0",
@@ -103,7 +99,6 @@
   "devDependencies": {
     "@e18e/eslint-plugin": "^0.6.0",
     "@iconify-json/iconoir": "^1.2.11",
-    "@sveltejs/vite-plugin-svelte": "^7.1.2",
     "@types/hast": "^3.0.4",
     "@types/mdast": "^4.0.4",
     "@types/unist": "^3.0.3",
@@ -129,8 +124,7 @@
     "astro": "^7.0.0",
     "astromotion": ">=0.1.0",
     "lightningcss": "^1.32.0",
-    "pagefind": "^1.0.0",
-    "svelte": "^5.0.0"
+    "pagefind": "^1.0.0"
   },
   "peerDependenciesMeta": {
     "astromotion": {

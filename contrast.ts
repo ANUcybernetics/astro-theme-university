@@ -7,7 +7,7 @@
 // honest check is on the token values themselves, which is exact, needs no
 // browser, and works regardless of what colour syntax CSS grows next.
 //
-// Brand packages that pin their own semantic tokens (astro-theme-anu's anu.css,
+// Brand packages that pin their own semantic tokens (for example brand.css,
 // astro-theme-slop's slop.css) should import these helpers and assert over
 // their own values — the theme's defaults being AA-clean says nothing about a
 // brand layer that overrides them.

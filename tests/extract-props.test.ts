@@ -27,10 +27,8 @@ describe("extract-props", () => {
     expect(keys).toContain("components/Pagination");
     expect(keys).toContain("components/Sidebar");
     expect(keys).toContain("components/YouTubeEmbed");
-    expect(keys).toContain("components/Countdown");
-    expect(keys).toContain("components/P5Sketch");
-    expect(keys).toContain("components/FillInTheBlank");
     expect(keys).toContain("components/FilterableCardGrid");
+    expect(keys).toContain("components/SearchDialog");
     expect(keys).toContain("layouts/BaseLayout");
     expect(keys).toContain("layouts/ContentLayout");
     expect(keys).toContain("layouts/SidebarLayout");
@@ -89,30 +87,6 @@ describe("extract-props", () => {
     expect(contactNames).toEqual(["description", "address", "email", "phone"]);
   });
 
-  test("extracts props from svelte components", () => {
-    const countdown = data["components/Countdown"];
-    expect(countdown.props).toHaveLength(2);
-    expect(countdown.props[0]).toMatchObject({
-      name: "deadline",
-      type: "string",
-      required: true,
-      description: "An ISO 8601 datetime string for the deadline.",
-    });
-    expect(countdown.props[1]).toMatchObject({
-      name: "label",
-      default: '"Due"',
-    });
-  });
-
-  test("extracts svelte component with function type", () => {
-    const p5 = data["components/P5Sketch"];
-    expect(p5.props[0]).toMatchObject({
-      name: "sketch",
-      type: "(p: p5) => void",
-      required: true,
-    });
-  });
-
   test("extracts ThemeOptions from index.ts", () => {
     const opts = data["ThemeOptions"];
     const names = opts.props.map((p: any) => p.name);
@@ -122,9 +96,7 @@ describe("extract-props", () => {
       "search",
       "checkLinks",
       "checkA11y",
-      "checkDecks",
       "llmsTxt",
-      "svelte",
       "mdx",
       "icon",
       "fonts",

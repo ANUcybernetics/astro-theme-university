@@ -72,7 +72,7 @@ programmatic pages like collection listings and dynamic routes.
 Import from `astro-theme-university`:
 
 - **layouts**: `BaseLayout`, `ContentLayout`, `SidebarLayout`
-- **components**: `Hero`, `Card`, `CardGrid`, `Callout`, `Countdown`,
+- **components**: `Hero`, `Card`, `CardGrid`, `Callout`,
   `Pagination`, `Sidebar`, `YouTubeEmbed`
 
 ### Callouts in markdown

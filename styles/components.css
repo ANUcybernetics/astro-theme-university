@@ -70,8 +70,8 @@
     flex-wrap: wrap;
     align-items: center;
 
-    /* Mobile default: tight icon-button gap so menu + search + theme toggle
-       fit on one row at narrow viewports (iPhone 15 = 393px CSS width). The
+    /* Mobile default: tight icon-button gap so menu + search fit on one row at
+       narrow viewports (iPhone 15 = 393px CSS width). The
        desktop override below restores the wider gap for breathing room
        between brand / nav links / icon buttons. */
     gap: 0 var(--at-spacing-sm);
@@ -712,39 +712,6 @@
   .at-pagination-status {
     font-size: var(--at-font-size-sm);
     color: var(--at-text-muted);
-  }
-
-  /* Countdown */
-  .at-countdown {
-    display: inline-flex;
-    gap: var(--at-spacing-sm);
-    align-items: baseline;
-    font-family: var(--at-font-mono);
-    font-size: var(--at-font-size-sm);
-    font-variant-numeric: tabular-nums;
-  }
-
-  .at-countdown-label {
-    font-family: var(--at-font-body);
-    font-weight: 600;
-    color: var(--at-text-secondary);
-  }
-
-  .at-countdown--passed {
-    color: var(--at-text-muted);
-  }
-
-  /* P5 Sketch */
-  .at-p5-sketch {
-    margin-block: var(--at-spacing-md);
-    border-radius: var(--at-border-radius);
-    overflow: hidden;
-  }
-
-  .at-p5-sketch canvas {
-    display: block;
-    max-width: 100%;
-    height: auto;
   }
 
   /* Button */

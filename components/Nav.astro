@@ -1,6 +1,6 @@
 ---
 import Icon from "./Icon.astro";
-import SearchDialog from "./SearchDialog.svelte";
+import SearchDialog from "./SearchDialog.astro";
 import type { NavLink } from "../types.js";
 import { withBase } from "../url.js";
 
@@ -126,12 +126,14 @@ const currentPath = Astro.url.pathname;
       )
     }
   </div>
-  {search && <SearchDialog basePath={import.meta.env.BASE_URL} client:idle />}
+  {search && <SearchDialog basePath={import.meta.env.BASE_URL} />}
 </nav>
 
 <script>
   function setupNav() {
     for (const toggle of document.querySelectorAll(".at-nav-toggle")) {
+      if (toggle.hasAttribute("data-at-nav-initialized")) continue;
+      toggle.setAttribute("data-at-nav-initialized", "true");
       toggle.addEventListener("click", function () {
         const expanded = this.getAttribute("aria-expanded") === "true";
         this.setAttribute("aria-expanded", String(!expanded));
@@ -140,6 +142,8 @@ const currentPath = Astro.url.pathname;
       });
     }
     for (const trigger of document.querySelectorAll("[data-search-trigger]")) {
+      if (trigger.hasAttribute("data-at-search-trigger-initialized")) continue;
+      trigger.setAttribute("data-at-search-trigger-initialized", "true");
       trigger.addEventListener("click", function () {
         document.dispatchEvent(new CustomEvent("at-search-open"));
       });
@@ -156,7 +160,11 @@ const currentPath = Astro.url.pathname;
       }
     }
     syncNavInert();
-    matchMedia("(width >= 640px)").addEventListener("change", syncNavInert);
+    if (document.documentElement.dataset.atNavMediaInitialized !== "true") {
+      document.documentElement.dataset.atNavMediaInitialized = "true";
+      matchMedia("(width >= 640px)").addEventListener("change", syncNavInert);
+    }
   }
+  setupNav();
   document.addEventListener("astro:page-load", setupNav);
 </script>
