@@ -27,6 +27,7 @@
     "virtual.d.ts",
     "link-checker.ts",
     "images.ts",
+    "icons/",
     "a11y-checker.ts",
     "a11y-worker.mjs",
     "contrast.ts",

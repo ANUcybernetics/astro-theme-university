@@ -1,5 +1,6 @@
 import { getViteConfig } from "astro/config";
 import icon from "astro-icon";
+import { fileURLToPath } from "node:url";
 
 export default getViteConfig(
   {
@@ -68,5 +69,7 @@ export default getViteConfig(
   },
   // Run astro-icon's integration during tests so component tests that import
   // from astro-icon/components can resolve the `virtual:astro-icon` module.
-  { integrations: [icon()] },
+  {
+    integrations: [icon({ iconDir: fileURLToPath(new URL("./icons", import.meta.url)) })],
+  },
 );

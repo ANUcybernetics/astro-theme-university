@@ -17,6 +17,7 @@ describe("universityTheme integration", () => {
       updateConfig: fakeUpdateConfig,
       config: {
         integrations: [],
+        root: new URL("file:///tmp/"),
         srcDir: new URL("file:///tmp/src/"),
         site: "https://example.com",
         fonts: [],

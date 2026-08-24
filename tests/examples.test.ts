@@ -61,12 +61,12 @@ function cleanEnv(extra: Record<string, string> = {}): NodeJS.ProcessEnv {
 }
 
 function run(command: string, cwd: string, env: Record<string, string> = {}) {
-  execSync(command, {
+  return execSync(`${command} 2>&1`, {
     cwd,
     stdio: "pipe",
     timeout: 120_000,
     env: cleanEnv(env),
-  });
+  }).toString();
 }
 
 function collectHtmlFiles(dir: string): string[] {
@@ -113,7 +113,9 @@ describe("example builds", () => {
       rewriteWorkspaceDependencies(join(tempDir, "package.json"));
 
       run("pnpm install --no-frozen-lockfile", tempDir);
-      run("pnpm build", tempDir);
+      const buildOutput = run("pnpm build", tempDir);
+
+      expect(buildOutput).not.toContain('Failed to load icons from "src/icons"');
 
       expect(existsSync(join(tempDir, "dist"))).toBe(true);
 

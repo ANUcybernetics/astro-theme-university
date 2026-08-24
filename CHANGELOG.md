@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.13.2
+
+Sites without local icons no longer get a missing `src/icons` warning from
+`astro-icon` 1.2. The theme still loads a consumer's local collection when the
+directory exists; otherwise it supplies an empty packaged collection alongside
+the Iconify icons used by the theme.
+
 ## 0.13.1
 
 `astro-icon` now starts at 1.2.0. That release replaces its vulnerable

@@ -47,6 +47,7 @@ const themeDark = JSON.parse(
 );
 
 const execFileAsync = promisify(execFile);
+const emptyIconDir = fileURLToPath(new URL("./icons", import.meta.url));
 
 export interface ThemeOptions {
   /** Site name displayed in the header and meta tags */
@@ -138,7 +139,14 @@ export default function universityTheme(options: ThemeOptions = {}): AstroIntegr
           extraIntegrations.push(mdx());
         }
         if (shouldAddIcon && !existingIntegrationNames.has("astro-icon")) {
-          extraIntegrations.push(icon());
+          // astro-icon 1.2 reports a missing default src/icons directory as a
+          // warning, even when the site uses Iconify collections exclusively.
+          // Preserve consumer-local icons when the directory exists; otherwise
+          // load the package's tracked empty collection.
+          const consumerIconDir = fileURLToPath(new URL("src/icons/", config.root));
+          extraIntegrations.push(
+            icon(existsSync(consumerIconDir) ? undefined : { iconDir: emptyIconDir }),
+          );
         }
         if (shouldCheckLinks) {
           extraIntegrations.push(
