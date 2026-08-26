@@ -136,15 +136,23 @@ export default defineConfig({
 
 ## Speaker notes
 
-Add notes that appear in the Reveal.js speaker view:
+Add notes that appear in the Reveal.js speaker view, written as markdown:
 
-```mdx
-{/* notes: Remember to explain this part slowly */}
+````mdx
+```notes
+Remember to explain this part **slowly**.
 ```
+````
 
 Press **S** right now to see the speaker note on this slide.
 
-{/* notes: This is an example speaker note --- you found it! */}
+```notes
+This is an example speaker note --- you found it! It is markdown, so it can
+carry _emphasis_, `code`, and a list:
+
+- one
+- two
+```
 
 ---
 
