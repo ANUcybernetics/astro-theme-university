@@ -572,9 +572,46 @@
     line-height: 0;
   }
 
-  a.at-card:hover {
+  a.at-card:hover,
+  .at-card:has(.at-card-title-link:hover) {
     background-color: var(--at-accent-soft);
     box-shadow: var(--at-shadow-sm);
+  }
+
+  /* The stretched link on a card with actions: the anchor is the title, and
+     this overlay gives it back the whole card as a click target. */
+  .at-card-title-link {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .at-card-title-link::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+  }
+
+  /* The title carries the focus ring, but it reads as the card's, so draw it
+     around the card and leave the anchor's own outline off. */
+  .at-card:has(.at-card-title-link:focus-visible) {
+    outline: 2px solid var(--at-accent);
+    outline-offset: 2px;
+  }
+
+  .at-card-title-link:focus-visible {
+    outline: none;
+    box-shadow: none;
+  }
+
+  /* Above the stretched overlay, so an action is clickable rather than being a
+     hole in the card's link. */
+  .at-card-actions {
+    position: absolute;
+    top: var(--at-spacing-xs);
+    right: var(--at-spacing-xs);
+    z-index: 1;
+    display: flex;
+    gap: var(--at-spacing-xs);
   }
 
   .at-card-image {
@@ -586,7 +623,8 @@
     transition: transform 0.3s ease;
   }
 
-  a.at-card:hover .at-card-image {
+  a.at-card:hover .at-card-image,
+  .at-card:has(.at-card-title-link:hover) .at-card-image {
     transform: scale(1.03);
   }
 

@@ -22,7 +22,7 @@ import Card from "astro-theme-university/components/Card.astro";
 
 <PropsTable component="components/Card" />
 
-The component also accepts a default slot for body content below the title.
+The component also accepts a default slot for body content below the title, and a named `actions` slot for a control that does something other than follow the card's link.
 
 ## Examples
 
@@ -47,6 +47,30 @@ The component also accepts a default slot for body content below the title.
     </p>
   </Card>
 </Example>
+
+<Example label="Card with an action">
+  <Card title="Deployed prototype" href="https://example.com">
+    <button slot="actions" type="button">
+      QR
+    </button>
+    <p>The action sits in the top corner, above the card's link.</p>
+  </Card>
+</Example>
+
+## Actions
+
+A card can carry a control that isn't the card's link — a copy button, a QR toggle, a dismiss. Put it in the `actions` slot and it renders as a badge in the card's top corner.
+
+```astro
+<Card title="Deployed prototype" href={url}>
+  <button slot="actions" type="button" aria-label="Show QR code">…</button>
+  <p>Card body.</p>
+</Card>
+```
+
+Filling the slot changes how a linked card is marked up. Normally the whole card is one `<a>`, which can't contain a button; with actions, the anchor shrinks to the title and stretches back over the card through a `::after` overlay. The card stays clickable end to end, the action stays clickable in its corner, and the link's accessible name becomes the title alone rather than every word on the card. A card without an `href` is unaffected either way.
+
+Style the slot's contents yourself — the theme positions the badge and stacks it above the overlay, but doesn't dictate how a control inside it looks.
 
 ## Notes
 

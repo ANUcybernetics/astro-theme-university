@@ -36,6 +36,43 @@ describe("Card", () => {
     expect(html).toContain("Link Card");
   });
 
+  test("renders the actions slot outside the card's link", async () => {
+    const container = await AstroContainer.create();
+    const html = await container.renderToString(Card, {
+      props: { title: "Action Card", href: "/about/" },
+      slots: { actions: "<button type='button'>QR</button>" },
+    });
+
+    // A linked card with actions is a div: the anchor shrinks to the title and
+    // stretches back over the card, so the button isn't nested in a link.
+    expect(html).toContain('<div class="at-card"');
+    expect(html).toContain('class="at-card-title-link" href="/about/"');
+    expect(html).toContain('class="at-card-actions"');
+    expect(html).toContain("<button type='button'>QR</button>");
+  });
+
+  test("leaves a linked card whole when the actions slot is empty", async () => {
+    const container = await AstroContainer.create();
+    const html = await container.renderToString(Card, {
+      props: { title: "Plain Link", href: "/about/" },
+    });
+
+    expect(html).toContain('<a class="at-card"');
+    expect(html).not.toContain("at-card-title-link");
+    expect(html).not.toContain("at-card-actions");
+  });
+
+  test("renders actions on an unlinked card without a stretched link", async () => {
+    const container = await AstroContainer.create();
+    const html = await container.renderToString(Card, {
+      props: { title: "Action Card" },
+      slots: { actions: "<button type='button'>QR</button>" },
+    });
+
+    expect(html).toContain('class="at-card-actions"');
+    expect(html).not.toContain("at-card-title-link");
+  });
+
   test("renders an image when image prop is provided", async () => {
     const container = await AstroContainer.create();
     const html = await container.renderToString(Card, {

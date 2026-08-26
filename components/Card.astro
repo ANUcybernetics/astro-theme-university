@@ -34,6 +34,12 @@ export interface CardProps {
   headingLevel?: HeadingLevel;
 }
 
+/* Slots: the default slot is the card body, below the title. The named
+ * `actions` slot takes controls that do something other than follow the card's
+ * link — a copy button, a QR toggle — rendered as a badge in the card's top
+ * corner. Filling it changes how a linked card is marked up (see `stretched`
+ * below), so leave it empty unless the card really carries a control. */
+
 type Props = CardProps;
 
 const {
@@ -61,7 +67,15 @@ const sizing = isVector
   ? {}
   : { widths: cardWidths, sizes: imageSizes, width: cardFallbackWidth };
 const href = rawHref ? withBase(rawHref) : undefined;
-const Tag = href ? "a" : "div";
+// A card carrying actions can't also be one big anchor: a <button> inside an
+// <a> is invalid, and nesting one swallows the action's click. So a linked card
+// with actions shrinks its anchor to the title and stretches it back over the
+// whole card with a ::after overlay — the actions sit above that overlay and
+// stay clickable, and the link's accessible name is the title rather than every
+// word on the card. A card without actions is untouched.
+const hasActions = Astro.slots.has("actions");
+const stretched = Boolean(href) && hasActions;
+const Tag = href && !stretched ? "a" : "div";
 const Heading = headingLevel;
 const transitionName = href
   ? `card-title-${href.replace(/^\/|\/$/g, "").replace(/\//g, "-")}`
@@ -103,7 +117,16 @@ const transitionName = href
     )
   }
   <div class="at-card-body">
-    <Heading class="at-card-title" transition:name={transitionName}>{title}</Heading>
+    <Heading class="at-card-title" transition:name={transitionName}>
+      {stretched ? <a class="at-card-title-link" href={href}>{title}</a> : title}
+    </Heading>
     <slot />
   </div>
+  {
+    hasActions && (
+      <div class="at-card-actions">
+        <slot name="actions" />
+      </div>
+    )
+  }
 </Tag>

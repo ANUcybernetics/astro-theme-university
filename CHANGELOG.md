@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.13.3
+
+`Card` gains a named `actions` slot for a control that isn't the card's link — a
+copy button, a QR toggle. It renders as a badge in the card's top corner.
+
+A linked card is normally one big `<a>`, which can't contain a button. Filling
+the slot switches that card to a stretched link: the anchor shrinks to the title
+and covers the card again through a `::after` overlay, so the card stays
+clickable end to end while the action stays clickable in its corner. The link's
+accessible name narrows to the title rather than every word on the card. Cards
+that leave the slot empty are unchanged.
+
 ## 0.13.2
 
 Sites without local icons no longer get a missing `src/icons` warning from
