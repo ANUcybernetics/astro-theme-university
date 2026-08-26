@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.14.0
+
+`FilterableCardGrid` items can carry an `image`, rendered above the title in the
+same frame `Card` uses. Filtering is unchanged: an image contributes nothing a
+query could match, so it is not searched, and `tags` remains the way to make an
+item findable by something the card doesn't show.
+
+The grid also takes `imageWidths`, `imageSizes` and `imageFormat`, as `Card`
+does. Narrow the widths on a grid of many images --- every width is a build-time
+encode per card.
+
 ## 0.13.3
 
 `Card` gains a named `actions` slot for a control that isn't the card's link — a

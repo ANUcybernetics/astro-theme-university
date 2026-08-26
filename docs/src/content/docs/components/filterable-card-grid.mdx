@@ -14,6 +14,8 @@ The FilterableCardGrid component renders a list of items as cards with a searchb
 
 Each item can carry two kinds of metadata beyond its title and description: `tags` are searchable but invisible, while `badges` are short labels (e.g. `"Week 1"`) rendered as small chips between the title and description, and searched like everything else.
 
+An item can also carry an `image` (an imported image, as `Card` takes) with optional `imageAlt`, rendered above the title in the same frame `Card` uses. The image is not searched. Where a grid runs to many images, narrow `imageWidths` from its default `[320, 640, 960]`: every width is a build-time encode per card.
+
 ```astro
 ---
 import FilterableCardGrid from "astro-theme-university/components/FilterableCardGrid.astro";

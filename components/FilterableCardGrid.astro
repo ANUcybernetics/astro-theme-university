@@ -1,4 +1,7 @@
 ---
+import { Image } from "astro:assets";
+import type { ImageMetadata, ImageOutputFormat } from "astro";
+import { imageFormat as themeImageFormat } from "virtual:astro-theme-university/images";
 import { cardSearchText, type CardItem } from "../match-card-items.js";
 import { withBase } from "../url.js";
 
@@ -19,6 +22,14 @@ export interface Props {
   headingLevel?: HeadingLevel;
   /** Optional stable id when more than one otherwise-identical grid appears on a page. */
   id?: string;
+  /** Srcset widths (px) for card images, as `Card`'s `imageWidths`. The default
+   *  covers the card grids up to 2x DPR; a grid of many images is worth
+   *  narrowing, since every width is a build-time encode per card. */
+  imageWidths?: number[];
+  /** The `sizes` attribute paired with `imageWidths`. */
+  imageSizes?: string;
+  /** Output format for card images. Defaults to the `imageFormat` integration option. */
+  imageFormat?: ImageOutputFormat;
 }
 
 const {
@@ -29,7 +40,23 @@ const {
   emptyMessage = "No items match",
   headingLevel = "h3",
   id,
+  imageWidths = [320, 640, 960],
+  imageSizes = "(min-width: 48rem) 24rem, 100vw",
+  imageFormat = themeImageFormat,
 } = Astro.props;
+
+// As Card.astro does: never ask the pipeline to upscale, fall back to the
+// widest width the source can actually serve, and let an SVG source override
+// the format rather than the format rejecting the source.
+function sizing(image: ImageMetadata) {
+  if (image.format === "svg") return { format: "svg" as const };
+  return {
+    widths: imageWidths.filter((w) => w <= image.width),
+    sizes: imageSizes,
+    width: Math.min(Math.max(...imageWidths), image.width),
+    format: imageFormat,
+  };
+}
 
 function stableHash(value: string): string {
   let hash = 2166136261;
@@ -88,6 +115,17 @@ const Heading = headingLevel;
     {
       items.map((item) => (
         <a class="at-card" href={withBase(item.href)} data-at-card-search={cardSearchText(item)}>
+          {item.image && (
+            <div class="at-card-image-frame">
+              <Image
+                src={item.image}
+                alt={item.imageAlt ?? item.title}
+                {...sizing(item.image)}
+                class="at-card-image"
+                loading="lazy"
+              />
+            </div>
+          )}
           <div class="at-card-body">
             <Heading class="at-card-title">{item.title}</Heading>
             {item.badges && item.badges.length > 0 && (

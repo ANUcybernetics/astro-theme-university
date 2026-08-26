@@ -1,3 +1,5 @@
+import type { ImageMetadata } from "astro";
+
 export interface CardItem {
   /** Card heading text. */
   title: string;
@@ -12,6 +14,15 @@ export interface CardItem {
   /** Optional short labels rendered as small chips between the title and
    *  description (e.g. "Week 1"). Searched alongside title, description, and tags. */
   badges?: string[] | null;
+  /** Optional card image, rendered above the title as `Card` renders one.
+   *  An imported image only: a filtered grid is built from a data file the
+   *  consumer globs at build time, so there is no remote-image case to serve.
+   *  Not searched — an image contributes nothing a query could match. */
+  image?: ImageMetadata;
+  /** Alt text for the card image. Defaults to the title, which is right for a
+   *  card whose image illustrates its subject and wrong for one whose image is
+   *  a generic thumbnail — pass a description in that case. */
+  imageAlt?: string;
 }
 
 /** Normalized searchable text shared by the pure matcher and the progressively
