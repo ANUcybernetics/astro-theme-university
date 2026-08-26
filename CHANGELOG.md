@@ -28,10 +28,10 @@ Three unused teaching-demo islands (`Countdown`, `FillInTheBlank`, and
 integration option is also removed; sites with their own Svelte components
 register that integration themselves.
 
-Deck route and generated-markup knowledge now lives in astromotion 0.22.0,
-where it protects every deck consumer. The duplicate theme checker and
-`checkDecks` option are removed. `@astrojs/markdown-satteri`, an unused direct
-dependency, is removed as well.
+Deck route and generated-markup knowledge now lives in astromotion 0.22.0, where
+it protects every deck consumer. The duplicate theme checker and `checkDecks`
+option are removed. `@astrojs/markdown-satteri`, an unused direct dependency, is
+removed as well.
 
 ## 0.9.4
 
