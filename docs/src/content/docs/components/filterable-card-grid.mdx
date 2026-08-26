@@ -1,6 +1,8 @@
 ---
 title: FilterableCardGrid
-description: A card grid with a built-in searchbox for live filtering by title, description, tags, or badges.
+description:
+  A card grid with a built-in searchbox for live filtering by title,
+  description, tags, or badges.
 section: components
 order: 13
 heroImage: ../../../assets/images/hero/abstract-06.svg
@@ -10,11 +12,21 @@ import PropsTable from "../../../components/PropsTable.astro";
 import Example from "../../../components/Example.astro";
 import FilterableCardGrid from "astro-theme-university/components/FilterableCardGrid.astro";
 
-The FilterableCardGrid component renders a list of items as cards with a searchbox above the grid. Typing into the searchbox filters the visible cards live by matching against the item's title, description, tags, and badges. It is designed as a drop-in replacement for `CardGrid` + `Card` on collection listing pages.
+The FilterableCardGrid component renders a list of items as cards with a
+searchbox above the grid. Typing into the searchbox filters the visible cards
+live by matching against the item's title, description, tags, and badges. It is
+designed as a drop-in replacement for `CardGrid` + `Card` on collection listing
+pages.
 
-Each item can carry two kinds of metadata beyond its title and description: `tags` are searchable but invisible, while `badges` are short labels (e.g. `"Week 1"`) rendered as small chips between the title and description, and searched like everything else.
+Each item can carry two kinds of metadata beyond its title and description:
+`tags` are searchable but invisible, while `badges` are short labels (e.g.
+`"Week 1"`) rendered as small chips between the title and description, and
+searched like everything else.
 
-An item can also carry an `image` (an imported image, as `Card` takes) with optional `imageAlt`, rendered above the title in the same frame `Card` uses. The image is not searched. Where a grid runs to many images, narrow `imageWidths` from its default `[320, 640, 960]`: every width is a build-time encode per card.
+An item can also carry an `image` (an imported image, as `Card` takes) with
+optional `imageAlt`, rendered above the title in the same frame `Card` uses. The
+image is not searched. Where a grid runs to many images, narrow `imageWidths`
+from its default `[320, 640, 960]`: every width is a build-time encode per card.
 
 ```astro
 ---
@@ -78,20 +90,25 @@ const items = [
 
 ## Filter behaviour
 
-The query is split on whitespace into tokens. Every token must appear (substring match, case-insensitive) somewhere in the item's title, description, tags, or badges. With no query, all items are shown in their original order.
+The query is split on whitespace into tokens. Every token must appear (substring
+match, case-insensitive) somewhere in the item's title, description, tags, or
+badges. With no query, all items are shown in their original order.
 
 ## Accessibility
 
-- The searchbox uses `type="search"` with the supplied `label` as its `aria-label`.
+- The searchbox uses `type="search"` with the supplied `label` as its
+  `aria-label`.
 - A live region announces the current match count whenever the query changes.
 - The keyboard hint (`<kbd>/</kbd>`) is marked `aria-hidden`.
-- Cards remain regular `<a>` elements --- focus order, hover states, and link behaviour match the standard `Card` component.
+- Cards remain regular `<a>` elements --- focus order, hover states, and link
+  behaviour match the standard `Card` component.
 
 ## Notes
 
-The component server-renders every card and progressively enhances the grid
-with a small native browser script. Do not add a `client:*` directive: links
-and content remain available before JavaScript runs, while filtering becomes
+The component server-renders every card and progressively enhances the grid with
+a small native browser script. Do not add a `client:*` directive: links and
+content remain available before JavaScript runs, while filtering becomes
 interactive as soon as the module loads.
 
-Internal absolute paths (starting with `/`) in `href` are automatically prefixed with the site's base path, matching the behaviour of the `Card` component.
+Internal absolute paths (starting with `/`) in `href` are automatically prefixed
+with the site's base path, matching the behaviour of the `Card` component.

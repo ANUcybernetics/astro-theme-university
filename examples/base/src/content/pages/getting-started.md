@@ -7,8 +7,8 @@ This is an example content page demonstrating the `pages` content collection.
 
 Files in `src/content/pages/` are validated against the schema in
 `src/content.config.ts`. By default the schema requires `title` and accepts
-optional `description` and `heroImage`, plus any other frontmatter fields
-(the base example uses `passthrough: true`).
+optional `description` and `heroImage`, plus any other frontmatter fields (the
+base example uses `passthrough: true`).
 
 ## Editing this page
 
@@ -33,6 +33,6 @@ To link to your new page from a nav or from this page, use its slug:
 
 ## Linking to external content
 
-Standard markdown links work as expected: [Astro docs](https://docs.astro.build/).
-The build-time link checker will flag broken **internal** links; external links
-are skipped by default.
+Standard markdown links work as expected:
+[Astro docs](https://docs.astro.build/). The build-time link checker will flag
+broken **internal** links; external links are skipped by default.

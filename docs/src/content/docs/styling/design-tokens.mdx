@@ -1,16 +1,27 @@
 ---
 title: Design tokens
-description: CSS custom properties that control the theme's colours, typography, spacing, and layout.
+description:
+  CSS custom properties that control the theme's colours, typography, spacing,
+  and layout.
 section: styling
 order: 1
 heroImage: ../../../assets/images/hero/abstract-02.svg
 ---
 
-The theme defines all visual decisions as [CSS custom properties](https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties) in `tokens.css`. These are declared inside the `at.tokens` CSS layer, so they can be overridden by your own styles without specificity battles. See [customisation](/docs/styling/customisation) for how to change them.
+The theme defines all visual decisions as
+[CSS custom properties](https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties)
+in `tokens.css`. These are declared inside the `at.tokens` CSS layer, so they
+can be overridden by your own styles without specificity battles. See
+[customisation](/docs/styling/customisation) for how to change them.
 
 ## Brand palette
 
-The brand palette is the theme's re-branding API. Every semantic colour token below derives from these values via [relative colour syntax](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_colors/Relative_colors), so overriding `--at-primary`, `--at-secondary`, and `--at-tertiary` re-brands the whole theme --- headings, links, borders, surface tints, and the deck palette all follow.
+The brand palette is the theme's re-branding API. Every semantic colour token
+below derives from these values via
+[relative colour syntax](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_colors/Relative_colors),
+so overriding `--at-primary`, `--at-secondary`, and `--at-tertiary` re-brands
+the whole theme --- headings, links, borders, surface tints, and the deck
+palette all follow.
 
 | Token                 | Value                                                       |
 | --------------------- | ----------------------------------------------------------- |
@@ -22,9 +33,14 @@ The brand palette is the theme's re-branding API. Every semantic colour token be
 | `--at-black`          | `#000`                                                      |
 | `--at-white`          | `#fff`                                                      |
 
-The hover and active variants derive from the base colour automatically; brands with hand-tuned variants can override the derived values directly. `--at-black` and `--at-white` are fixed --- the theme is always dark-ink-on-light (and the inverse in dark mode).
+The hover and active variants derive from the base colour automatically; brands
+with hand-tuned variants can override the derived values directly. `--at-black`
+and `--at-white` are fixed --- the theme is always dark-ink-on-light (and the
+inverse in dark mode).
 
-The deck stylesheet additionally derives tint scales from the palette: `--at-primary-tint`, `--at-primary-1`/`-3`/`-4`, `--at-secondary-1`--`4`, and `--at-tertiary-1`--`4`, plus the fixed `--at-light-grey` and `--at-dark-grey`.
+The deck stylesheet additionally derives tint scales from the palette:
+`--at-primary-tint`, `--at-primary-1`/`-3`/`-4`, `--at-secondary-1`--`4`, and
+`--at-tertiary-1`--`4`, plus the fixed `--at-light-grey` and `--at-dark-grey`.
 
 ## Typography
 
@@ -54,7 +70,11 @@ The deck stylesheet additionally derives tint scales from the palette: `--at-pri
 | `--at-gutter`        | `var(--at-spacing-lg)` |
 | `--at-nav-height`    | `6.5rem`               |
 
-The page layout uses a body-level CSS grid with named column lines. `--at-content-width` sets the main content column width. `--at-sidebar-inset` is `0px` by default --- set it to reserve gutter space for a sidebar (both gutters grow symmetrically to keep content centred). `--at-content-inset` controls the gap between the decorative accent rule and the content edge.
+The page layout uses a body-level CSS grid with named column lines.
+`--at-content-width` sets the main content column width. `--at-sidebar-inset` is
+`0px` by default --- set it to reserve gutter space for a sidebar (both gutters
+grow symmetrically to keep content centred). `--at-content-inset` controls the
+gap between the decorative accent rule and the content edge.
 
 ## Spacing
 
@@ -85,7 +105,9 @@ square the whole theme by pinning it to `0`.
 | `--at-shadow-md` | `0 2px 8px rgb(0 0 0 / 10%)`  | `0 2px 8px rgb(0 0 0 / 65%)`   |
 | `--at-shadow-lg` | `0 8px 32px rgb(0 0 0 / 20%)` | `0 12px 40px rgb(0 0 0 / 70%)` |
 
-Use these on hover/focus states (e.g. `var(--at-shadow-md)` for card hover) and floating panels (e.g. `var(--at-shadow-lg)` for the search dialog) rather than hardcoding shadow values.
+Use these on hover/focus states (e.g. `var(--at-shadow-md)` for card hover) and
+floating panels (e.g. `var(--at-shadow-lg)` for the search dialog) rather than
+hardcoding shadow values.
 
 ## Nav brand alignment
 
@@ -95,9 +117,9 @@ Use these on hover/focus states (e.g. `var(--at-shadow-md)` for card hover) and 
 
 The nav brand logo (and the footer band logo) are pulled left by one
 `--at-content-inset`, which brings the logo's box-left onto the content rule ---
-the vertical accent line down the left of the content column. `--at-logo-offset-x`
-adds a further per-brand nudge so the rule _bisects_ the brand mark rather than
-skimming its left edge.
+the vertical accent line down the left of the content column.
+`--at-logo-offset-x` adds a further per-brand nudge so the rule _bisects_ the
+brand mark rather than skimming its left edge.
 
 Set it to the negative of the mark's centre expressed as a percentage of the
 logo's rendered width. A crest at the left of a wide lockup with its centre 14%
@@ -108,7 +130,10 @@ distinct left-hand mark).
 
 ## Colours
 
-These semantic colour tokens adapt between light and dark mode, and every one of them derives from the brand palette --- backgrounds and text are neutrals tinted toward the primary hue, while accents, links, and borders use the primary colour directly. Use these in your own styles rather than hard-coding colour values.
+These semantic colour tokens adapt between light and dark mode, and every one of
+them derives from the brand palette --- backgrounds and text are neutrals tinted
+toward the primary hue, while accents, links, and borders use the primary colour
+directly. Use these in your own styles rather than hard-coding colour values.
 
 | Token                    | Derivation                                                    |
 | ------------------------ | ------------------------------------------------------------- |
@@ -134,11 +159,16 @@ These semantic colour tokens adapt between light and dark mode, and every one of
 | `--at-table-header-text` | `var(--at-on-primary)`                                        |
 | `--at-table-stripe`      | `--at-primary` at 6% (light) / 8% (dark) opacity              |
 
-Light and dark values are resolved with [`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark), keyed off the active `color-scheme`. Because the derivations use relative colour syntax, they re-derive automatically when a brand overrides the palette.
+Light and dark values are resolved with
+[`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark),
+keyed off the active `color-scheme`. Because the derivations use relative colour
+syntax, they re-derive automatically when a brand overrides the palette.
 
 ## Status colours
 
-Semantic colour tokens for callouts, form validation, and other status indicators. These also adapt between light and dark mode — the dark variants are lifted slightly for better contrast on dark backgrounds.
+Semantic colour tokens for callouts, form validation, and other status
+indicators. These also adapt between light and dark mode — the dark variants are
+lifted slightly for better contrast on dark backgrounds.
 
 | Token               | Light                       | Dark                     |
 | ------------------- | --------------------------- | ------------------------ |
@@ -151,4 +181,6 @@ Semantic colour tokens for callouts, form validation, and other status indicator
 | `--at-error`        | `#dc2626`                   | `#f87171`                |
 | `--at-error-soft`   | `rgb(220 38 38 / 10%)`      | `rgb(248 113 113 / 14%)` |
 
-The four [callout](/docs/components/callout/) variants (`info`, `tip`, `warning`, `error`) are wired to these tokens — `tip` uses `--at-success`, the rest match their names.
+The four [callout](/docs/components/callout/) variants (`info`, `tip`,
+`warning`, `error`) are wired to these tokens — `tip` uses `--at-success`, the
+rest match their names.

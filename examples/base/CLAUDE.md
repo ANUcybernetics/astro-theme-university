@@ -1,13 +1,15 @@
 # Example university site
 
-This is a university-style website built with [Astro](https://astro.build) and the
-[astro-theme-university](https://github.com/ANUcybernetics/astro-theme-university) theme.
+This is a university-style website built with [Astro](https://astro.build) and
+the
+[astro-theme-university](https://github.com/ANUcybernetics/astro-theme-university)
+theme.
 
 ## Commands
 
 - `pnpm dev` --- start the dev server
-- `pnpm build` --- build for production (set `SITE_URL` and `BASE_PATH` env
-  vars for deployment)
+- `pnpm build` --- build for production (set `SITE_URL` and `BASE_PATH` env vars
+  for deployment)
 - `pnpm preview` --- preview the production build locally
 - `pnpm typecheck` --- run `astro check`
 
@@ -31,9 +33,9 @@ src/
 ## Site configuration
 
 `src/site-config.ts` uses the `defineSiteConfig()` helper imported from
-`astro-theme-university/types` — **not** from the package root — so the site config
-module stays lightweight and doesn't pull the theme's integration code into
-your page bundles. The helper is an identity function that gives you full
+`astro-theme-university/types` — **not** from the package root — so the site
+config module stays lightweight and doesn't pull the theme's integration code
+into your page bundles. The helper is an identity function that gives you full
 TypeScript autocomplete and validation on the `SiteConfig` shape.
 
 ## Content
@@ -48,8 +50,8 @@ const pages = definePageCollection({ passthrough: true });
 export const collections = { pages };
 ```
 
-`passthrough: true` allows arbitrary extra frontmatter fields without
-updating the schema. Remove it to enforce strict validation.
+`passthrough: true` allows arbitrary extra frontmatter fields without updating
+the schema. Remove it to enforce strict validation.
 
 Required frontmatter:
 
@@ -72,8 +74,8 @@ programmatic pages like collection listings and dynamic routes.
 Import from `astro-theme-university`:
 
 - **layouts**: `BaseLayout`, `ContentLayout`, `SidebarLayout`
-- **components**: `Hero`, `Card`, `CardGrid`, `Callout`,
-  `Pagination`, `Sidebar`, `YouTubeEmbed`
+- **components**: `Hero`, `Card`, `CardGrid`, `Callout`, `Pagination`,
+  `Sidebar`, `YouTubeEmbed`
 
 ### Callouts in markdown
 
@@ -102,6 +104,6 @@ optimisation. For standalone pages, import images in the script block.
 
 ## Style customisation
 
-The theme uses CSS custom properties and `@layer`. Override tokens in a
-custom CSS file imported from `PageLayout.astro` or a wrapping layout. See
-the theme docs for available tokens and design primitives.
+The theme uses CSS custom properties and `@layer`. Override tokens in a custom
+CSS file imported from `PageLayout.astro` or a wrapping layout. See the theme
+docs for available tokens and design primitives.

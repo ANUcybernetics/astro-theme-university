@@ -8,7 +8,9 @@ heroImage: ../../../assets/images/hero/abstract-06.svg
 
 import PropsTable from "../../../components/PropsTable.astro";
 
-The Pagination component renders previous/next links and a page status indicator. It's designed to work with Astro's built-in [`paginate()` function](https://docs.astro.build/en/guides/routing/#pagination).
+The Pagination component renders previous/next links and a page status
+indicator. It's designed to work with Astro's built-in
+[`paginate()` function](https://docs.astro.build/en/guides/routing/#pagination).
 
 ```astro
 ---
@@ -46,4 +48,5 @@ const { page } = Astro.props;
 <Pagination page={page} />
 ```
 
-The component shows "Previous" and "Next" links only when the corresponding page exists, with a "Page X of Y" status in between.
+The component shows "Previous" and "Next" links only when the corresponding page
+exists, with a "Page X of Y" status in between.

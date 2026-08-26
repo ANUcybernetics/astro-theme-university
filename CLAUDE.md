@@ -2,11 +2,11 @@
 
 Astro 7 theme package for university-style static sites. Interactive theme
 controls use progressively enhanced native browser APIs, so consumers do not
-inherit a client-framework runtime. The package
-lives at the **repo root** (astromotion-style layout); `docs/` is the
-documentation site and `examples/base` is a standalone example workspace (not a
-root-workspace member — the examples test copies it to a temp dir and rewrites
-the theme dep to `file:` the repo root).
+inherit a client-framework runtime. The package lives at the **repo root**
+(astromotion-style layout); `docs/` is the documentation site and
+`examples/base` is a standalone example workspace (not a root-workspace member —
+the examples test copies it to a temp dir and rewrites the theme dep to `file:`
+the repo root).
 
 Extracted from an institution-specific monorepo whose private data-only brand
 package continues separately. This repo must stay free of institutional

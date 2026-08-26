@@ -1,16 +1,20 @@
 ---
 title: Deploying
-description: How to deploy your astro-theme-university site to common hosting platforms.
+description:
+  How to deploy your astro-theme-university site to common hosting platforms.
 section: guides
 order: 2
 heroImage: ../../../assets/images/hero/abstract-03.svg
 ---
 
-Astro builds your site to static HTML, CSS, and JavaScript by default. The output goes into a `dist/` directory, which you can deploy to any static hosting provider.
+Astro builds your site to static HTML, CSS, and JavaScript by default. The
+output goes into a `dist/` directory, which you can deploy to any static hosting
+provider.
 
 ## [GitHub Pages](https://pages.github.com/)
 
-The simplest approach is the official [Astro GitHub Action](https://github.com/withastro/action). Add a workflow file:
+The simplest approach is the official
+[Astro GitHub Action](https://github.com/withastro/action). Add a workflow file:
 
 ```yaml
 # .github/workflows/deploy.yml
@@ -53,7 +57,8 @@ export default defineConfig({
 });
 ```
 
-If your repository isn't deployed at the root (e.g. it's at `your-username.github.io/my-repo`), also set the `base` path:
+If your repository isn't deployed at the root (e.g. it's at
+`your-username.github.io/my-repo`), also set the `base` path:
 
 ```js
 export default defineConfig({
@@ -68,7 +73,8 @@ Connect your repository in the Cloudflare Pages dashboard, then configure:
 
 - **Build command**: `pnpm build`
 - **Build output directory**: `dist`
-- **Node.js version**: set the `NODE_VERSION` environment variable to `22` or later
+- **Node.js version**: set the `NODE_VERSION` environment variable to `22` or
+  later
 
 Cloudflare will build and deploy on every push to your main branch.
 
@@ -89,7 +95,9 @@ You can also add a `netlify.toml` to your repository:
 
 ## Base path configuration
 
-If your site isn't served from the root of the domain, the `base` option in `astro.config.ts` ensures all internal links and asset paths include the correct prefix. This applies to all deployment targets, not just GitHub Pages.
+If your site isn't served from the root of the domain, the `base` option in
+`astro.config.ts` ensures all internal links and asset paths include the correct
+prefix. This applies to all deployment targets, not just GitHub Pages.
 
 ```js
 import { defineConfig } from "astro/config";
@@ -100,4 +108,6 @@ export default defineConfig({
 });
 ```
 
-When `base` is set, use Astro's built-in URL handling rather than hard-coding paths. For example, `import.meta.env.BASE_URL` gives you the base path at runtime.
+When `base` is set, use Astro's built-in URL handling rather than hard-coding
+paths. For example, `import.meta.env.BASE_URL` gives you the base path at
+runtime.

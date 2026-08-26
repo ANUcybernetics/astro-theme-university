@@ -1,12 +1,17 @@
 ---
 title: CSS layers
-description: How the theme uses CSS cascade layers and how to work with them in your own styles.
+description:
+  How the theme uses CSS cascade layers and how to work with them in your own
+  styles.
 section: styling
 order: 4
 heroImage: ../../../assets/images/hero/abstract-05.svg
 ---
 
-The theme organises its styles using [CSS cascade layers](https://developer.mozilla.org/en-US/docs/Learn_CSS/Building_blocks/Cascade_layers), giving you predictable control over specificity without resorting to `!important`.
+The theme organises its styles using
+[CSS cascade layers](https://developer.mozilla.org/en-US/docs/Learn_CSS/Building_blocks/Cascade_layers),
+giving you predictable control over specificity without resorting to
+`!important`.
 
 ## Layer structure
 
@@ -16,15 +21,21 @@ The theme declares three layers in this order:
 @layer at.tokens, at.base, at.components;
 ```
 
-- **at.tokens** --- CSS custom properties (design tokens) for colours, typography, spacing, and layout
-- **at.base** --- element-level resets and base styles (headings, paragraphs, links, tables, code blocks)
-- **at.components** --- styles for specific theme components (Nav, Footer, Card, and others)
+- **at.tokens** --- CSS custom properties (design tokens) for colours,
+  typography, spacing, and layout
+- **at.base** --- element-level resets and base styles (headings, paragraphs,
+  links, tables, code blocks)
+- **at.components** --- styles for specific theme components (Nav, Footer, Card,
+  and others)
 
-Layers declared earlier have lower priority. So `at.components` styles can override `at.base` styles, which can override `at.tokens` values.
+Layers declared earlier have lower priority. So `at.components` styles can
+override `at.base` styles, which can override `at.tokens` values.
 
 ## Your styles take precedence
 
-Any CSS you write that is _not_ placed inside a `@layer` block is considered "unlayered" and automatically wins over all layered styles, regardless of specificity. This means you can override any theme style with a simple selector:
+Any CSS you write that is _not_ placed inside a `@layer` block is considered
+"unlayered" and automatically wins over all layered styles, regardless of
+specificity. This means you can override any theme style with a simple selector:
 
 ```css
 /* This overrides the theme's heading colour without !important */
@@ -33,11 +44,14 @@ h1 {
 }
 ```
 
-This is the recommended approach for most customisation --- just write normal CSS and it takes effect.
+This is the recommended approach for most customisation --- just write normal
+CSS and it takes effect.
 
 ## Adding your own layers
 
-If you want finer control, you can declare your own layers that interleave with the theme's. The `@layer` order declaration must come before any layer content, so place it at the top of your main CSS file:
+If you want finer control, you can declare your own layers that interleave with
+the theme's. The `@layer` order declaration must come before any layer content,
+so place it at the top of your main CSS file:
 
 ```css
 @layer at.tokens, at.base, my.utilities, at.components, my.overrides;
@@ -60,10 +74,16 @@ If you want finer control, you can declare your own layers that interleave with 
 }
 ```
 
-In this example, `my.utilities` sits between `at.base` and `at.components`, and `my.overrides` comes after all theme layers. This gives you precise control over which styles win in each situation.
+In this example, `my.utilities` sits between `at.base` and `at.components`, and
+`my.overrides` comes after all theme layers. This gives you precise control over
+which styles win in each situation.
 
 ## When to use layers vs unlayered CSS
 
-For most sites, unlayered CSS is the simplest approach. Write your styles normally and they'll override the theme wherever they conflict.
+For most sites, unlayered CSS is the simplest approach. Write your styles
+normally and they'll override the theme wherever they conflict.
 
-Layers become useful when you're building a design system on top of the theme, or when you have multiple CSS files that need a clear priority order among themselves. In those cases, declaring an explicit layer order prevents surprises as your stylesheet grows.
+Layers become useful when you're building a design system on top of the theme,
+or when you have multiple CSS files that need a clear priority order among
+themselves. In those cases, declaring an explicit layer order prevents surprises
+as your stylesheet grows.

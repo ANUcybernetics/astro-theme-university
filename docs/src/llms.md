@@ -1,7 +1,7 @@
 # astro-theme-university
 
-> An Astro 7 theme package for university-style static sites, with
-> progressively enhanced native controls and no client-framework dependency.
+> An Astro 7 theme package for university-style static sites, with progressively
+> enhanced native controls and no client-framework dependency.
 
 astro-theme-university provides layouts, components, and styles for building
 institutional websites. It ships neutral defaults (a teal primary colour, text

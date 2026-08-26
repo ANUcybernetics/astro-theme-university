@@ -1,16 +1,21 @@
 ---
 title: Customisation
-description: How to re-brand the theme and override design tokens with your own styles.
+description:
+  How to re-brand the theme and override design tokens with your own styles.
 section: styling
 order: 2
 heroImage: ../../../assets/images/hero/abstract-06.svg
 ---
 
-The theme's visual design is controlled entirely through CSS custom properties. You can change colours, typography, spacing, and layout by redefining the relevant `--at-*` tokens in your own CSS.
+The theme's visual design is controlled entirely through CSS custom properties.
+You can change colours, typography, spacing, and layout by redefining the
+relevant `--at-*` tokens in your own CSS.
 
 ## Re-branding
 
-Every semantic colour token derives from the three-colour brand palette via relative colour syntax, so a full re-brand is a small CSS file that overrides the palette:
+Every semantic colour token derives from the three-colour brand palette via
+relative colour syntax, so a full re-brand is a small CSS file that overrides
+the palette:
 
 ```css
 /* src/styles/brand.css */
@@ -34,13 +39,22 @@ import "../styles/brand.css";
 </BaseLayout>
 ```
 
-Headings, links, borders, surface tints, table styling, and the deck tint scales all re-derive from the new palette --- there's nothing else to override. Pair the CSS with branding props on `BaseLayout` (`logo`, `favicon`, `acknowledgement`, `legalLinks`, and so on) and the whole site carries your institution's identity. A branding package can bundle both: a brand stylesheet plus a props object you spread into `BaseLayout`.
+Headings, links, borders, surface tints, table styling, and the deck tint scales
+all re-derive from the new palette --- there's nothing else to override. Pair
+the CSS with branding props on `BaseLayout` (`logo`, `favicon`,
+`acknowledgement`, `legalLinks`, and so on) and the whole site carries your
+institution's identity. A branding package can bundle both: a brand stylesheet
+plus a props object you spread into `BaseLayout`.
 
-The derived hover and active variants (`--at-primary-hover`, `--at-primary-active`) usually just work; brands with hand-tuned variants can override them directly.
+The derived hover and active variants (`--at-primary-hover`,
+`--at-primary-active`) usually just work; brands with hand-tuned variants can
+override them directly.
 
 ## Overriding individual tokens
 
-For finer-grained changes, redefine semantic tokens instead of (or as well as) the palette. Create a CSS file in your project --- for example, `src/styles/overrides.css` --- and redefine the tokens you want to change:
+For finer-grained changes, redefine semantic tokens instead of (or as well as)
+the palette. Create a CSS file in your project --- for example,
+`src/styles/overrides.css` --- and redefine the tokens you want to change:
 
 ```css
 :root {
@@ -49,11 +63,24 @@ For finer-grained changes, redefine semantic tokens instead of (or as well as) t
 }
 ```
 
-Because the theme tokens are declared inside the `at.tokens` CSS layer and your overrides sit in unlayered CSS, your values automatically take precedence. There's no need to use `!important` or increase specificity. Note that most colour tokens resolve light and dark values with `light-dark()`, so a plain override applies in both modes --- use `light-dark()` yourself if you need mode-specific values.
+Because the theme tokens are declared inside the `at.tokens` CSS layer and your
+overrides sit in unlayered CSS, your values automatically take precedence.
+There's no need to use `!important` or increase specificity. Note that most
+colour tokens resolve light and dark values with `light-dark()`, so a plain
+override applies in both modes --- use `light-dark()` yourself if you need
+mode-specific values.
 
 ## Adjusting typography
 
-To use a different body font, redefine `--at-font-body`. Make sure you also load the font itself. The easiest path is Astro's [font system](https://docs.astro.build/en/guides/fonts/): `BaseLayout` emits an `@font-face` for every font registered in your config's top-level `fonts` array, and the `preloadFonts` integration option controls which of them are preloaded (by default only the theme body font). Fonts loaded outside the font system need a `<link>` in your layout's `<head>` or your own [`@font-face`](https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face) declaration.
+To use a different body font, redefine `--at-font-body`. Make sure you also load
+the font itself. The easiest path is Astro's
+[font system](https://docs.astro.build/en/guides/fonts/): `BaseLayout` emits an
+`@font-face` for every font registered in your config's top-level `fonts` array,
+and the `preloadFonts` integration option controls which of them are preloaded
+(by default only the theme body font). Fonts loaded outside the font system need
+a `<link>` in your layout's `<head>` or your own
+[`@font-face`](https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face)
+declaration.
 
 ```css
 :root {
@@ -75,11 +102,15 @@ To use a different body font, redefine `--at-font-body`. Make sure you also load
 
 ## Dark mode overrides
 
-If you need different values in dark mode, use `light-dark()` in your override, or scope a rule to the `[data-theme="dark"]` selector. See [dark mode](/docs/styling/dark-mode#adding-custom-dark-mode-styles) for details and examples.
+If you need different values in dark mode, use `light-dark()` in your override,
+or scope a rule to the `[data-theme="dark"]` selector. See
+[dark mode](/docs/styling/dark-mode#adding-custom-dark-mode-styles) for details
+and examples.
 
 ## Practical example
 
-Here's a complete brand file that moves the theme to a crimson palette and tightens the type scale:
+Here's a complete brand file that moves the theme to a crimson palette and
+tightens the type scale:
 
 ```css
 /* src/styles/brand.css */
@@ -95,4 +126,5 @@ Here's a complete brand file that moves the theme to a crimson palette and tight
 }
 ```
 
-This approach keeps your customisations separate from the theme, making upgrades straightforward --- your overrides simply continue to replace the same tokens.
+This approach keeps your customisations separate from the theme, making upgrades
+straightforward --- your overrides simply continue to replace the same tokens.

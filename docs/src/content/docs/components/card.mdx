@@ -1,6 +1,8 @@
 ---
 title: Card
-description: A versatile card component for displaying titled content blocks, optionally linked and with images.
+description:
+  A versatile card component for displaying titled content blocks, optionally
+  linked and with images.
 section: components
 order: 2
 heroImage: ../../../assets/images/hero/abstract-03.svg
@@ -10,7 +12,9 @@ import PropsTable from "../../../components/PropsTable.astro";
 import Example from "../../../components/Example.astro";
 import Card from "astro-theme-university/components/Card.astro";
 
-The Card component displays content in a contained, titled block. When an `href` is provided the entire card renders as an `<a>` element, making the whole surface clickable. Without `href`, it renders as a `<div>`.
+The Card component displays content in a contained, titled block. When an `href`
+is provided the entire card renders as an `<a>` element, making the whole
+surface clickable. Without `href`, it renders as a `<div>`.
 
 ```astro
 ---
@@ -22,7 +26,9 @@ import Card from "astro-theme-university/components/Card.astro";
 
 <PropsTable component="components/Card" />
 
-The component also accepts a default slot for body content below the title, and a named `actions` slot for a control that does something other than follow the card's link.
+The component also accepts a default slot for body content below the title, and
+a named `actions` slot for a control that does something other than follow the
+card's link.
 
 ## Examples
 
@@ -59,7 +65,9 @@ The component also accepts a default slot for body content below the title, and 
 
 ## Actions
 
-A card can carry a control that isn't the card's link — a copy button, a QR toggle, a dismiss. Put it in the `actions` slot and it renders as a badge in the card's top corner.
+A card can carry a control that isn't the card's link — a copy button, a QR
+toggle, a dismiss. Put it in the `actions` slot and it renders as a badge in the
+card's top corner.
 
 ```astro
 <Card title="Deployed prototype" href={url}>
@@ -68,14 +76,32 @@ A card can carry a control that isn't the card's link — a copy button, a QR to
 </Card>
 ```
 
-Filling the slot changes how a linked card is marked up. Normally the whole card is one `<a>`, which can't contain a button; with actions, the anchor shrinks to the title and stretches back over the card through a `::after` overlay. The card stays clickable end to end, the action stays clickable in its corner, and the link's accessible name becomes the title alone rather than every word on the card. A card without an `href` is unaffected either way.
+Filling the slot changes how a linked card is marked up. Normally the whole card
+is one `<a>`, which can't contain a button; with actions, the anchor shrinks to
+the title and stretches back over the card through a `::after` overlay. The card
+stays clickable end to end, the action stays clickable in its corner, and the
+link's accessible name becomes the title alone rather than every word on the
+card. A card without an `href` is unaffected either way.
 
-Style the slot's contents yourself — the theme positions the badge and stacks it above the overlay, but doesn't dictate how a control inside it looks.
+Style the slot's contents yourself — the theme positions the badge and stacks it
+above the overlay, but doesn't dictate how a control inside it looks.
 
 ## Notes
 
-When using the `image` prop, provide meaningful `imageAlt` text if the image conveys information. The default empty string marks the image as decorative, which is appropriate for purely visual imagery but not for informational graphics.
+When using the `image` prop, provide meaningful `imageAlt` text if the image
+conveys information. The default empty string marks the image as decorative,
+which is appropriate for purely visual imagery but not for informational
+graphics.
 
-The `image` prop also accepts a `RemoteImage` object (`{ src, width?, height?, srcset?, sizes? }`) for a pre-encoded external source — a CDN or object-store URL — rendered as a plain `<img>` with no build-time processing. Supply `srcset` (and per-image `sizes` if the default doesn't fit) for responsive variants you've encoded yourself; the card's CSS aspect ratio handles layout either way.
+The `image` prop also accepts a `RemoteImage` object
+(`{ src, width?, height?, srcset?, sizes? }`) for a pre-encoded external source
+— a CDN or object-store URL — rendered as a plain `<img>` with no build-time
+processing. Supply `srcset` (and per-image `sizes` if the default doesn't fit)
+for responsive variants you've encoded yourself; the card's CSS aspect ratio
+handles layout either way.
 
-When cards are placed inside a [CardGrid](/docs/components/card-grid/), they use [CSS subgrid](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_grid_layout/Subgrid) to align their image, title, and body rows across all cards in the same grid row. This keeps cards visually aligned even when titles or body text vary in length.
+When cards are placed inside a [CardGrid](/docs/components/card-grid/), they use
+[CSS subgrid](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_grid_layout/Subgrid)
+to align their image, title, and body rows across all cards in the same grid
+row. This keeps cards visually aligned even when titles or body text vary in
+length.

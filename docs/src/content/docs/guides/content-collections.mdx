@@ -6,13 +6,19 @@ order: 3
 heroImage: ../../../assets/images/hero/abstract-02.svg
 ---
 
-[Astro's content collections](https://docs.astro.build/en/guides/content-collections/) give you type-safe access to your Markdown and [MDX](https://mdxjs.com/) content. They're the recommended way to manage structured content like blog posts, news items, or project pages.
+[Astro's content collections](https://docs.astro.build/en/guides/content-collections/)
+give you type-safe access to your Markdown and [MDX](https://mdxjs.com/)
+content. They're the recommended way to manage structured content like blog
+posts, news items, or project pages.
 
 ## Defining a collection
 
 ### The fast path: `definePageCollection`
 
-For a standard page-style collection (`title`, optional `description`, optional `heroImage`, `published` flag) the theme ships a helper. `heroImage` accepts a relative image path (validated and optimised through Astro's image pipeline) or an absolute `http(s)://` URL for a remote, pre-encoded hero:
+For a standard page-style collection (`title`, optional `description`, optional
+`heroImage`, `published` flag) the theme ships a helper. `heroImage` accepts a
+relative image path (validated and optimised through Astro's image pipeline) or
+an absolute `http(s)://` URL for a remote, pre-encoded hero:
 
 ```ts
 // src/content.config.ts
@@ -24,9 +30,13 @@ const pages = definePageCollection();
 export const collections = { pages };
 ```
 
-Pass `passthrough: true` if you want to accept arbitrary additional frontmatter fields without updating the schema. That's the default in the base starter example.
+Pass `passthrough: true` if you want to accept arbitrary additional frontmatter
+fields without updating the schema. That's the default in the base starter
+example.
 
-To extend the base schema with extra fields, import `pageSchema` instead and use it inside a regular `defineCollection` call. This lets TypeScript infer the extended data shape correctly:
+To extend the base schema with extra fields, import `pageSchema` instead and use
+it inside a regular `defineCollection` call. This lets TypeScript infer the
+extended data shape correctly:
 
 ```ts
 import { defineCollection } from "astro:content";
@@ -46,7 +56,8 @@ const docs = defineCollection({
 
 ### The manual path: `defineCollection`
 
-If your collection doesn't fit the page shape, define it the usual way with Astro's own helpers:
+If your collection doesn't fit the page shape, define it the usual way with
+Astro's own helpers:
 
 ```ts
 import { defineCollection, z } from "astro:content";
@@ -76,11 +87,13 @@ src/content/posts/
   announcing-something.md
 ```
 
-Each file's frontmatter must match the schema. TypeScript will flag any mismatches during the build.
+Each file's frontmatter must match the schema. TypeScript will flag any
+mismatches during the build.
 
 ## Creating a dynamic route
 
-To render each post as a page, create a dynamic route file. For a blog at `/posts/[slug]`, create `src/pages/posts/[...slug].astro`:
+To render each post as a page, create a dynamic route file. For a blog at
+`/posts/[slug]`, create `src/pages/posts/[...slug].astro`:
 
 ```astro
 ---
@@ -121,11 +134,13 @@ const { Content } = await render(post);
 </BaseLayout>
 ```
 
-The `getStaticPaths` function tells Astro which pages to generate at build time. Each post becomes its own HTML page with a URL based on the filename.
+The `getStaticPaths` function tells Astro which pages to generate at build time.
+Each post becomes its own HTML page with a URL based on the filename.
 
 ## Listing posts
 
-To create an index page that lists all posts, query the collection and render them however you like:
+To create an index page that lists all posts, query the collection and render
+them however you like:
 
 ```astro
 ---
@@ -158,7 +173,8 @@ const sorted = posts.sort(
 
 ## Filtering and querying
 
-The `getCollection` function accepts an optional filter callback. Use it to exclude drafts, filter by tag, or limit to recent posts:
+The `getCollection` function accepts an optional filter callback. Use it to
+exclude drafts, filter by tag, or limit to recent posts:
 
 ```ts
 // Published posts only
@@ -172,10 +188,13 @@ const tagged = await getCollection("posts", ({ data }) =>
 
 ## Using MDX
 
-If your content files use `.mdx` instead of `.md`, you can import and use Astro or framework components directly within the content. Update the glob pattern accordingly:
+If your content files use `.mdx` instead of `.md`, you can import and use Astro
+or framework components directly within the content. Update the glob pattern
+accordingly:
 
 ```ts
 loader: glob({ pattern: "**/*.{md,mdx}", base: "src/content/posts" }),
 ```
 
-MDX files can then import components at the top of the file and use them alongside Markdown content.
+MDX files can then import components at the top of the file and use them
+alongside Markdown content.

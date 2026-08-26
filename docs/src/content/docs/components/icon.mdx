@@ -1,6 +1,7 @@
 ---
 title: Icon
-description: Inline iconoir icons that inherit text colour and size from their context.
+description:
+  Inline iconoir icons that inherit text colour and size from their context.
 section: components
 order: 14
 heroImage: ../../../assets/images/hero/abstract-03.svg
@@ -10,7 +11,9 @@ import PropsTable from "../../../components/PropsTable.astro";
 import Example from "../../../components/Example.astro";
 import Icon from "astro-theme-university/components/Icon.astro";
 
-The Icon component renders an iconoir icon inline. Icons inherit the surrounding text colour via `currentColor` and default to `1em` square so they line up with the text they sit alongside.
+The Icon component renders an iconoir icon inline. Icons inherit the surrounding
+text colour via `currentColor` and default to `1em` square so they line up with
+the text they sit alongside.
 
 ```astro
 ---
@@ -58,11 +61,15 @@ Pass the bare name (no `iconoir:` prefix) to `<Icon name="...">`.
 
 ## Accessibility
 
-By default, the icon renders with `aria-hidden="true"` and `focusable="false"` --- appropriate for decorative icons sitting next to a text label. Pass `aria-label` to flip it to a labelled `role="img"` element when the icon is the only thing conveying meaning (e.g. an icon-only button).
+By default, the icon renders with `aria-hidden="true"` and `focusable="false"`
+--- appropriate for decorative icons sitting next to a text label. Pass
+`aria-label` to flip it to a labelled `role="img"` element when the icon is the
+only thing conveying meaning (e.g. an icon-only button).
 
 ## Using other iconify sets
 
-The theme ships iconoir only. Consumers needing a different iconify set can use the `IconifyIcon` re-export, which is the underlying `astro-icon` `<Icon>`:
+The theme ships iconoir only. Consumers needing a different iconify set can use
+the `IconifyIcon` re-export, which is the underlying `astro-icon` `<Icon>`:
 
 ```astro
 ---
@@ -72,4 +79,5 @@ import { IconifyIcon } from "astro-theme-university/components/Icon.astro";
 <IconifyIcon name="mdi:home" />
 ```
 
-Add the corresponding `@iconify-json/<set>` package to your project's `dependencies`.
+Add the corresponding `@iconify-json/<set>` package to your project's
+`dependencies`.

@@ -1,6 +1,8 @@
 ---
 title: SidebarLayout
-description: A layout with an optional sidebar navigation and article column, built on top of BaseLayout.
+description:
+  A layout with an optional sidebar navigation and article column, built on top
+  of BaseLayout.
 section: layouts
 order: 3
 heroImage: ../../../assets/images/hero/abstract-03.svg
@@ -8,7 +10,9 @@ heroImage: ../../../assets/images/hero/abstract-03.svg
 
 import PropsTable from "../../../components/PropsTable.astro";
 
-SidebarLayout wraps `BaseLayout` with a sticky sidebar navigation and an article column for long-form content. The sidebar is optional — omit the `sidebar` prop and SidebarLayout collapses to "BaseLayout with a content column".
+SidebarLayout wraps `BaseLayout` with a sticky sidebar navigation and an article
+column for long-form content. The sidebar is optional — omit the `sidebar` prop
+and SidebarLayout collapses to "BaseLayout with a content column".
 
 ```astro
 ---
@@ -45,15 +49,21 @@ const sidebar: SidebarSection[] = [
 
 ## Props
 
-SidebarLayout accepts the same site-wide props as [BaseLayout](/docs/layouts/base-layout/) (`name`, `links`, `contact`, `socials`, `licence`) plus the following:
+SidebarLayout accepts the same site-wide props as
+[BaseLayout](/docs/layouts/base-layout/) (`name`, `links`, `contact`, `socials`,
+`licence`) plus the following:
 
 <PropsTable component="layouts/SidebarLayout" />
 
-The Sidebar section shape (`SidebarSection` / `SidebarItem`) lives in the [Sidebar component docs](/docs/components/sidebar/).
+The Sidebar section shape (`SidebarSection` / `SidebarItem`) lives in the
+[Sidebar component docs](/docs/components/sidebar/).
 
 ## Generating the sidebar from a content collection
 
-The docs site you're reading derives its sidebar from the `docs` content collection. The pattern is: read the collection with `getCollection`, group entries by a `section` field, sort by an `order` field, and pass the resulting `SidebarSection[]` to SidebarLayout.
+The docs site you're reading derives its sidebar from the `docs` content
+collection. The pattern is: read the collection with `getCollection`, group
+entries by a `section` field, sort by an `order` field, and pass the resulting
+`SidebarSection[]` to SidebarLayout.
 
 ```astro
 ---
@@ -101,8 +111,15 @@ const sidebar: SidebarSection[] = SECTION_ORDER.flatMap((section) => {
 
 ## Responsive behaviour
 
-The sidebar is rendered as a 16rem sticky column on viewports wider than 768px. Below that breakpoint the sidebar is hidden entirely — consumers who want mobile navigation should provide a separate summary/details expander in their page scripts.
+The sidebar is rendered as a 16rem sticky column on viewports wider than 768px.
+Below that breakpoint the sidebar is hidden entirely — consumers who want mobile
+navigation should provide a separate summary/details expander in their page
+scripts.
 
 ## Why the sidebar is optional
 
-SidebarLayout's sidebar CSS is gated on `body:has(.at-sidebar)`, so pages that don't pass a `sidebar` prop inherit the default BaseLayout grid with centred content. This lets you use SidebarLayout as a single layout for your whole docs tree, toggling the sidebar on a per-page basis if some pages should render full-width.
+SidebarLayout's sidebar CSS is gated on `body:has(.at-sidebar)`, so pages that
+don't pass a `sidebar` prop inherit the default BaseLayout grid with centred
+content. This lets you use SidebarLayout as a single layout for your whole docs
+tree, toggling the sidebar on a per-page basis if some pages should render
+full-width.

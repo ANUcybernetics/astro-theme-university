@@ -1,6 +1,7 @@
 ---
 title: BaseLayout
-description: The main page wrapper that provides navigation, footer, and theme support.
+description:
+  The main page wrapper that provides navigation, footer, and theme support.
 section: layouts
 order: 1
 heroImage: ../../../assets/images/hero/abstract-01.svg
@@ -8,7 +9,9 @@ heroImage: ../../../assets/images/hero/abstract-01.svg
 
 import PropsTable from "../../../components/PropsTable.astro";
 
-BaseLayout is the primary layout component for every page. It renders the full HTML document including the `Nav` and `Footer` components, imports the theme's base and component stylesheets, and handles dark mode initialisation.
+BaseLayout is the primary layout component for every page. It renders the full
+HTML document including the `Nav` and `Footer` components, imports the theme's
+base and component stylesheets, and handles dark mode initialisation.
 
 ```astro
 ---
@@ -27,7 +30,8 @@ import BaseLayout from "astro-theme-university/layouts/BaseLayout.astro";
 
 ## Hero banner
 
-There are two ways to add a hero banner to a page. In `.astro` files you can use the named `hero` slot with the Hero component directly:
+There are two ways to add a hero banner to a page. In `.astro` files you can use
+the named `hero` slot with the Hero component directly:
 
 ```astro
 ---
@@ -40,9 +44,14 @@ import bannerImage from "../assets/images/banner.avif";
 </BaseLayout>
 ```
 
-The `image` prop accepts an imported image (`ImageMetadata`), which is processed through Astro's image pipeline for optimisation, or a `RemoteImage` object (`{ src, width?, height?, srcset?, sizes? }`) for a pre-encoded external source — a CDN or object-store URL — rendered as a plain `<img>` with no build-time processing.
+The `image` prop accepts an imported image (`ImageMetadata`), which is processed
+through Astro's image pipeline for optimisation, or a `RemoteImage` object
+(`{ src, width?, height?, srcset?, sizes? }`) for a pre-encoded external source
+— a CDN or object-store URL — rendered as a plain `<img>` with no build-time
+processing.
 
-For MDX pages, wrap content in the layout component directly to pass imported images:
+For MDX pages, wrap content in the layout component directly to pass imported
+images:
 
 ```mdx
 import PageLayout from "../layouts/PageLayout.astro";
@@ -55,27 +64,40 @@ Page content here as markdown.
 </PageLayout>
 ```
 
-If both `heroTitle` and a `slot="hero"` are provided, both will render --- so pick one approach per page.
+If both `heroTitle` and a `slot="hero"` are provided, both will render --- so
+pick one approach per page.
 
 ## What it includes
 
 BaseLayout renders the complete HTML document. Inside, it provides:
 
 - a skip-to-main-content link for keyboard navigation
-- the `Nav` component with your site name (as a text wordmark, or a logo if you pass one) and links
+- the `Nav` component with your site name (as a text wordmark, or a logo if you
+  pass one) and links
 - a `<main>` element that receives the default slot content
-- the `Footer` component with contact info, social links, acknowledgement, and licence
-- a favicon link, but only when you pass a `favicon` image --- there's no default
-- Open Graph and Twitter card meta for link previews (see [social cards](#social-cards) below)
-- an inline script that reads the user's theme preference from [`localStorage`](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) and applies it before first paint, preventing a flash of the wrong theme
+- the `Footer` component with contact info, social links, acknowledgement, and
+  licence
+- a favicon link, but only when you pass a `favicon` image --- there's no
+  default
+- Open Graph and Twitter card meta for link previews (see
+  [social cards](#social-cards) below)
+- an inline script that reads the user's theme preference from
+  [`localStorage`](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage)
+  and applies it before first paint, preventing a flash of the wrong theme
 
-The layout also imports `base.css` and `components.css` from the theme, so you don't need to add those yourself.
+The layout also imports `base.css` and `components.css` from the theme, so you
+don't need to add those yourself.
 
 ## Social cards
 
-Every page emits Open Graph and Twitter card meta, so a link pasted into Slack, Discord or a social feed renders as a card rather than a bare URL. Title, description and site name come from props you already pass; `og:url` and a canonical link are added when your Astro config declares a `site`.
+Every page emits Open Graph and Twitter card meta, so a link pasted into Slack,
+Discord or a social feed renders as a card rather than a bare URL. Title,
+description and site name come from props you already pass; `og:url` and a
+canonical link are added when your Astro config declares a `site`.
 
-The one piece with no fallback is the image. Scrapers derive `og:title` from `<title>` and `og:description` from the meta description, but a page with no `og:image` gets no card at all --- so set one:
+The one piece with no fallback is the image. Scrapers derive `og:title` from
+`<title>` and `og:description` from the meta description, but a page with no
+`og:image` gets no card at all --- so set one:
 
 ```js
 // src/site-config.ts
@@ -98,10 +120,20 @@ socialImageAlt: The 2027 annual report cover
 ---
 ```
 
-A local image is encoded to a **JPEG** card 1200px wide at build time, because card scrapers largely don't decode AVIF or WebP --- so pointing `socialImage` at the same AVIF you use for a hero is fine. A pre-encoded card hosted elsewhere can be passed as a `RemoteImage` instead, and is used as-is. Pages with no image still emit the text tags and declare `twitter:card` as `summary` rather than `summary_large_image`.
+A local image is encoded to a **JPEG** card 1200px wide at build time, because
+card scrapers largely don't decode AVIF or WebP --- so pointing `socialImage` at
+the same AVIF you use for a hero is fine. A pre-encoded card hosted elsewhere
+can be passed as a `RemoteImage` instead, and is used as-is. Pages with no image
+still emit the text tags and declare `twitter:card` as `summary` rather than
+`summary_large_image`.
 
-Use `socialType` for pages that aren't ordinary pages --- `"article"` for posts and news, `"profile"` for people.
+Use `socialType` for pages that aren't ordinary pages --- `"article"` for posts
+and news, `"profile"` for people.
 
 ## Site config pattern
 
-Most props on BaseLayout are the same across every page --- site name, navigation links, footer details. Rather than repeating them, define a shared config object and spread it. See [configuration](/docs/getting-started/configuration/#site-config) for the full pattern.
+Most props on BaseLayout are the same across every page --- site name,
+navigation links, footer details. Rather than repeating them, define a shared
+config object and spread it. See
+[configuration](/docs/getting-started/configuration/#site-config) for the full
+pattern.

@@ -1,6 +1,8 @@
 ---
 title: Installation
-description: Install astro-theme-university and its peer dependencies, configure the integration, and create your first page.
+description:
+  Install astro-theme-university and its peer dependencies, configure the
+  integration, and create your first page.
 section: getting-started
 order: 1
 heroImage: ../../../assets/images/hero/abstract-06.svg
@@ -8,17 +10,29 @@ heroImage: ../../../assets/images/hero/abstract-06.svg
 
 ## Install the package
 
-The theme is distributed from exact tagged releases of its public Git repository. Install it alongside the required peer dependencies using [pnpm](https://pnpm.io/):
+The theme is distributed from exact tagged releases of its public Git
+repository. Install it alongside the required peer dependencies using
+[pnpm](https://pnpm.io/):
 
 ```bash
 pnpm add astro "git+https://github.com/ANUcybernetics/astro-theme-university.git#vX.Y.Z" @astrojs/mdx sharp pagefind lightningcss @iconify-json/iconoir
 ```
 
-The theme requires [Astro](https://astro.build/) ^7.0.0. `@astrojs/mdx` is needed so Astro can resolve the renderer entry point from your project root; the theme auto-registers the integration at build time. `lightningcss` is required because the theme configures Vite's CSS transformer to use it; Vite resolves that package from your project root, not from inside the theme. `@iconify-json/iconoir` ships the iconoir icon set; `astro-icon` resolves iconify-set packages from the consumer's `package.json` (not the theme's), so the set has to live as a direct dep. The theme's interactive controls use native browser APIs and add no UI-framework dependency.
+The theme requires [Astro](https://astro.build/) ^7.0.0. `@astrojs/mdx` is
+needed so Astro can resolve the renderer entry point from your project root; the
+theme auto-registers the integration at build time. `lightningcss` is required
+because the theme configures Vite's CSS transformer to use it; Vite resolves
+that package from your project root, not from inside the theme.
+`@iconify-json/iconoir` ships the iconoir icon set; `astro-icon` resolves
+iconify-set packages from the consumer's `package.json` (not the theme's), so
+the set has to live as a direct dep. The theme's interactive controls use native
+browser APIs and add no UI-framework dependency.
 
 :::tip
 
-**Build-script approvals.** pnpm 11 asks for explicit approval before running build scripts on installed packages. Add a `pnpm-workspace.yaml` at your project root with:
+**Build-script approvals.** pnpm 11 asks for explicit approval before running
+build scripts on installed packages. Add a `pnpm-workspace.yaml` at your project
+root with:
 
 ```yaml
 allowBuilds:
@@ -26,13 +40,24 @@ allowBuilds:
   sharp: false
 ```
 
-`esbuild` needs its postinstall to fetch the platform-specific binary; `sharp` is set to `false` because its install script falls through to a from-source build when a system `libvips` is present (e.g. on macOS with Homebrew), and the prebuilt `@img/sharp-*` platform binary works at runtime regardless. Without these entries, every `pnpm install` warns "Ignored build scripts" and `sharp` may fail to load at build time.
+`esbuild` needs its postinstall to fetch the platform-specific binary; `sharp`
+is set to `false` because its install script falls through to a from-source
+build when a system `libvips` is present (e.g. on macOS with Homebrew), and the
+prebuilt `@img/sharp-*` platform binary works at runtime regardless. Without
+these entries, every `pnpm install` warns "Ignored build scripts" and `sharp`
+may fail to load at build time.
 
 :::
 
 :::warning
 
-**Git-deps caching quirk.** While the theme is still distributed from the git repo (i.e. you've pinned it as `git+https://github.com/ANUcybernetics/astro-theme-university.git#main` rather than an npm version), pnpm caches its resolution of `#main` to a specific commit and **does not re-fetch on subsequent `pnpm install` runs**. If you run an install after the upstream has moved forward and your site seems to be stuck on an older theme version, the escape hatch is:
+**Git-deps caching quirk.** While the theme is still distributed from the git
+repo (i.e. you've pinned it as
+`git+https://github.com/ANUcybernetics/astro-theme-university.git#main` rather
+than an npm version), pnpm caches its resolution of `#main` to a specific commit
+and **does not re-fetch on subsequent `pnpm install` runs**. If you run an
+install after the upstream has moved forward and your site seems to be stuck on
+an older theme version, the escape hatch is:
 
 ```bash
 rm -rf node_modules pnpm-lock.yaml
@@ -40,7 +65,11 @@ pnpm store prune
 pnpm install
 ```
 
-That forces pnpm to re-resolve `#main` to the current HEAD. Pinning a specific commit hash (`#<sha>&path:…`) avoids the issue entirely and gives you reproducible builds. This is a git-dep-only quirk — once the packages are published to npm, `pnpm update` handles version bumps cleanly and this note goes away.
+That forces pnpm to re-resolve `#main` to the current HEAD. Pinning a specific
+commit hash (`#<sha>&path:…`) avoids the issue entirely and gives you
+reproducible builds. This is a git-dep-only quirk — once the packages are
+published to npm, `pnpm update` handles version bumps cleanly and this note goes
+away.
 
 :::
 
@@ -63,10 +92,13 @@ export default defineConfig({
 The theme integration automatically:
 
 - registers `@astrojs/mdx` (set `mdx: false` to opt out)
-- adds Google font providers for Public Sans and Roboto Mono with the theme's CSS variable names (set `fonts: false` to opt out)
+- adds Google font providers for Public Sans and Roboto Mono with the theme's
+  CSS variable names (set `fonts: false` to opt out)
 - configures [Lightning CSS](https://lightningcss.dev/) as the CSS transformer
-- wires up remark/rehype plugins for callouts, heading IDs, autolinked headings, and smart typography
-- runs broken-link and axe-core accessibility checks, with optional `/llms.txt` generation; astromotion owns deck-specific checks when installed
+- wires up remark/rehype plugins for callouts, heading IDs, autolinked headings,
+  and smart typography
+- runs broken-link and axe-core accessibility checks, with optional `/llms.txt`
+  generation; astromotion owns deck-specific checks when installed
 
 If you're coming from an older template that installed Svelte only for the
 theme, remove `svelte`, `@astrojs/svelte`, `svelte-check`, and the explicit
@@ -75,7 +107,8 @@ site components use it.
 
 ## Create your first page
 
-With the integration in place, you can use the theme's `BaseLayout` in any Astro page:
+With the integration in place, you can use the theme's `BaseLayout` in any Astro
+page:
 
 ```astro
 ---
@@ -89,6 +122,8 @@ import BaseLayout from "astro-theme-university/layouts/BaseLayout.astro";
 </BaseLayout>
 ```
 
-Run `pnpm dev` and open the page in your browser. You should see the themed layout with a navigation bar and footer.
+Run `pnpm dev` and open the page in your browser. You should see the themed
+layout with a navigation bar and footer.
 
-The next step is to [configure your site](/docs/getting-started/configuration/) with a name and navigation links.
+The next step is to [configure your site](/docs/getting-started/configuration/)
+with a name and navigation links.

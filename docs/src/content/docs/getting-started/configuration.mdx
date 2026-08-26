@@ -1,6 +1,8 @@
 ---
 title: Configuration
-description: Configure theme options, create a site config file, and pass settings to the BaseLayout.
+description:
+  Configure theme options, create a site config file, and pass settings to the
+  BaseLayout.
 section: getting-started
 order: 2
 heroImage: ../../../assets/images/hero/abstract-04.svg
@@ -30,11 +32,17 @@ export default defineConfig({
 
 <PropsTable component="ThemeOptions" />
 
-Both `checkLinks` and `checkA11y` default to `true`, so you get post-build validation out of the box. Set either to `false` if you need to skip them temporarily. When the site is deployed under a `base` sub-path, `checkLinks` also verifies that every rendered internal link carries the base prefix (see [base-path-aware links](/docs/guides/markdown-extensions#base-links)).
+Both `checkLinks` and `checkA11y` default to `true`, so you get post-build
+validation out of the box. Set either to `false` if you need to skip them
+temporarily. When the site is deployed under a `base` sub-path, `checkLinks`
+also verifies that every rendered internal link carries the base prefix (see
+[base-path-aware links](/docs/guides/markdown-extensions#base-links)).
 
 ### Default layout
 
-The `defaultLayout` option injects a layout into MDX pages that don't specify one in frontmatter. This means individual pages don't need a `layout:` field or a wrapping layout component --- just frontmatter and content:
+The `defaultLayout` option injects a layout into MDX pages that don't specify
+one in frontmatter. This means individual pages don't need a `layout:` field or
+a wrapping layout component --- just frontmatter and content:
 
 ```js
 // astro.config.ts
@@ -53,7 +61,10 @@ Content here --- no layout import needed.
 
 ### Frontmatter hero images
 
-When using `defaultLayout`, MDX pages can specify hero images as paths in frontmatter instead of importing them. Pass a path starting with `/src/assets/` and BaseLayout resolves it to `ImageMetadata` via `import.meta.glob`, so the image goes through Astro's optimisation pipeline automatically:
+When using `defaultLayout`, MDX pages can specify hero images as paths in
+frontmatter instead of importing them. Pass a path starting with `/src/assets/`
+and BaseLayout resolves it to `ImageMetadata` via `import.meta.glob`, so the
+image goes through Astro's optimisation pipeline automatically:
 
 ```mdx
 ---
@@ -62,9 +73,14 @@ heroTitle: About us
 ---
 ```
 
-This avoids the need for explicit `import` statements in every MDX file. The path must start with `/src/assets/` and point to an image file within the `src/assets/` directory tree.
+This avoids the need for explicit `import` statements in every MDX file. The
+path must start with `/src/assets/` and point to an image file within the
+`src/assets/` directory tree.
 
-An absolute `http(s)://` URL also works, for images hosted outside the site (a CDN or object-store bucket). A remote hero bypasses Astro's image pipeline and renders as a plain `<img>` — the hero's CSS handles layout, so no dimensions are needed:
+An absolute `http(s)://` URL also works, for images hosted outside the site (a
+CDN or object-store bucket). A remote hero bypasses Astro's image pipeline and
+renders as a plain `<img>` — the hero's CSS handles layout, so no dimensions are
+needed:
 
 ```mdx
 ---
@@ -73,32 +89,54 @@ heroTitle: About us
 ---
 ```
 
-For remote images with responsive variants, pass a `RemoteImage` object (`{ src, width?, height?, srcset?, sizes? }`) to the layout's `heroImage` prop from a page's own frontmatter-free code instead.
+For remote images with responsive variants, pass a `RemoteImage` object
+(`{ src, width?, height?, srcset?, sizes? }`) to the layout's `heroImage` prop
+from a page's own frontmatter-free code instead.
 
 ### LLM content
 
-When `llmsTxt: true` is set, the theme generates `/llms.txt` and `/llms-full.txt` at build time. The page index is auto-generated from your content collections, but the preamble at the top of `llms.txt` is hand-written.
+When `llmsTxt: true` is set, the theme generates `/llms.txt` and
+`/llms-full.txt` at build time. The page index is auto-generated from your
+content collections, but the preamble at the top of `llms.txt` is hand-written.
 
-Create `src/llms.md` with a title, description, and any context you want LLMs to have about your site:
+Create `src/llms.md` with a title, description, and any context you want LLMs to
+have about your site:
 
 ```markdown
 # My Research Group
 
 > Interdisciplinary research at Example University.
 
-This site documents our projects, publications, and team members.
-Key areas include quantum computing, climate modelling, and policy analysis.
+This site documents our projects, publications, and team members. Key areas
+include quantum computing, climate modelling, and policy analysis.
 ```
 
-The theme appends an auto-generated `## Pages` section listing all published content pages with their titles and descriptions. If `src/llms.md` doesn't exist, the theme falls back to a minimal header using the site name from your theme options.
+The theme appends an auto-generated `## Pages` section listing all published
+content pages with their titles and descriptions. If `src/llms.md` doesn't
+exist, the theme falls back to a minimal header using the site name from your
+theme options.
 
-Every page also advertises the file to agent visitors with a `<link rel="alternate" type="text/markdown" href="/llms.txt">` in the head, so a crawler that reads the head can find it without relying on the well-known-path convention. The link is emitted only when `llmsTxt: true`, and its `href` respects your configured `base` path.
+Every page also advertises the file to agent visitors with a
+`<link rel="alternate" type="text/markdown" href="/llms.txt">` in the head, so a
+crawler that reads the head can find it without relying on the well-known-path
+convention. The link is emitted only when `llmsTxt: true`, and its `href`
+respects your configured `base` path.
 
-Entry URLs are derived from each markdown file's path under `src/content/` and `src/pages/`: the `pages` collection renders at the site root (`src/content/pages/about.md` → `/about/`, matching the `definePageCollection` catch-all convention), while any other collection keeps its directory name (`src/content/news/launch.md` → `/news/launch/`). The build verifies that every entry has a matching page in the output (`<url>/index.html` or `<url>.html`) and fails if any entry would point at a page that doesn't exist — for example when a collection renders under a different route than its directory name implies.
+Entry URLs are derived from each markdown file's path under `src/content/` and
+`src/pages/`: the `pages` collection renders at the site root
+(`src/content/pages/about.md` → `/about/`, matching the `definePageCollection`
+catch-all convention), while any other collection keeps its directory name
+(`src/content/news/launch.md` → `/news/launch/`). The build verifies that every
+entry has a matching page in the output (`<url>/index.html` or `<url>.html`) and
+fails if any entry would point at a page that doesn't exist — for example when a
+collection renders under a different route than its directory name implies.
 
 ## Site config {#site-config}
 
-Rather than repeating the same props on every page, create a central config file that exports your site's identity and navigation. Use the `defineSiteConfig` helper from `astro-theme-university/types` — it's an identity-typed function that gives you autocomplete and type-checking on the full `SiteConfig` shape:
+Rather than repeating the same props on every page, create a central config file
+that exports your site's identity and navigation. Use the `defineSiteConfig`
+helper from `astro-theme-university/types` — it's an identity-typed function
+that gives you autocomplete and type-checking on the full `SiteConfig` shape:
 
 ```ts
 // src/site-config.ts
@@ -124,17 +162,25 @@ export const siteConfig = defineSiteConfig({
 });
 ```
 
-:::info
-Import `defineSiteConfig` from `astro-theme-university/types` (the types-only subpath), **not** from `astro-theme-university` directly. The subpath keeps your site-config module lightweight and avoids pulling the theme's integration code into your page bundles.
-:::
+:::info Import `defineSiteConfig` from `astro-theme-university/types` (the
+types-only subpath), **not** from `astro-theme-university` directly. The subpath
+keeps your site-config module lightweight and avoids pulling the theme's
+integration code into your page bundles. :::
 
-The theme ships no default logo. With no `logo` prop, the site `name` renders in the navigation bar as a text wordmark. To show a logo instead, pass an imported image as `logo` (and optionally `logoDark` for dark mode). If your logo is a wide horizontal lockup, also pass `logoCompact` (a crest or monogram) so the nav swaps to it below the 640px breakpoint instead of wrapping --- see the [Nav docs](/docs/components/nav/).
+The theme ships no default logo. With no `logo` prop, the site `name` renders in
+the navigation bar as a text wordmark. To show a logo instead, pass an imported
+image as `logo` (and optionally `logoDark` for dark mode). If your logo is a
+wide horizontal lockup, also pass `logoCompact` (a crest or monogram) so the nav
+swaps to it below the 640px breakpoint instead of wrapping --- see the
+[Nav docs](/docs/components/nav/).
 
-The `socials` array supports `"facebook"`, `"instagram"`, `"youtube"`, and `"linkedin"` as platform values.
+The `socials` array supports `"facebook"`, `"instagram"`, `"youtube"`, and
+`"linkedin"` as platform values.
 
 ## Passing config to BaseLayout
 
-Spread the site config into `BaseLayout` on each page, then override anything page-specific:
+Spread the site config into `BaseLayout` on each page, then override anything
+page-specific:
 
 ```astro
 ---
@@ -148,7 +194,8 @@ import { siteConfig } from "../site-config";
 </BaseLayout>
 ```
 
-This pattern means adding a new nav link or changing the site name is a single edit in `site-config.ts`.
+This pattern means adding a new nav link or changing the site name is a single
+edit in `site-config.ts`.
 
 ### BaseLayout props
 

@@ -1,6 +1,8 @@
 ---
 title: Buttons
-description: Styled button classes for primary actions, outline variants, and link-styled buttons.
+description:
+  Styled button classes for primary actions, outline variants, and link-styled
+  buttons.
 section: styling
 order: 5
 heroImage: ../../../assets/images/hero/abstract-04.svg
@@ -8,7 +10,9 @@ heroImage: ../../../assets/images/hero/abstract-04.svg
 
 import Example from "../../../components/Example.astro";
 
-The theme provides `.at-button` classes for styling buttons and link elements as actionable controls. These are CSS classes rather than Astro components, so they work on any `<button>` or `<a>` element.
+The theme provides `.at-button` classes for styling buttons and link elements as
+actionable controls. These are CSS classes rather than Astro components, so they
+work on any `<button>` or `<a>` element.
 
 ## Usage
 
@@ -69,7 +73,8 @@ Two size modifiers are available alongside the default size.
 
 ## Disabled state
 
-Add the `disabled` attribute to a `<button>`, or `aria-disabled="true"` to an `<a>`.
+Add the `disabled` attribute to a `<button>`, or `aria-disabled="true"` to an
+`<a>`.
 
 ```html
 <button class="at-button" disabled>Disabled</button>
@@ -105,4 +110,7 @@ Size and style modifiers combine freely:
 
 ## Notes
 
-All button styles live in the `at.components` CSS layer, so they can be overridden in higher-priority layers. The `.at-button` class works on both `<button>` and `<a>` elements --- use `<a>` for navigation and `<button>` for actions.
+All button styles live in the `at.components` CSS layer, so they can be
+overridden in higher-priority layers. The `.at-button` class works on both
+`<button>` and `<a>` elements --- use `<a>` for navigation and `<button>` for
+actions.

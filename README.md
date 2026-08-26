@@ -2,8 +2,8 @@
 
 An Astro 7 theme package for university-style static sites — layouts,
 progressively enhanced components, content helpers, post-build checks
-(accessibility and broken links), Pagefind search, and a Reveal.js deck theme for
-[astromotion](https://github.com/ANUcybernetics/astromotion) slide decks.
+(accessibility and broken links), Pagefind search, and a Reveal.js deck theme
+for [astromotion](https://github.com/ANUcybernetics/astromotion) slide decks.
 
 The theme is deliberately institutional in feel — sticky nav with logo or text
 wordmark, hero banners, a footer with legal links, partnership band, and
