@@ -82,7 +82,9 @@ const transitionName = href
   : undefined;
 ---
 
-<Tag class="at-card" {...href ? { href } : {}}>
+{/* href only where it means something: on a stretched card it belongs to the
+    title's anchor, not to the div the card became. */}
+<Tag class="at-card" {...Tag === "a" ? { href } : {}}>
   {
     localImage && (
       <div class="at-card-image-frame">

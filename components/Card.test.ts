@@ -46,6 +46,8 @@ describe("Card", () => {
     // A linked card with actions is a div: the anchor shrinks to the title and
     // stretches back over the card, so the button isn't nested in a link.
     expect(html).toContain('<div class="at-card"');
+    // The href moved to the title's anchor; it means nothing on a div.
+    expect(html).not.toMatch(/<div class="at-card"[^>]*href=/);
     expect(html).toContain('class="at-card-title-link" href="/about/"');
     expect(html).toContain('class="at-card-actions"');
     expect(html).toContain("<button type='button'>QR</button>");
