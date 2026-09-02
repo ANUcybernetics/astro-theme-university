@@ -1,14 +1,7 @@
 {
   "$schema": "./node_modules/oxfmt/configuration_schema.json",
   "proseWrap": "always",
-  "ignorePatterns": [
-    ".claude/",
-    "backlog/",
-    ".worktrees/",
-    "**/*.deck.svx",
-    "**/*.deck.mdx",
-    "**/decks/**/*.mdx"
-  ],
+  "ignorePatterns": [".claude/", "backlog/", ".worktrees/"],
   "svelte": true,
   "overrides": [
     {
