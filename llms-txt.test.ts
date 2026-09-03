@@ -364,6 +364,18 @@ describe("readContentEntries", () => {
     expect(entries[0].title).toBe("Live");
   });
 
+  fsTest("filters out unlisted entries", async ({ tmpDir }) => {
+    await writeFile(
+      join(tmpDir, "hidden.md"),
+      "---\ntitle: Hidden\nunlisted: true\n---\n\nHidden content.\n",
+    );
+    await writeFile(join(tmpDir, "listed.md"), "---\ntitle: Listed\n---\n\nListed content.\n");
+
+    const entries = await readContentEntries(tmpDir);
+    expect(entries).toHaveLength(1);
+    expect(entries[0].title).toBe("Listed");
+  });
+
   fsTest("skips files without a title", async ({ tmpDir }) => {
     await writeFile(
       join(tmpDir, "no-title.md"),

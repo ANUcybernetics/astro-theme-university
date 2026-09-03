@@ -169,7 +169,10 @@ export async function readContentEntries(contentDir: string): Promise<LlmsEntry[
     const source = await readFile(filePath, "utf-8");
     const { data, body } = parseFrontmatter(source);
 
-    if (data.published === false) continue;
+    // `published: false` is out of the build; `unlisted: true` stays in it
+    // at its own URL but out of every index, and llms.txt is an index —
+    // matching the noindex + pagefind-ignore the layout already emits.
+    if (data.published === false || data.unlisted === true) continue;
 
     const title = data.title;
     if (typeof title !== "string" || !title) continue;

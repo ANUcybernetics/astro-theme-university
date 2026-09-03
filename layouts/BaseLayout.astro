@@ -26,7 +26,9 @@ export interface BaseLayoutProps {
   description?: string;
   /** Unlisted page: builds at its URL for anyone with the link, but stays out
    *  of the indexes — emits `<meta name="robots" content="noindex">` and marks
-   *  the page `data-pagefind-ignore="all"` so the on-site search skips it. */
+   *  the page `data-pagefind-ignore="all"` so the on-site search skips it. Set
+   *  as page frontmatter it also drops the page from llms.txt, which is an
+   *  index like any other. */
   unlisted?: boolean;
   /** Site name displayed in the nav and footer. */
   name?: string;

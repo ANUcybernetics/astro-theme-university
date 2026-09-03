@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.14.1
+
+`unlisted` now reaches llms.txt. The layout prop already emitted
+`<meta name="robots" content="noindex">` and marked the body
+`data-pagefind-ignore="all"`, but a page carrying `unlisted: true` in its
+frontmatter still turned up in `/llms.txt` and `/llms-full.txt`, body and all
+--- so the one flag meant "hidden" in two indexes out of three. It now means it
+in all three.
+
 ## 0.14.0
 
 `FilterableCardGrid` items can carry an `image`, rendered above the title in the
