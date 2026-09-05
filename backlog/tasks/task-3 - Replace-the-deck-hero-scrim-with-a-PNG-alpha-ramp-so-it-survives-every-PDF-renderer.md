@@ -6,6 +6,7 @@ title: >-
 status: To Do
 assignee: []
 created_date: '2026-09-05 04:52'
+updated_date: '2026-09-05 05:05'
 labels:
   - deck
   - pdf
@@ -50,4 +51,24 @@ An image with an alpha soft mask is the one transparency primitive every writer 
 3. Verify on the docs deck and on llms-unplugged's language-model-by-show-of-hands: export raw (--no-compress) and compressed, split pages with qpdf, render with pdftoppm, mutool draw, gs and sips on daysy, compare brightness bands against an agent-browser screenshot of the same slide. sips and qlmanage draw only a PDF's first page, hence the split.
 4. In astromotion, remove the pdftocairo passes from scripts/deck-pdf.mjs (keep gs and the ICC repair), re-run step 3 on the simplified pipeline, release. Note TASK-2's poppler quirk: pdftocairo bakes poppler's brighter reading of translucent SVG shading fills into the file, so dropping it also fixes SVG-backed slides.
 5. Release the theme patch, then propagate both packages via anu-theme-sync.
+
+6. Fix astromotion TASK-5 in the same astromotion release: pair deck-pdf's process-group kill with astro preview stop, as deck-check already does. Every export attempt in the Linux verification tripped over the leaked daemon.
 <!-- SECTION:PLAN:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+Findings from the Linux session of 2026-09-05, for whoever picks this up on daysy.
+
+**PNG ramp on the real docs deck (SVG hero art), Linux renderers.** Identical tonal profile under gs, poppler and MuPDF, raw and after gs alone (bottom row 32-33 against 32 on screen). After gs the scrim is still a plain 1x256 image with an SMask: no group, no blend mode. The multiply scrim after gs is a nested form XObject carrying /BM /Multiply inside an isolated group, which is the arrangement Quartz misdraws.
+
+**SVG gradient scrim: evaluated and rejected.** An SVG data URI with a stop-opacity linearGradient survives gs in all three Linux renderers, but only by accident: Chrome emits it as a tiling pattern whose content is an axial shading under a luminosity soft mask whose group is another axial shading. It escapes the pdfwrite bug because the colour layer comes out as ShadingType 2 rather than the ShadingType 1 a CSS gradient produces. Same soft-mask family that failed, one more wrapper, and unmeasured on Quartz, PDFium and Acrobat. Don't pursue it.
+
+**Poppler quirk, not ours to fix.** Poppler ignores the constant alpha (ExtGState ca) on shading-pattern fills, so an SVG background whose gradient shapes carry opacity renders brighter under poppler (Evince, Okular, pdftocairo) than under gs, MuPDF, Chrome or the browser. Confirmed by patching the PDF: forcing those fills to ca 1 makes gs match poppler; replacing them with flat colours makes poppler match gs. Each pdftocairo pass bakes that reading in for every viewer, so dropping both passes fixes SVG-backed slides everywhere except poppler-based viewers. Installed poppler is 24.02; current is 26.08; worth a check whether it is fixed upstream before caring further.
+
+**Measurement method that worked here.** astromotion-pdf <slug> out.pdf --no-compress --port=4399, then gs by hand with the exact flags from scripts/deck-pdf.mjs. Find the hero page with pdftotext per page. Rasterise at 216 dpi with gs png16m, pdftoppm and mutool draw. Profile: mean luminance per row over the right 40% of the width (no title there), read at 5%, 50%, 95% height. Screen reference: headless Chrome screenshot of the deck's ?print-pdf view at 1280 x (720 x pages), cropped to the page.
+
+**Pitfall.** astromotion-pdf's readiness check fails with 'Preview server never became ready' whenever Astro 7's preview daemon is already up from a previous export (astromotion TASK-5). Run astro preview stop in the site dir before each export. A server on the port can also belong to another site entirely.
+
+**Pins.** Every astromotion consumer is on v0.24.4 (the Ass2 template was bumped 2026-09-05, with Ben's OK despite provisioning) and every theme consumer on v0.14.2.
+<!-- SECTION:NOTES:END -->
