@@ -23,7 +23,7 @@ minimumReleaseAgeExclude:
 # tag — a floating ref here freezes at whatever commit main pointed to when
 # the lockfile entry was first resolved, then silently never moves.
 overrides:
-  astromotion: github:ANUcybernetics/astromotion#v0.25.0
+  astromotion: github:ANUcybernetics/astromotion#v0.25.1
   # Security floors for transitives the time-based resolver keeps on
   # vulnerable versions (Dependabot alerts). Scoped to the vulnerable range so
   # e.g. svgo@3 (iconify's major) is untouched; drop each entry once the
