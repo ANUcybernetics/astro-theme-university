@@ -333,37 +333,53 @@ body.reveal-viewport {
   &.hero {
     place-content: end start;
 
-    /* Keeps the scrim's multiply blend inside this slide: without an isolated
-       group it would reach past .slide-bg to whatever Reveal paints beneath. */
-    isolation: isolate;
-
     /* Scrim layered between bg image and content. ::after sits after
        .slide-bg in DOM order at the same z-index, so it paints over the
        image; content gets z-index: 1 below, so it paints over the scrim.
 
-       This is an OPAQUE grey gradient multiplied onto the image, not the
-       translucent black one the website Hero uses in components.css, though
-       the arithmetic is identical: multiplying by grey g dims exactly as black
-       at alpha 1 - g does, so 204 -> 51 is the same 20% -> 80% scrim. The
-       difference is what Chrome writes to a PDF. A gradient whose alpha
-       varies becomes a shading behind a luminosity soft mask, and
-       Ghostscript's pdfwrite (which astromotion-pdf compresses with) rewrites
-       that shading as an empty form, so the exported slide prints white
-       titles on undimmed artwork. An opaque shading under /BM /Multiply is
-       ordinary PDF that every renderer draws.
+       The scrim is a 1x256 RGBA PNG, black with alpha 20% at the top and 80%
+       at the bottom, stretched over the slide: the same dimming the website
+       Hero draws with a translucent gradient in components.css, but as an
+       image rather than a gradient. On screen the two are indistinguishable
+       (256 alpha steps over 720px). The difference is what Chrome writes to
+       a PDF and what each renderer then makes of it. A gradient whose alpha
+       varies becomes a shading behind a luminosity soft mask, which
+       Ghostscript's pdfwrite (astromotion-pdf's compressor) hollows out, so
+       the slide prints white titles on undimmed artwork. An opaque gradient
+       under mix-blend-mode: multiply survives Ghostscript but not macOS
+       Quartz: Preview, Safari and Quick Look draw the raw file too bright
+       and the compressed one as a near-uniform darkening of the whole
+       slide. An image with an alpha soft mask is the one transparency
+       primitive every writer and renderer agrees on, so it needs no blend
+       mode, no isolation and no post-processing.
 
-       So an override via --at-deck-hero-scrim must keep to opaque colours:
-       darker is stronger, a hue tints. Any alpha in it, or a mask-image,
-       brings the soft mask back and the scrim silently vanishes on export. */
+       Regenerate the data URI with:
+
+         import base64, struct, zlib
+         a = [round(51 + 153 * i / 255) for i in range(256)]
+         chunk = lambda t, d: struct.pack(">I", len(d)) + t + d + struct.pack(">I", zlib.crc32(t + d))
+         rows = b"".join(bytes([2, 0, 0, 0, x - (a[i - 1] if i else 0)]) for i, x in enumerate(a))
+         png = b"\x89PNG\r\n\x1a\n" + chunk(b"IHDR", struct.pack(">IIBBBBB", 1, 256, 8, 6, 0, 0, 0))
+         png += chunk(b"IDAT", zlib.compress(rows, 9)) + chunk(b"IEND", b"")
+         print(base64.b64encode(png).decode())
+
+       (filter type 2 stores each row as its delta from the row above, which
+       is why 256 rows compress to 89 bytes.)
+
+       An override via --at-deck-hero-scrim should likewise be an image with
+       an alpha channel (a data URI or a url()). A translucent gradient or a
+       mask-image brings the soft mask back, and a blend mode brings the
+       Quartz misdraw back; either exports wrong while the browser shows the
+       slide you designed. */
     &::after {
       content: "";
       position: absolute;
       inset: 0;
       background: var(
-        --at-deck-hero-scrim,
-        linear-gradient(to top, rgb(51 51 51), rgb(204 204 204))
-      );
-      mix-blend-mode: multiply;
+          --at-deck-hero-scrim,
+          url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAEACAYAAAByPhyYAAAAIElEQVR42mNiYGAwZgISjCCCAQtrVGJUYlRiVGJ4SgAAhLkCzbiKsDcAAAAASUVORK5CYII=")
+        )
+        0 0 / 100% 100% no-repeat;
       pointer-events: none;
     }
 

@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.14.3
+
+The deck hero scrim is now a PNG alpha ramp, a 1x256 image stretched over the
+slide, replacing the opaque gradient under `multiply` that 0.14.2 introduced.
+That gradient survived Ghostscript but not macOS Quartz: Preview, Safari and
+Quick Look drew the raw export too bright and the compressed one as a
+near-uniform darkening of the whole slide. An image with an alpha soft mask
+renders the same under poppler, MuPDF, Ghostscript and Quartz, before and after
+compression, so the `.hero` rule drops its `mix-blend-mode` and `isolation` and
+astromotion's export needs no pdftocairo passes on its account. On screen the
+slide is unchanged. The guide's `--at-deck-hero-scrim` entry now asks for an
+image with an alpha channel and names translucent gradients and blend modes as
+export hazards.
+
 ## 0.14.2
 
 The deck hero scrim survives PDF export under Ghostscript alone. The translucent

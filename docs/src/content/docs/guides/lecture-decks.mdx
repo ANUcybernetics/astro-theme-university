@@ -162,23 +162,23 @@ from 20% black at the top to 80% at the bottom. Retint or restrength it through
 
 ```css
 :root {
-  --at-deck-hero-scrim: linear-gradient(
-    to top,
-    rgb(30 20 60),
-    rgb(200 190 220)
-  );
+  --at-deck-hero-scrim: url("/decks/hero-scrim.png");
 }
 ```
 
-The scrim is an _opaque_ gradient blended onto the image with `multiply`, not a
-translucent one laid over it, and an override has to keep to opaque colours:
-darker is stronger, and a hue tints the artwork. Don't put any alpha in it, and
-don't reach for `mask-image`. Chrome writes a gradient whose alpha varies as a
-shading behind a soft mask, which Ghostscript (the compressor behind
+The default scrim is a tiny PNG with an alpha channel (a 1x256 ramp stretched
+over the slide), not a CSS gradient, and an override should be a raster image
+with alpha too. The reason is PDF export. Chrome writes a gradient whose alpha
+varies as a shading behind a soft mask, which Ghostscript (the compressor behind
 `astromotion-pdf`) hollows out, so the exported deck silently prints white
-titles on undimmed artwork while the browser shows the slide you designed.
-Multiplying by an opaque grey dims by exactly the same arithmetic and survives
-every PDF renderer.
+titles on undimmed artwork. An opaque gradient under `mix-blend-mode: multiply`
+survives Ghostscript but macOS Preview, Safari and Quick Look draw it wrong, too
+bright before compression and a near-uniform darkening after. An image with an
+alpha channel is the one kind of transparency every PDF writer and renderer
+agrees on. So don't put a translucent gradient, a `mask-image` or a blend mode
+in the override; the browser will show the slide you designed and the export
+won't. (An opaque gradient exports fine, but it covers the artwork entirely, so
+it only makes sense on a hero with no background image.)
 
 ## Table headers
 
