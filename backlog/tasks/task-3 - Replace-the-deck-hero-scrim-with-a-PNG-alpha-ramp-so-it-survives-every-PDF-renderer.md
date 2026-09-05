@@ -3,10 +3,10 @@ id: TASK-3
 title: >-
   Replace the deck hero scrim with a PNG alpha ramp so it survives every PDF
   renderer
-status: To Do
+status: Done
 assignee: []
 created_date: '2026-09-05 04:52'
-updated_date: '2026-09-05 05:05'
+updated_date: '2026-09-05 05:39'
 labels:
   - deck
   - pdf
@@ -35,12 +35,12 @@ An image with an alpha soft mask is the one transparency primitive every writer 
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 The .hero scrim is a data-URI PNG alpha ramp in styles/deck.css with no mix-blend-mode and no isolation; the PNG's generation (a few lines of Python or Node) is recorded in the comment, not shipped as a script
-- [ ] #2 A hero slide exported with astromotion-pdf renders with the same tonal profile under poppler, MuPDF, Ghostscript and macOS Quartz (sips on daysy), before and after Ghostscript compression
-- [ ] #3 On screen the hero slide is visually unchanged (max per-pixel difference under 3 grey levels against the multiply version)
-- [ ] #4 --at-deck-hero-scrim still works as an override and its documented constraint is updated (an image or an opaque gradient; translucent gradients and blend modes are called out as export hazards)
-- [ ] #5 astromotion's export drops both pdftocairo passes once no scrim needs them, with the Quartz check repeated on the simplified pipeline before release
-- [ ] #6 Released as a patch and propagated to every consumer via anu-theme-sync; llms-unplugged's NeurIPS deck re-exported and eyeballed in Preview
+- [x] #1 The .hero scrim is a data-URI PNG alpha ramp in styles/deck.css with no mix-blend-mode and no isolation; the PNG's generation (a few lines of Python or Node) is recorded in the comment, not shipped as a script
+- [x] #2 A hero slide exported with astromotion-pdf renders with the same tonal profile under poppler, MuPDF, Ghostscript and macOS Quartz (sips on daysy), before and after Ghostscript compression
+- [x] #3 On screen the hero slide is visually unchanged (max per-pixel difference under 3 grey levels against the multiply version)
+- [x] #4 --at-deck-hero-scrim still works as an override and its documented constraint is updated (an image or an opaque gradient; translucent gradients and blend modes are called out as export hazards)
+- [x] #5 astromotion's export drops both pdftocairo passes once no scrim needs them, with the Quartz check repeated on the simplified pipeline before release
+- [x] #6 Released as a patch and propagated to every consumer via anu-theme-sync; llms-unplugged's NeurIPS deck re-exported and eyeballed in Preview
 <!-- AC:END -->
 
 ## Implementation Plan
@@ -71,4 +71,10 @@ Findings from the Linux session of 2026-09-05, for whoever picks this up on days
 **Pitfall.** astromotion-pdf's readiness check fails with 'Preview server never became ready' whenever Astro 7's preview daemon is already up from a previous export (astromotion TASK-5). Run astro preview stop in the site dir before each export. A server on the port can also belong to another site entirely.
 
 **Pins.** Every astromotion consumer is on v0.24.4 (the Ass2 template was bumped 2026-09-05, with Ben's OK despite provisioning) and every theme consumer on v0.14.2.
+
+Done on daysy 2026-09-05. Theme v0.14.3 (scrim = 1x256 RGBA PNG, 89 bytes, filter type 2; no mix-blend-mode, no isolation). astromotion v0.25.1 drops both pdftocairo passes and stops its preview daemon on exit (astromotion TASK-5).
+
+Docs deck hero page, mid-slide luminance against 18.2 on screen (1280x720 screenshot), rendered at 216 dpi: raw poppler 23.0 (the known poppler quirk on the SVG artwork's translucent fills, not the scrim), raw gs 18.1, raw MuPDF 17.0, raw Quartz 18.7; after the released pipeline (gs + ICC repair) poppler 17.1, gs 18.1, MuPDF 17.0, Quartz 18.7. On screen, old multiply vs new ramp: max 1 grey level over the slide area (the only diff is Reveal's progress bar strip below the slide). llms-unplugged's language-model-by-show-of-hands re-exported with the new pipeline: both hero pages agree across gs, poppler and Quartz within 1 grey level and look right in Preview.
+
+Propagated: benswift-me e7de7b3, llms-unplugged 7ae66b1, comp4020/website 94f2e6f, Ass2 template 757136b, astro-theme-anu pins 393aa5d (no release). slop-university skipped per the impact map (deck.css only).
 <!-- SECTION:NOTES:END -->
