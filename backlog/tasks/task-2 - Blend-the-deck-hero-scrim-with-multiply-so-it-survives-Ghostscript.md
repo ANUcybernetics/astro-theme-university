@@ -1,10 +1,10 @@
 ---
 id: TASK-2
 title: Blend the deck hero scrim with multiply so it survives Ghostscript
-status: In Progress
+status: Done
 assignee: []
 created_date: '2026-09-05 02:04'
-updated_date: '2026-09-05 02:32'
+updated_date: '2026-09-05 02:37'
 labels:
   - deck
   - pdf
@@ -29,12 +29,12 @@ Deck-only. The website hero in styles/components.css keeps its translucent gradi
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 A hero slide's scrim survives an astromotion-pdf export compressed with Ghostscript alone, with no pdftocairo flattening stage
-- [ ] #2 The exported scrim renders with the same tonal profile under Ghostscript, poppler and MuPDF
-- [ ] #3 The scrim shows no visible banding at 3x export resolution (per-row step under 2 grey levels)
-- [ ] #4 On screen the hero slide is visually unchanged from the current gradient
-- [ ] #5 Consumers can retint or restrength the scrim through a documented custom property, with the opaque-colours-only constraint stated
-- [ ] #6 The scrim stays a plain CSS gradient: no embedded image asset or generator script
+- [x] #1 A hero slide's scrim survives an astromotion-pdf export compressed with Ghostscript alone, with no pdftocairo flattening stage
+- [x] #2 The exported scrim renders with the same tonal profile under Ghostscript, poppler and MuPDF
+- [x] #3 The scrim shows no visible banding at 3x export resolution (per-row step under 2 grey levels)
+- [x] #4 On screen the hero slide is visually unchanged from the current gradient
+- [x] #5 Consumers can retint or restrength the scrim through a documented custom property, with the opaque-colours-only constraint stated
+- [x] #6 The scrim stays a plain CSS gradient: no embedded image asset or generator script
 <!-- AC:END -->
 
 ## Implementation Plan
