@@ -1,6 +1,6 @@
 {
   "name": "astro-theme-university",
-  "version": "0.14.2",
+  "version": "0.14.3",
   "description": "Astro 7 theme package for university-style sites — layouts, progressively enhanced components, content helpers, post-build checks, and a Reveal.js deck theme. Re-brandable via CSS custom properties and data-only branding props.",
   "keywords": [
     "astro-component",
