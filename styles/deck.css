@@ -333,15 +333,37 @@ body.reveal-viewport {
   &.hero {
     place-content: end start;
 
-    /* Gradient scrim layered between bg image and content. ::after sits
-       after .slide-bg in DOM order at the same z-index, so it paints over
-       the image; content gets z-index: 1 below, so it paints over the
-       gradient. Mirrors the website Hero overlay in components.css. */
+    /* Keeps the scrim's multiply blend inside this slide: without an isolated
+       group it would reach past .slide-bg to whatever Reveal paints beneath. */
+    isolation: isolate;
+
+    /* Scrim layered between bg image and content. ::after sits after
+       .slide-bg in DOM order at the same z-index, so it paints over the
+       image; content gets z-index: 1 below, so it paints over the scrim.
+
+       This is an OPAQUE grey gradient multiplied onto the image, not the
+       translucent black one the website Hero uses in components.css, though
+       the arithmetic is identical: multiplying by grey g dims exactly as black
+       at alpha 1 - g does, so 204 -> 51 is the same 20% -> 80% scrim. The
+       difference is what Chrome writes to a PDF. A gradient whose alpha
+       varies becomes a shading behind a luminosity soft mask, and
+       Ghostscript's pdfwrite (which astromotion-pdf compresses with) rewrites
+       that shading as an empty form, so the exported slide prints white
+       titles on undimmed artwork. An opaque shading under /BM /Multiply is
+       ordinary PDF that every renderer draws.
+
+       So an override via --at-deck-hero-scrim must keep to opaque colours:
+       darker is stronger, a hue tints. Any alpha in it, or a mask-image,
+       brings the soft mask back and the scrim silently vanishes on export. */
     &::after {
       content: "";
       position: absolute;
       inset: 0;
-      background: linear-gradient(to top, rgb(0 0 0 / 80%), rgb(0 0 0 / 20%));
+      background: var(
+        --at-deck-hero-scrim,
+        linear-gradient(to top, rgb(51 51 51), rgb(204 204 204))
+      );
+      mix-blend-mode: multiply;
       pointer-events: none;
     }
 

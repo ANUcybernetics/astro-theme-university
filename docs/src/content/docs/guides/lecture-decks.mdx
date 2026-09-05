@@ -154,6 +154,32 @@ it's on you to supply artwork that impact slides' white text stays legible over
 --- a dark or low-contrast ground, or a mostly-empty field with the motif kept
 to a corner.
 
+## The hero scrim
+
+A `hero` slide dims its background image behind the title with a scrim that runs
+from 20% black at the top to 80% at the bottom. Retint or restrength it through
+`--at-deck-hero-scrim`, which takes any CSS image:
+
+```css
+:root {
+  --at-deck-hero-scrim: linear-gradient(
+    to top,
+    rgb(30 20 60),
+    rgb(200 190 220)
+  );
+}
+```
+
+The scrim is an _opaque_ gradient blended onto the image with `multiply`, not a
+translucent one laid over it, and an override has to keep to opaque colours:
+darker is stronger, and a hue tints the artwork. Don't put any alpha in it, and
+don't reach for `mask-image`. Chrome writes a gradient whose alpha varies as a
+shading behind a soft mask, which Ghostscript (the compressor behind
+`astromotion-pdf`) hollows out, so the exported deck silently prints white
+titles on undimmed artwork while the browser shows the slide you designed.
+Multiplying by an opaque grey dims by exactly the same arithmetic and survives
+every PDF renderer.
+
 ## Table headers
 
 Decks style tables from their own tokens rather than the `--at-table-header-*`

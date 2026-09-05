@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.14.2
+
+The deck hero scrim survives PDF export under Ghostscript alone. The translucent
+black gradient is now an opaque grey one blended with `multiply`: the same
+dimming arithmetic on screen (pixel-identical within rounding), but Chrome
+writes it as an ordinary shading with a blend mode rather than a shading behind
+a luminosity soft mask, which Ghostscript's pdfwrite hollows out. New
+`--at-deck-hero-scrim` custom property to retint or restrength it; the guide
+explains why an override must keep to opaque colours.
+
 ## 0.14.1
 
 `unlisted` now reaches llms.txt. The layout prop already emitted
