@@ -1,9 +1,15 @@
 import type { Root } from "mdast";
 import type { Plugin } from "unified";
-// Side-effect import for its mdast type augmentation (declaration merging),
-// not runtime exports — nothing to assign.
+// Side-effect imports for their mdast type augmentation (declaration
+// merging), not runtime exports — nothing to assign. mdast-util-to-hast's
+// hName/hProperties augmentation used to reach this file transitively
+// through @astrojs/markdown-remark's re-exported `unified`; astro 7.3's
+// markdown-remark no longer surfaces that chain at the type level, so we pull
+// it in directly.
 // oxlint-disable-next-line import/no-unassigned-import
 import "mdast-util-directive";
+// oxlint-disable-next-line import/no-unassigned-import
+import "mdast-util-to-hast";
 import { visit } from "unist-util-visit";
 
 const CALLOUT_TYPES = new Set(["info", "tip", "warning", "error"]);
