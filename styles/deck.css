@@ -520,10 +520,14 @@ body.reveal-viewport {
     padding: var(--at-slide-padding);
   }
 
+  /* Sized so the canonical QR slide --- `.centered`, the code with its
+     caption, one line of text under it --- sits inside the slide's padded
+     content area with a little to spare. At 480px the stack was 10px taller
+     than the area and `astromotion-check` reported every such slide. */
   .qr-code {
     svg {
-      width: 480px;
-      height: 480px;
+      width: 440px;
+      height: 440px;
     }
 
     span {

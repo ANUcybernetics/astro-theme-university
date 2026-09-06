@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.14.5
+
+The deck QR code is 440px square rather than 480px. The canonical QR slide ---
+`.centered`, the code with its caption, one line of text beneath --- stacked
+10px taller than the slide's padded content area, which astromotion-check v0.26
+(now measuring against the gutter rather than the canvas edge) reports on every
+such slide.
+
 ## 0.14.4
 
 The theme now depends on `@astrojs/mdx` 8. That version drops the bundled
