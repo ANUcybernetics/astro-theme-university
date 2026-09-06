@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.14.4
+
+The theme now depends on `@astrojs/mdx` 8. That version drops the bundled
+`@astrojs/markdown-remark` astro 7.2 shipped alongside it, so a consumer that
+calls `unified()` itself --- for a custom remark/rehype pipeline outside the
+theme's own markdown config --- needs `@astrojs/markdown-remark` 7.3 or later as
+a direct dependency to get a `unified` export at all. This theme already carries
+that dependency directly, so sites that only use the theme's exported markdown
+helpers need no changes.
+
+The a11y checker's jsdom moved from 29 to 30. Its DOM parsing and `axe-core`
+runs are otherwise unaffected; no `--at-` custom properties or check output
+changed.
+
 ## 0.14.3
 
 The deck hero scrim is now a PNG alpha ramp, a 1x256 image stretched over the
