@@ -50,14 +50,15 @@ token reference.
 ## Development
 
 pnpm workspace: the package lives at the repo root, with `docs/` (the
-documentation site) and `examples/` as workspace members.
+documentation site) as the other workspace member. `examples/base` is a
+fresh-consumer fixture installed on its own by the tests.
 
 ```bash
 pnpm install
-pnpm test        # package unit tests
-pnpm typecheck   # integration surface + docs astro check
-pnpm test:examples # fresh-consumer and base-path builds
-pnpm dev         # docs site
+pnpm test          # every suite, including the fresh-consumer example builds
+pnpm test:examples # only the example builds under tests/
+pnpm typecheck     # integration surface + docs astro check
+pnpm dev           # docs site
 ```
 
 Releases: `scripts/release.sh <patch|minor|major|x.y.z> [reason]` — tags
