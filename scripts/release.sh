@@ -63,7 +63,7 @@ jq --arg spec "git+https://github.com/ANUcybernetics/astro-theme-university.git#
 mv "$example_pkg.tmp" "$example_pkg"
 
 git add package.json "$example_pkg"
-git commit -m "chore(release): astro-theme-university $tag"
+git commit -m "release: astro-theme-university $tag"
 
 msg="astro-theme-university $new"
 [[ -n "$reason" ]] && msg="$msg"$'\n\n'"$reason"
