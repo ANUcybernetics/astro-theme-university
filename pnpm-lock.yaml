@@ -5,7 +5,7 @@ settings:
   excludeLinksFromLockfile: false
 
 overrides:
-  astromotion: github:ANUcybernetics/astromotion#v0.26.0
+  astromotion: github:ANUcybernetics/astromotion#v0.28.1
   yaml@>=2.0.0 <2.8.3: ^2.9.0
 
 importers:
@@ -31,8 +31,8 @@ importers:
         specifier: ^1.2.0
         version: 1.2.0
       astromotion:
-        specifier: github:ANUcybernetics/astromotion#v0.26.0
-        version: https://codeload.github.com/ANUcybernetics/astromotion/tar.gz/037de6258f064d02f0e3eff34342ff6b93265d39(@astrojs/mdx@8.0.0(@astrojs/markdown-remark@7.3.0(supports-color@10.2.2))(@astrojs/markdown-satteri@0.4.0)(astro@7.3.1(@astrojs/markdown-remark@7.3.0(supports-color@10.2.2))(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.3)(@types/node@26.1.2)(yaml@2.9.0)))(astro@7.3.1(@astrojs/markdown-remark@7.3.0(supports-color@10.2.2))(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.3)(@types/node@26.1.2)(yaml@2.9.0))(supports-color@10.2.2)
+        specifier: github:ANUcybernetics/astromotion#v0.28.1
+        version: https://codeload.github.com/ANUcybernetics/astromotion/tar.gz/38fd05967600d6ad6eb562642749c734283be46e(@astrojs/mdx@8.0.0(@astrojs/markdown-remark@7.3.0(supports-color@10.2.2))(@astrojs/markdown-satteri@0.4.0)(astro@7.3.1(@astrojs/markdown-remark@7.3.0(supports-color@10.2.2))(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.3)(@types/node@26.1.2)(yaml@2.9.0)))(astro@7.3.1(@astrojs/markdown-remark@7.3.0(supports-color@10.2.2))(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.3)(@types/node@26.1.2)(yaml@2.9.0))(supports-color@10.2.2)
       axe-core:
         specifier: ^4.11.4
         version: 4.13.0
@@ -155,8 +155,8 @@ importers:
         specifier: workspace:*
         version: link:..
       astromotion:
-        specifier: github:ANUcybernetics/astromotion#v0.26.0
-        version: https://codeload.github.com/ANUcybernetics/astromotion/tar.gz/037de6258f064d02f0e3eff34342ff6b93265d39(@astrojs/mdx@8.0.0(@astrojs/markdown-remark@7.3.0(supports-color@10.2.2))(@astrojs/markdown-satteri@0.4.0)(astro@7.3.1(@astrojs/markdown-remark@7.3.0(supports-color@10.2.2))(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.3)(@types/node@26.1.2)(yaml@2.9.0)))(astro@7.3.1(@astrojs/markdown-remark@7.3.0(supports-color@10.2.2))(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.3)(@types/node@26.1.2)(yaml@2.9.0))(supports-color@10.2.2)
+        specifier: github:ANUcybernetics/astromotion#v0.28.1
+        version: https://codeload.github.com/ANUcybernetics/astromotion/tar.gz/38fd05967600d6ad6eb562642749c734283be46e(@astrojs/mdx@8.0.0(@astrojs/markdown-remark@7.3.0(supports-color@10.2.2))(@astrojs/markdown-satteri@0.4.0)(astro@7.3.1(@astrojs/markdown-remark@7.3.0(supports-color@10.2.2))(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.3)(@types/node@26.1.2)(yaml@2.9.0)))(astro@7.3.1(@astrojs/markdown-remark@7.3.0(supports-color@10.2.2))(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.3)(@types/node@26.1.2)(yaml@2.9.0))(supports-color@10.2.2)
       sharp:
         specifier: ^0.35.4
         version: 0.35.4(@types/node@26.1.2)
@@ -1640,9 +1640,9 @@ packages:
       '@astrojs/markdown-remark':
         optional: true
 
-  astromotion@https://codeload.github.com/ANUcybernetics/astromotion/tar.gz/037de6258f064d02f0e3eff34342ff6b93265d39:
-    resolution: {gitHosted: true, integrity: sha512-u8Xd6OmnY1PHublMSACa6k2RCvvFMHlK613Izi7JWO/eWy4SyNNBSuklMX51se2dqmJWAOM/VML18H62b+XXnQ==, tarball: https://codeload.github.com/ANUcybernetics/astromotion/tar.gz/037de6258f064d02f0e3eff34342ff6b93265d39}
-    version: 0.26.0
+  astromotion@https://codeload.github.com/ANUcybernetics/astromotion/tar.gz/38fd05967600d6ad6eb562642749c734283be46e:
+    resolution: {gitHosted: true, integrity: sha512-Mt/D0tLg9/pdpGYkuxyHshM0KSmWA0WFgn7FzEtXWklp8WB9jI+I7i54vyULvNbJoR25yTCcNIgCHMrHWZn3Gw==, tarball: https://codeload.github.com/ANUcybernetics/astromotion/tar.gz/38fd05967600d6ad6eb562642749c734283be46e}
+    version: 0.28.1
     engines: {node: '>=24'}
     hasBin: true
     peerDependencies:
@@ -5098,7 +5098,7 @@ snapshots:
       - uploadthing
       - yaml
 
-  astromotion@https://codeload.github.com/ANUcybernetics/astromotion/tar.gz/037de6258f064d02f0e3eff34342ff6b93265d39(@astrojs/mdx@8.0.0(@astrojs/markdown-remark@7.3.0(supports-color@10.2.2))(@astrojs/markdown-satteri@0.4.0)(astro@7.3.1(@astrojs/markdown-remark@7.3.0(supports-color@10.2.2))(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.3)(@types/node@26.1.2)(yaml@2.9.0)))(astro@7.3.1(@astrojs/markdown-remark@7.3.0(supports-color@10.2.2))(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.3)(@types/node@26.1.2)(yaml@2.9.0))(supports-color@10.2.2):
+  astromotion@https://codeload.github.com/ANUcybernetics/astromotion/tar.gz/38fd05967600d6ad6eb562642749c734283be46e(@astrojs/mdx@8.0.0(@astrojs/markdown-remark@7.3.0(supports-color@10.2.2))(@astrojs/markdown-satteri@0.4.0)(astro@7.3.1(@astrojs/markdown-remark@7.3.0(supports-color@10.2.2))(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.3)(@types/node@26.1.2)(yaml@2.9.0)))(astro@7.3.1(@astrojs/markdown-remark@7.3.0(supports-color@10.2.2))(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.3)(@types/node@26.1.2)(yaml@2.9.0))(supports-color@10.2.2):
     dependencies:
       '@astrojs/mdx': 8.0.0(@astrojs/markdown-remark@7.3.0(supports-color@10.2.2))(@astrojs/markdown-satteri@0.4.0)(astro@7.3.1(@astrojs/markdown-remark@7.3.0(supports-color@10.2.2))(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.3)(@types/node@26.1.2)(yaml@2.9.0))
       '@qrgrid/core': 0.2.4
