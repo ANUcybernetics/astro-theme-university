@@ -1,5 +1,30 @@
 @import url("./tokens.css");
 
+/*
+ * The `hidden` attribute means "not rendered", but it gets its `display: none`
+ * only from the UA stylesheet, and every author `display` beats the UA origin
+ * whatever its specificity. This theme sets `display` on most of its layout
+ * classes — `.at-card` and `.at-card-grid` among them — so without this rule a
+ * script that sets `el.hidden = true` on a card changes an attribute and
+ * nothing else. `FilterableCardGrid` did exactly that: the status line counted
+ * matches down while every card stayed on screen.
+ *
+ * Unlayered, so it beats `@layer at.components`, and `!important` so it also
+ * beats a consumer's own unlayered CSS — the theme can't see what `display`
+ * rules a consumer writes over its cards, and this is the one declaration that
+ * should win against all of them. That last part is why this rule carries an
+ * `!important` where the `astro-island` overrides in components.css must not:
+ * those only have to out-rank Astro's own injected rule, which being unlayered
+ * and lower-specificity they already do. A consumer who genuinely needs a
+ * hidden element laid out can still override with an `!important` of their own.
+ *
+ * `until-found` is excluded because that value exists to be revealed by
+ * find-in-page, which needs the content to remain searchable.
+ */
+[hidden]:not([hidden="until-found" i]) {
+  display: none !important;
+}
+
 @layer at.base {
   *,
   *::before,
