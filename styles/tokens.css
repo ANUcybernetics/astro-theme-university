@@ -1,8 +1,10 @@
 @layer at.tokens {
   :root {
     /* Brand palette — the theme's re-branding API. Override these from a
-       brand CSS file imported after the theme styles and every semantic
-       token below (plus the deck.css tint scales) follows. Hover/active
+       brand CSS file imported after the theme styles. Every semantic token
+       below derives from --at-primary; --at-tertiary colours the info
+       tokens, and --at-secondary is used only by deck.css's tint scales.
+       Hover/active
        derive from the base colour via relative colour syntax; brands with
        hand-tuned variants can override the derived values directly. Black
        and white are fixed — the theme is always dark-ink-on-light (and the

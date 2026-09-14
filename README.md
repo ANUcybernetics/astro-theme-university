@@ -11,11 +11,11 @@ The theme is deliberately institutional in feel — sticky nav with logo or text
 wordmark, hero banners, a footer with legal links, partnership band, and
 acknowledgement section — but ships no institution's branding. Brands are data:
 
-- **colours**: override `--at-primary` (and optionally `--at-secondary`,
-  `--at-tertiary`) from a CSS file imported after the theme styles. Every
-  semantic token — links, headings, table headers, surface tints, deck tint
-  scales — derives from the palette via CSS relative colour syntax, so two or
-  three custom properties re-theme the whole site and any decks.
+- **colours**: override `--at-primary` from a CSS file imported after the theme
+  styles. Every semantic token — links, headings, table headers, surface tints,
+  the deck tint scales — derives from it via CSS relative colour syntax, so one
+  custom property re-themes the whole site and any decks; `--at-tertiary`
+  colours info callouts and `--at-secondary` feeds the deck tint scales.
 - **logos and footer data**: pass `logo`, `logoDark`, `favicon`, `legalLinks`,
   `partnerships`, `meta`, and `acknowledgement` to `BaseLayout`. Keep them in
   one object and spread it: `<BaseLayout {...myBranding} title={title}>`.

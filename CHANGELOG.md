@@ -1,5 +1,23 @@
 # Changelog
 
+## 0.15.0
+
+**`decks` option.** `universityTheme({ decks: true })` registers astromotion
+with the theme's deck stylesheet and body font as defaults and appends the deck
+remark plugins to the markdown chain the theme owns, replacing the three-part
+wiring every deck-bearing site repeated
+(`extraRemarkPlugins: deckRemarkPlugins`, an `astromotion()` block, and a
+one-line `src/decks/theme.css`). Pass an object to forward astromotion options
+(`routePrefix`, a custom `theme`, `shikiConfig`, …). A site that registers
+astromotion itself keeps working: `decks` warns and steps aside. astromotion
+stays an optional peer, loaded on demand.
+
+**Removed:** `ContentLayout`'s `wide` prop (nothing read it) and `Footer`'s
+`name` prop (never rendered; `BaseLayout` no longer forwards it). The palette
+docs now state the contract as implemented: web-side semantic tokens derive from
+`--at-primary`, `--at-tertiary` colours the info tokens, and `--at-secondary`
+reaches only the deck tint scales.
+
 ## 0.14.7
 
 `BaseLayout` emits a `<meta name="color-scheme">` derived from the `colorScheme`
