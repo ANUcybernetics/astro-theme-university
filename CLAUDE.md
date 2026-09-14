@@ -4,6 +4,9 @@ Astro 7 theme package for university-style static sites. Interactive theme
 controls are progressively enhanced native browser APIs; never introduce a
 client-framework runtime, because consumers would inherit it.
 
+**Browser support:** Baseline, no legacy browsers. Baseline newly available
+features are used natively with no fallbacks or feature detection.
+
 The package lives at the **repo root** (astromotion-style layout); `docs/` is
 the documentation site. `examples/base` is deliberately not a workspace member:
 `tests/examples.test.ts` copies it to a temp dir and rewrites the theme dep to

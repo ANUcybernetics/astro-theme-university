@@ -114,7 +114,7 @@ body.reveal-viewport {
    brand CSS overrides only win more easily than before. */
 :where(.reveal .slides) section {
   font-weight: 400;
-  text-align: left;
+  text-align: start;
   padding: var(--at-slide-padding);
   align-content: start;
 
@@ -142,7 +142,7 @@ body.reveal-viewport {
   }
 
   :is(h1, h2, h3, h4, h5, h6) {
-    text-align: left;
+    text-align: start;
   }
 
   h1 {
@@ -294,6 +294,12 @@ body.reveal-viewport {
     td {
       padding: 0.75rem 1rem;
       text-align: start;
+    }
+
+    /* improve-text-layout-and-legibility: balance header text the same way
+       headings are balanced — short labels, evenly broken. */
+    th {
+      text-wrap: balance;
     }
 
     /* Every `th` is a header, wherever it sits. A matrix table — one whose
@@ -549,11 +555,11 @@ body.reveal-viewport {
 
   .image-credit {
     position: absolute;
-    bottom: 1rem;
-    right: 1.5rem;
+    inset-block-end: 1rem;
+    inset-inline-end: 1.5rem;
     font-size: 1rem;
     color: rgb(255 255 255 / 60%);
-    text-align: right;
+    text-align: end;
 
     a {
       color: rgb(255 255 255 / 60%);
@@ -591,6 +597,17 @@ body.reveal-viewport {
     to {
       opacity: 1;
     }
+  }
+}
+
+/* deck.css is dark-only and doesn't load base.css, so it doesn't inherit that
+   file's site-wide reduced-motion rule — the .hero slide's own fade-up
+   animations need their own guard. Selector matches the compiled specificity
+   of the `&.present h1` rules above so it actually wins the cascade. */
+@media (prefers-reduced-motion: reduce) {
+  :where(.reveal .slides) section.hero.present h1,
+  :where(.reveal .slides) section.hero.present h1::after {
+    animation: none;
   }
 }
 

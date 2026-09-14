@@ -159,6 +159,14 @@ const resolvedSocialImage = resolveSocialImage(socialImage);
         emission order. Keep in sync if new at.* layers are added. */}
     <style is:inline>@layer at.tokens, at.base, at.components;</style>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    {/* dark-mode guide: declares supported colour schemes before the
+        stylesheet loads, so the browser can theme its own UI (scrollbars,
+        form controls, the initial canvas) without waiting on CSS. Kept in
+        sync with the resolved theme by the scripts below. */}
+    <meta
+      name="color-scheme"
+      content={colorScheme === "auto" ? "light dark" : colorScheme}
+    />
     {/* Emit @font-face for every registered font (the theme pair plus any the
         site registers itself). Preloads default to the body font only — the
         mono font is code-only and may never be used on a given page; sites
@@ -192,6 +200,8 @@ const resolvedSocialImage = resolveSocialImage(socialImage);
               ? "dark"
               : "light");
           document.documentElement.dataset.theme = t;
+          var schemeMeta = document.querySelector('meta[name="color-scheme"]');
+          if (schemeMeta) schemeMeta.content = t;
           var label = t === "dark" ? "Switch to light theme" : "Switch to dark theme";
           document.querySelectorAll(".at-footer-theme-toggle").forEach(function (btn) {
             btn.setAttribute("aria-label", label);

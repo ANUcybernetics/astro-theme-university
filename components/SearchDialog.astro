@@ -8,7 +8,12 @@ const { basePath = "/" } = Astro.props;
 const pagefindBase = basePath.endsWith("/") ? basePath : `${basePath}/`;
 ---
 
-<dialog class="at-search-dialog" data-at-search-dialog data-pagefind-base={pagefindBase}>
+<dialog
+  class="at-search-dialog"
+  aria-label="Search"
+  data-at-search-dialog
+  data-pagefind-base={pagefindBase}
+>
   <div class="at-search-panel">
     <div class="at-search-header">
       <svg

@@ -351,6 +351,12 @@
     text-align: start;
   }
 
+  /* improve-text-layout-and-legibility: balance header text the same way
+     headings are balanced — short labels, evenly broken. */
+  th {
+    text-wrap: balance;
+  }
+
   tbody tr:nth-child(even) {
     background: var(--at-table-stripe);
   }
