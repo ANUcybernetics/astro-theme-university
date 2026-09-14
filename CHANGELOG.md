@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.14.6
+
+The theme's base styles now reset `[hidden]`, so the attribute actually hides
+themed elements whose component styles set a `display` value.
+
 ## 0.14.5
 
 The deck QR code is 440px square rather than 480px. The canonical QR slide ---
