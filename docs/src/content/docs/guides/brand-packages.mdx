@@ -163,6 +163,7 @@ identity. A minimal `astro.config.ts` for a course site is:
 import { defineConfig } from "astro/config";
 import universityTheme from "astro-theme-university";
 import courseGraph from "astro-course-university";
+import { courseCollections } from "./src/course-collections";
 
 export default defineConfig({
   site: process.env.SITE_URL,
@@ -173,13 +174,13 @@ export default defineConfig({
       brandCss: "example-brand/brand.css",
       decks: true,
     }),
-    courseGraph({
-      collections: [{ key: "topics" }, { key: "labs" }, { key: "assessments" }],
-    }),
+    // the same spec object src/content.config.ts builds its collections from
+    courseGraph({ collections: courseCollections }),
   ],
 });
 ```
 
-The course package's README documents the collections config, refs, specs and
-the generated API. Institutions that maintain a brand package usually keep a
+The collections are declared once, in a plain module both config files import;
+the course package's README documents that spec, refs, `spec:` lists and the
+generated API. Institutions that maintain a brand package usually keep a
 course-site starter beside it, already wired to all three.
