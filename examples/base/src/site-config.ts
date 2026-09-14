@@ -1,7 +1,12 @@
 import { defineSiteConfig } from "astro-theme-university/types";
+import favicon from "./assets/images/favicon.svg";
 
 export const siteConfig = defineSiteConfig({
   name: "Example University",
+
+  // Replace with your own. `logo` / `logoDark` (imported images) swap the
+  // text wordmark in the nav for an image; see the theme's Nav docs.
+  favicon,
 
   // Nav bar links. Omit or leave empty to hide the nav entirely.
   links: [

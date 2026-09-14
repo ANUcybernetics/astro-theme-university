@@ -1,21 +1,11 @@
 ---
-import type { ImageMetadata } from "astro";
-import BaseLayout from "astro-theme-university/layouts/BaseLayout.astro";
+// The layout every MDX page renders through (see `defaultLayout` in
+// astro.config.ts). MdxPageLayout unwraps the frontmatter, joins the page
+// title to the site name, and renders `description` as the lead paragraph.
+import MdxPageLayout from "astro-theme-university/layouts/MdxPageLayout.astro";
 import { siteConfig } from "../site-config";
-
-const props = Astro.props.frontmatter ?? Astro.props;
-const { title, heroImage, ...rest } = props as {
-  title: string;
-  heroImage?: string | ImageMetadata;
-  [key: string]: unknown;
-};
 ---
 
-<BaseLayout
-  title={`${title} — ${siteConfig.name}`}
-  {...siteConfig}
-  {...rest}
-  heroImage={heroImage}
->
+<MdxPageLayout siteConfig={siteConfig} {...Astro.props}>
   <slot />
-</BaseLayout>
+</MdxPageLayout>
