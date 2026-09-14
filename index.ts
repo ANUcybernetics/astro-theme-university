@@ -1,6 +1,11 @@
 import type { AstroIntegration, ImageOutputFormat } from "astro";
 import { fontProviders } from "astro/config";
-import type { RehypePlugins, RemarkPlugin, RemarkPlugins } from "@astrojs/markdown-remark";
+import type {
+  RehypePlugins,
+  RemarkPlugin,
+  RemarkPlugins,
+  ShikiConfig,
+} from "@astrojs/markdown-remark";
 import { unified } from "@astrojs/markdown-remark";
 import mdx from "@astrojs/mdx";
 import icon from "astro-icon";
@@ -48,6 +53,43 @@ const themeDark = JSON.parse(
 
 const execFileAsync = promisify(execFile);
 const emptyIconDir = fileURLToPath(new URL("./icons", import.meta.url));
+const themeDeckCss = fileURLToPath(new URL("./styles/deck.css", import.meta.url));
+
+/** The astromotion options the theme forwards when it registers the deck
+ *  integration itself (`decks`). */
+interface AstromotionModule {
+  astromotion: (options: DeckOptions) => AstroIntegration;
+  deckRemarkPlugins: RemarkPlugins;
+}
+
+// astromotion is an optional peer, resolved here at module load: Astro
+// evaluates the config through a Vite module runner that it closes before
+// integration hooks run, so a lazy import() inside a hook has nowhere to
+// execute. A missing peer only matters when `decks` is set, and is reported
+// there.
+const astromotionModule = (await import("astromotion").catch(() => undefined)) as
+  | AstromotionModule
+  | undefined;
+
+export interface DeckOptions {
+  /** Deck stylesheet. Defaults to the theme's own `styles/deck.css`; a site
+   *  that layers deck CSS of its own points this at a file that imports it. */
+  theme?: string;
+  /** Route prefix for the injected deck pages (default: "/decks"). */
+  routePrefix?: string;
+  /** Check the structure of built deck pages after a production build
+   *  (default: true). */
+  checkStructure?: boolean;
+  /** Shiki config for deck code blocks (default: astromotion's own). */
+  shikiConfig?: ShikiConfig;
+  /** Registered font `cssVariable`s the deck head should emit `@font-face`
+   *  and preloads for (default: the theme body font when `fonts` is on). */
+  fontVariables?: string[];
+  /** Favicon path for deck pages, resolved against `base`. */
+  favicon?: string;
+  /** Default social-card image for deck pages. */
+  ogImage?: string;
+}
 
 export interface ThemeOptions {
   /** Site name displayed in the header and meta tags */
@@ -89,6 +131,14 @@ export interface ThemeOptions {
    *  are layered (`@layer at.tokens`), so unlayered brand declarations win
    *  the cascade regardless of load order. */
   brandCss?: string | string[];
+  /** Register astromotion for `.deck.mdx` slide decks under `src/decks/`,
+   *  with the theme's deck stylesheet and body font as defaults and the deck
+   *  remark plugins appended to the theme's markdown chain. Pass an object to
+   *  forward astromotion options (`routePrefix`, a custom `theme`, …).
+   *  Ignored, with a warning, when
+   *  the site registers astromotion itself — then it also owns the remark
+   *  plugins (`extraRemarkPlugins: deckRemarkPlugins`). (default: false) */
+  decks?: boolean | DeckOptions;
   /** Extra remark plugins to run BEFORE the theme's default list — e.g. a topic
    *  splicer whose output must then flow through the theme's directive plugins
    *  (custom heading ids, callouts). */
@@ -122,7 +172,7 @@ export default function universityTheme(options: ThemeOptions = {}): AstroIntegr
   return {
     name: "astro-theme-university",
     hooks: {
-      "astro:config:setup": ({ updateConfig, config, injectRoute, injectScript, logger }) => {
+      "astro:config:setup": async ({ updateConfig, config, injectRoute, injectScript, logger }) => {
         srcDir = fileURLToPath(config.srcDir);
         basePath = config.base;
         projectRootUrl = config.root;
@@ -147,6 +197,29 @@ export default function universityTheme(options: ThemeOptions = {}): AstroIntegr
           extraIntegrations.push(
             icon(existsSync(consumerIconDir) ? undefined : { iconDir: emptyIconDir }),
           );
+        }
+        let deckRemarkPlugins: RemarkPlugins = [];
+        if (options.decks) {
+          if (existingIntegrationNames.has("astromotion")) {
+            logger.warn(
+              "`decks` is set but astromotion is already registered; leaving the site's registration (and its remark plugins) in charge.",
+            );
+          } else {
+            if (!astromotionModule) {
+              throw new Error(
+                'astro-theme-university: `decks` needs the astromotion package installed (pnpm add "git+https://github.com/ANUcybernetics/astromotion.git#vX.Y.Z").',
+              );
+            }
+            const deckOptions = typeof options.decks === "object" ? options.decks : {};
+            extraIntegrations.push(
+              astromotionModule.astromotion({
+                theme: themeDeckCss,
+                ...(shouldAddFonts ? { fontVariables: ["--font-public-sans"] } : {}),
+                ...deckOptions,
+              }),
+            );
+            deckRemarkPlugins = astromotionModule.deckRemarkPlugins;
+          }
         }
         if (shouldCheckLinks) {
           extraIntegrations.push(
@@ -231,6 +304,9 @@ export default function universityTheme(options: ThemeOptions = {}): AstroIntegr
                     ]
                   : []),
                 ...(options.extraRemarkPlugins ?? []),
+                // Last: each deck plugin gates on `.deck.mdx`, so ordinary
+                // pages pass through untouched.
+                ...deckRemarkPlugins,
               ],
               rehypePlugins: [
                 ...headingAnchorPlugins,

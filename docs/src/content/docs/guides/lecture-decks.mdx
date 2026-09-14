@@ -23,29 +23,35 @@ source for it lives at `docs/src/decks/astromotion.deck.mdx`.
 
 ## Setup
 
-Add astromotion alongside the theme in `astro.config.ts` and point it at a deck
-stylesheet that imports the theme's deck styles. Astro has one markdown
-processor, and the theme owns it, so astromotion's remark plugins (the ones that
-split slides, resolve `@include` and read the `_class` and `![bg]` directives)
-go in through the theme's `extraRemarkPlugins` option:
+Install astromotion beside the theme and turn on `decks`:
 
 ```ts
 import { defineConfig } from "astro/config";
 import universityTheme from "astro-theme-university";
-import { astromotion, deckRemarkPlugins } from "astromotion";
 
 export default defineConfig({
-  integrations: [
-    universityTheme({ extraRemarkPlugins: deckRemarkPlugins }),
-    astromotion({ theme: "./src/decks/theme.css" }),
-  ],
+  integrations: [universityTheme({ decks: true })],
 });
+```
+
+The theme registers astromotion with its own deck stylesheet and body font, and
+appends astromotion's remark plugins (slide splitting, `@include`, the `_class`
+and `![bg]` directives) to the markdown chain it owns. Pass an object to forward
+astromotion options: `routePrefix` to mount decks somewhere other than `/decks`,
+or `theme` for a site that layers deck CSS of its own over the theme's:
+
+```ts
+universityTheme({ decks: { theme: "./src/decks/theme.css" } });
 ```
 
 ```css
 /* src/decks/theme.css */
 @import url("astro-theme-university/styles/deck.css");
 ```
+
+A site that registers `astromotion()` itself keeps doing so; `decks` then warns
+and steps aside, and the site passes `extraRemarkPlugins: deckRemarkPlugins` to
+the theme as before.
 
 The deck stylesheet carries the brand tint scales and the slide classes below,
 plus a full-bleed `logo-slide` class and reveal animations for closing logo

@@ -38,9 +38,10 @@ regardless of import order, so the file is just custom properties:
 }
 ```
 
-Every semantic token, and the deck tint scales, re-derive from these three (see
-[customisation](/docs/styling/customisation/)). A brand with hand-tuned link or
-hover colours pins those tokens in the same file.
+Every semantic colour on the web side derives from `--at-primary`;
+`--at-tertiary` colours info callouts, and `--at-secondary` reaches only the
+deck tint scales (see [customisation](/docs/styling/customisation/)). A brand
+with hand-tuned link or hover colours pins those tokens in the same file.
 
 **A branding object** shaped to spread straight into `BaseLayout` or
 `defineSiteConfig`. It carries the props the theme renders only when given:
@@ -162,7 +163,6 @@ identity. A minimal `astro.config.ts` for a course site is:
 import { defineConfig } from "astro/config";
 import universityTheme from "astro-theme-university";
 import courseGraph from "astro-course-university";
-import { astromotion, deckRemarkPlugins } from "astromotion";
 
 export default defineConfig({
   site: process.env.SITE_URL,
@@ -171,12 +171,11 @@ export default defineConfig({
     universityTheme({
       defaultLayout: "src/layouts/PageLayout.astro",
       brandCss: "example-brand/brand.css",
-      extraRemarkPlugins: deckRemarkPlugins,
+      decks: true,
     }),
     courseGraph({
       collections: [{ key: "topics" }, { key: "labs" }, { key: "assessments" }],
     }),
-    astromotion({ theme: "./src/decks/theme.css" }),
   ],
 });
 ```

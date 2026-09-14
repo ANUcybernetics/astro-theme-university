@@ -11,6 +11,9 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "noEmit": true,
+    // astromotion (an optional peer, imported for the `decks` option) ships
+    // TypeScript sources whose imports carry .ts extensions.
+    "allowImportingTsExtensions": true,
     "declaration": false,
     "declarationMap": false,
     "sourceMap": false

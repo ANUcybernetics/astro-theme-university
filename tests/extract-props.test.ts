@@ -103,6 +103,7 @@ describe("extract-props", () => {
       "preloadFonts",
       "imageFormat",
       "brandCss",
+      "decks",
       "extraRemarkPluginsBefore",
       "extraRemarkPlugins",
       "extraRehypePlugins",
