@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.14.7
+
+`BaseLayout` emits a `<meta name="color-scheme">` derived from the `colorScheme`
+prop, and both the no-flash inline script and the footer toggle keep it in step
+with the resolved theme, so native controls and scrollbars match before the
+stylesheet arrives. The footer toggle now binds on the initial load as well as
+on `astro:page-load`; it used to depend on the ClientRouter dispatching that
+event, so a site rendering with `clientRouter={false}` had a dead button. The
+search dialog carries an accessible name. Table headers get
+`text-wrap: balance`; `deck.css` moves to logical properties and gains a
+`prefers-reduced-motion` guard for the hero animation, which it lacked because
+it loads without `base.css`. The browser policy is now stated in CLAUDE.md:
+Baseline, no legacy browsers, newly available features used natively.
+
 ## 0.14.6
 
 The theme's base styles now reset `[hidden]`, so the attribute actually hides
