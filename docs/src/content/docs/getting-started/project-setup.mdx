@@ -17,14 +17,16 @@ my-site/
 ├── astro.config.ts
 ├── package.json
 ├── tsconfig.json
-├── public/
-│   └── favicon.svg
 └── src/
     ├── site-config.ts
+    ├── assets/
+    │   └── images/
+    │       └── favicon.svg   # imported in site-config.ts
     ├── pages/
     │   ├── index.astro
     │   └── about.astro
-    ├── content/        # if using content collections
+    ├── content.config.ts     # if using content collections
+    ├── content/
     │   └── posts/
     │       └── first-post.md
     └── styles/
@@ -48,19 +50,16 @@ Astro projects should extend the framework's built-in
 This gives you path resolution for theme imports like
 `astro-theme-university/components/Callout.astro` without any extra aliases.
 
-## CSS and lightningcss
+## CSS and Lightning CSS
 
 The theme integration registers [Lightning CSS](https://lightningcss.dev/) as
 the [Vite](https://vite.dev/) CSS transformer automatically, so you don't need
-to configure it. This enables modern CSS features ---
-[nesting](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_nesting), custom
-media queries, and colour functions --- with broad browser support.
+to configure it. This enables modern CSS features --- nesting, custom media
+queries, and colour functions --- with broad browser support.
 
 If you add your own stylesheets, import them in your pages or layouts as usual.
-The theme's styles use
-[`@layer`](https://developer.mozilla.org/en-US/docs/Web/CSS/@layer) to keep
-specificity predictable, so your overrides will take effect without fighting the
-cascade.
+The theme's styles use `@layer` to keep specificity predictable, so your
+overrides will take effect without fighting the cascade.
 
 ```astro
 ---
@@ -112,11 +111,10 @@ import { siteConfig } from "../site-config";
 
 ## Content collections
 
-For blog posts, docs pages, or other structured content, use Astro's
-[content collections](https://docs.astro.build/en/guides/content-collections/).
-The theme ships a `definePageCollection` helper that wraps `defineCollection` +
-`glob` + a page-style Zod schema (`title`, `description`, `heroImage`,
-`published`), so a typical `src/content.config.ts` is a few lines:
+For blog posts, docs pages, or other structured content, use Astro's content
+collections. The theme ships a `definePageCollection` helper that wraps
+`defineCollection` + `glob` + a page-style Zod schema (`title`, `description`,
+`heroImage`, `published`), so a typical `src/content.config.ts` is a few lines:
 
 ```ts
 // src/content.config.ts
@@ -132,8 +130,8 @@ you need a different shape.
 
 ## Recommended tooling
 
-The theme is developed with oxlint and oxfmt for linting and formatting. You're
-free to use whatever tools you prefer, but if you'd like a consistent setup:
+The theme is developed with oxlint and oxfmt for linting and formatting. For a
+consistent setup:
 
 - **[oxlint](https://oxc.rs/docs/guide/usage/linter)** for fast
   JavaScript/TypeScript linting

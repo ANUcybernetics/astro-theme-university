@@ -36,15 +36,17 @@ You need `pagefind` installed as a dev dependency in your project:
 pnpm add -D pagefind
 ```
 
-To disable search, pass `search: false` to the theme integration:
+To disable search, pass `search: false` to the theme integration, which skips
+the index build (and the check that `pagefind` is installed):
 
 ```js
 // astro.config.ts
 universityTheme({ search: false });
 ```
 
-You can also hide just the search button in the nav by passing `search={false}`
-to `BaseLayout` or `Nav`:
+The nav's search button is controlled separately: pass `search={false}` to
+`BaseLayout` or `Nav` to hide it, on its own or alongside the integration
+option.
 
 ```astro
 <BaseLayout title="My Page" search={false}> ... </BaseLayout>
@@ -79,10 +81,12 @@ pnpm preview
 ## Notes
 
 - The search index is built automatically in the `astro:build:done` hook. If
-  pagefind is not installed, the build will log a warning but continue
-  successfully.
-- If index building fails for any reason, the site still works --- the search
-  dialog will show a "search index not available" message.
+  search is enabled but `pagefind` isn't installed in the project, the build
+  fails with an error telling you to add it or pass `search: false`; a failed
+  Pagefind run also fails the build.
+- If the index can't be loaded at runtime --- in the dev server, or on a build
+  made with `search: false` --- the site still works and the search dialog shows
+  a "Search index not available" message.
 - Pagefind indexes all rendered HTML pages by default. Use
   [`data-pagefind-ignore`](https://pagefind.app/docs/indexing/#removing-individual-elements-from-the-index)
   on elements you want to exclude from search results.

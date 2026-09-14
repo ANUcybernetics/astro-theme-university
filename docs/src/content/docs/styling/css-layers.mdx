@@ -8,10 +8,8 @@ order: 4
 heroImage: ../../../assets/images/hero/abstract-05.svg
 ---
 
-The theme organises its styles using
-[CSS cascade layers](https://developer.mozilla.org/en-US/docs/Learn_CSS/Building_blocks/Cascade_layers),
-giving you predictable control over specificity without resorting to
-`!important`.
+The theme organises its styles using CSS cascade layers, giving predictable
+control over specificity without `!important`.
 
 ## Layer structure
 
@@ -33,9 +31,8 @@ override `at.base` styles, which can override `at.tokens` values.
 
 ## Your styles take precedence
 
-Any CSS you write that is _not_ placed inside a `@layer` block is considered
-"unlayered" and automatically wins over all layered styles, regardless of
-specificity. This means you can override any theme style with a simple selector:
+CSS outside any `@layer` block wins over all layered styles regardless of
+specificity, so a plain selector overrides the theme:
 
 ```css
 /* This overrides the theme's heading colour without !important */
@@ -44,14 +41,13 @@ h1 {
 }
 ```
 
-This is the recommended approach for most customisation --- just write normal
-CSS and it takes effect.
+This is the recommended approach for most customisation.
 
 ## Adding your own layers
 
-If you want finer control, you can declare your own layers that interleave with
-the theme's. The `@layer` order declaration must come before any layer content,
-so place it at the top of your main CSS file:
+For finer control, declare your own layers interleaved with the theme's. The
+`@layer` order statement must come before any layer content, so place it at the
+top of your main CSS file:
 
 ```css
 @layer at.tokens, at.base, my.utilities, at.components, my.overrides;
@@ -68,22 +64,20 @@ so place it at the top of your main CSS file:
 }
 
 @layer my.overrides {
-  .at-card {
+  .at-button {
     border-radius: 0;
   }
 }
 ```
 
-In this example, `my.utilities` sits between `at.base` and `at.components`, and
-`my.overrides` comes after all theme layers. This gives you precise control over
-which styles win in each situation.
+Here `my.utilities` sits between `at.base` and `at.components`; `my.overrides`
+comes after all theme layers.
 
 ## When to use layers vs unlayered CSS
 
-For most sites, unlayered CSS is the simplest approach. Write your styles
-normally and they'll override the theme wherever they conflict.
+For most sites, unlayered CSS is simplest: write styles normally and they
+override the theme wherever they conflict.
 
-Layers become useful when you're building a design system on top of the theme,
-or when you have multiple CSS files that need a clear priority order among
-themselves. In those cases, declaring an explicit layer order prevents surprises
-as your stylesheet grows.
+Layers become useful when building a design system on top of the theme, or with
+multiple CSS files that need an explicit priority order among themselves ---
+declaring one prevents surprises as the stylesheet grows.

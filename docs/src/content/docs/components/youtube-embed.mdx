@@ -43,10 +43,8 @@ import YouTubeEmbed from "astro-theme-university/components/YouTubeEmbed.astro";
 
 ## Notes
 
-Always provide a descriptive `title` prop for accessibility. The title should
-describe the video content so users can decide whether to interact with it.
+Always provide a descriptive `title` prop for accessibility.
 
-The embed renders a clickable poster image on initial load, with zero JavaScript
-until the user interacts. This dramatically improves page performance compared
-to eager-loading iframes, especially when multiple videos appear on a single
-page.
+The embed renders a clickable poster image on initial load. Only the small
+`lite-youtube-embed` script that defines the custom element loads with the page;
+YouTube's own iframe and player JavaScript load when the user clicks play.

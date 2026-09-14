@@ -16,9 +16,8 @@ create yourself, or to an existing Astro project.
 ## Create the project
 
 The theme isn't published to npm; it's installed straight from a tagged release
-of its public Git repository, with [pnpm](https://pnpm.io/). Start with a
-`package.json` that declares the project as an ES module and gives you the usual
-Astro scripts:
+of its public Git repository, with pnpm. Start with a `package.json` that
+declares the project as an ES module and gives you the usual Astro scripts:
 
 ```json
 {
@@ -59,15 +58,18 @@ pnpm add astro "git+https://github.com/ANUcybernetics/astro-theme-university.git
 pnpm add -D @astrojs/check "typescript@^6"
 ```
 
-The theme requires [Astro](https://astro.build/) ^7.0.0. `@astrojs/mdx` is
-needed so Astro can resolve the renderer entry point from your project root; the
-theme auto-registers the integration at build time. `lightningcss` is required
-because the theme configures Vite's CSS transformer to use it; Vite resolves
-that package from your project root, not from inside the theme.
-`@iconify-json/iconoir` ships the iconoir icon set; `astro-icon` resolves
-iconify-set packages from the consumer's `package.json` (not the theme's), so
-the set has to live as a direct dep. The theme's interactive controls use native
-browser APIs and add no UI-framework dependency.
+The theme requires Astro ^7.0.0. `@astrojs/mdx` is needed so Astro can resolve
+the renderer entry point from your project root; the theme auto-registers the
+integration at build time. `lightningcss` is required because the theme
+configures Vite's CSS transformer to use it; Vite resolves that package from
+your project root, not from inside the theme. `@iconify-json/iconoir` ships the
+iconoir icon set; `astro-icon` resolves iconify-set packages from the consumer's
+`package.json` (not the theme's), so the set has to live as a direct dep.
+`pagefind` builds the on-site search index after each build; search is on by
+default and the build fails if the binary is missing, so it's only optional if
+you pass `search: false`. `sharp` is Astro's image service, which the theme's
+`Card` and `Hero` components use to encode local images. The theme's interactive
+controls use native browser APIs and add no UI-framework dependency.
 
 `@astrojs/check` and `typescript` are what `pnpm typecheck` runs. TypeScript
 stays on 6.x for now: `astro check` relies on a programmatic API the native
@@ -79,7 +81,7 @@ makes an exact tag a reproducible pin.
 
 ## Add the integration
 
-Register the theme integration in your Astro config. That's all:
+Register the theme integration in your Astro config:
 
 ```js
 // astro.config.ts
@@ -96,11 +98,15 @@ export default defineConfig({
 The theme integration automatically:
 
 - registers `@astrojs/mdx` (set `mdx: false` to opt out)
+- registers `astro-icon` for the theme's `Icon` component (set `icon: false` to
+  opt out)
 - adds Google font providers for Public Sans and Roboto Mono with the theme's
   CSS variable names (set `fonts: false` to opt out)
 - configures [Lightning CSS](https://lightningcss.dev/) as the CSS transformer
 - wires up remark/rehype plugins for callouts, heading IDs, autolinked headings,
   and smart typography
+- builds a Pagefind search index after each build (set `search: false` to opt
+  out)
 - runs broken-link and axe-core accessibility checks, with optional `/llms.txt`
   generation; astromotion owns deck-specific checks when installed
 
@@ -134,9 +140,8 @@ import BaseLayout from "astro-theme-university/layouts/BaseLayout.astro";
 </BaseLayout>
 ```
 
-Run `pnpm dev` and open the page in your browser. You should see the themed
-layout with a navigation bar and footer, and `pnpm build` produces a static site
-in `dist/` after running the accessibility and link checks.
+`pnpm build` produces a static site in `dist/` after running the accessibility
+and link checks.
 
 The next step is to [configure your site](/docs/getting-started/configuration/)
 with a name and navigation links.

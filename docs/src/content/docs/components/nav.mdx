@@ -60,13 +60,9 @@ import Nav from "astro-theme-university/components/Nav.astro";
 The component handles several concerns automatically:
 
 - **Active link detection** --- the current page's link receives
-  [`aria-current="page"`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-current)
-  based on URL path matching, enabling both visual styling and assistive
-  technology support.
-- **Mobile menu** --- below 640px, links move behind a hamburger toggle button.
-  The button updates
-  [`aria-expanded`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-expanded)
-  to reflect menu state.
+  `aria-current="page"` based on URL path matching.
+- **Mobile menu** --- below 640px, links move behind a hamburger toggle button
+  that updates `aria-expanded`.
 - **Search** --- the optional search button opens a native dialog backed by the
   site's Pagefind index; <kbd>Cmd/Ctrl+K</kbd> works globally.
 - **Brand mark** --- with no `logo` prop, the site `name` renders as a text

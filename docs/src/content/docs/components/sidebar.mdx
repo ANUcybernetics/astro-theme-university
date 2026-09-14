@@ -71,19 +71,19 @@ extend the Sidebar can reuse the types.
 
 ## Active link highlighting
 
-The Sidebar sets `aria-current="page"` on any link whose `href` exactly matches
-the `currentPath` prop. CSS then styles that link with `--at-accent` colour and
-background. Pass `Astro.url.pathname` as `currentPath` in most cases — for
-collection detail pages you may want to strip or rewrite the path to match the
-sidebar entry.
+The Sidebar sets `aria-current="page"` on any link whose `href` (after the
+site's base path is prefixed) exactly matches the `currentPath` prop. CSS then
+styles that link with `--at-accent` text on an `--at-accent-soft` background.
+Pass `Astro.url.pathname` as `currentPath` in most cases --- collection detail
+pages may need the path stripped or rewritten to match the sidebar entry.
 
 ## Responsive behaviour
 
 The Sidebar renders as a 16rem sticky column on viewports wider than 768px.
 Below that breakpoint the `at-sidebar` rules in `styles/sidebar.css` hide it
-entirely via `display: none` — there's currently no built-in mobile equivalent.
-If you need a mobile navigation experience, render a `<details>`-based summary
-inside the main column, or reach for your own drawer component.
+entirely via `display: none` --- there's no built-in mobile equivalent. For a
+mobile navigation experience, render a `<details>`-based summary inside the main
+column, or reach for your own drawer component.
 
 ## Notes
 

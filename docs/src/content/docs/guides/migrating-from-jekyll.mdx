@@ -1,24 +1,23 @@
 ---
 title: Migrating from Jekyll
-description: A guide to moving your site from Jekyll to astro-theme-university.
+description: Move a site from Jekyll to astro-theme-university.
 section: guides
 order: 6
 heroImage: ../../../assets/images/hero/abstract-06.svg
 ---
 
 If you're coming from a [Jekyll](https://jekyllrb.com/) site, this guide covers
-the key steps and differences. The content structure is similar enough that the
-migration is mostly mechanical, but there are some concepts that map
-differently.
+the key steps and differences. The content structure maps closely, so migration
+is mostly mechanical, but a few concepts differ.
 
 ## High-level steps
 
-1. Create a new Astro project and install `astro-theme-university`
-2. Move your Markdown content into Astro content collections
-3. Convert any kramdown-specific syntax to standard Markdown
-4. Replace Liquid tags and includes with Astro components
-5. Move images into `src/assets/` or `public/`
-6. Update frontmatter to match the new schema
+1. Create a new Astro project and install `astro-theme-university`.
+2. Move your Markdown content into Astro content collections.
+3. Convert any kramdown-specific syntax to standard Markdown.
+4. Replace Liquid tags and includes with Astro components.
+5. Move images into `src/assets/` or `public/`.
+6. Update frontmatter to match the new schema.
 
 ## Content collections replace \_posts
 
@@ -85,8 +84,8 @@ import Figure from "../components/Figure.astro";
 <Figure src="photo.jpg" alt="A photo" />
 ```
 
-For content in Markdown/[MDX](https://mdxjs.com/) files, you can import
-components at the top of an MDX file and use them inline.
+The same applies in Markdown/MDX content files: import components at the top and
+use them inline.
 
 ## Data files
 

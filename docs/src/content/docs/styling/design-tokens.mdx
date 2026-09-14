@@ -8,20 +8,17 @@ order: 1
 heroImage: ../../../assets/images/hero/abstract-02.svg
 ---
 
-The theme defines all visual decisions as
-[CSS custom properties](https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties)
-in `tokens.css`. These are declared inside the `at.tokens` CSS layer, so they
-can be overridden by your own styles without specificity battles. See
+The theme defines all visual decisions as CSS custom properties in `tokens.css`,
+declared inside the `at.tokens` layer so they can be overridden by your own
+styles without specificity battles. See
 [customisation](/docs/styling/customisation) for how to change them.
 
 ## Brand palette
 
 The brand palette is the theme's re-branding API. Every semantic colour token
-below derives from these values via
-[relative colour syntax](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_colors/Relative_colors),
-so overriding `--at-primary`, `--at-secondary`, and `--at-tertiary` re-brands
-the whole theme --- headings, links, borders, surface tints, and the deck
-palette all follow.
+below derives from these values via relative colour syntax, so overriding
+`--at-primary`, `--at-secondary`, and `--at-tertiary` re-brands the whole theme
+--- headings, links, borders, surface tints, and the deck palette all follow.
 
 | Token                 | Value                                                       |
 | --------------------- | ----------------------------------------------------------- |
@@ -105,7 +102,7 @@ square the whole theme by pinning it to `0`.
 | `--at-shadow-md` | `0 2px 8px rgb(0 0 0 / 10%)`  | `0 2px 8px rgb(0 0 0 / 65%)`   |
 | `--at-shadow-lg` | `0 8px 32px rgb(0 0 0 / 20%)` | `0 12px 40px rgb(0 0 0 / 70%)` |
 
-Use these on hover/focus states (e.g. `var(--at-shadow-md)` for card hover) and
+Use these on hover/focus states (e.g. `var(--at-shadow-sm)` for card hover) and
 floating panels (e.g. `var(--at-shadow-lg)` for the search dialog) rather than
 hardcoding shadow values.
 
@@ -142,7 +139,7 @@ directly. Use these in your own styles rather than hard-coding colour values.
 | `--at-bg-elevated`       | surface for cards and panels                                  |
 | `--at-text`              | near-black / near-white, tinted toward the primary hue        |
 | `--at-text-secondary`    | `--at-text` at 78% opacity                                    |
-| `--at-text-muted`        | `--at-text` at 56% opacity                                    |
+| `--at-text-muted`        | `--at-text` at 62% (light) / 56% (dark) opacity               |
 | `--at-heading`           | `var(--at-primary)`                                           |
 | `--at-accent`            | `var(--at-primary)`                                           |
 | `--at-accent-hover`      | `var(--at-primary-hover)`                                     |
@@ -159,16 +156,15 @@ directly. Use these in your own styles rather than hard-coding colour values.
 | `--at-table-header-text` | `var(--at-on-primary)`                                        |
 | `--at-table-stripe`      | `--at-primary` at 6% (light) / 8% (dark) opacity              |
 
-Light and dark values are resolved with
-[`light-dark()`](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark),
-keyed off the active `color-scheme`. Because the derivations use relative colour
-syntax, they re-derive automatically when a brand overrides the palette.
+Light and dark values are resolved with `light-dark()`, keyed off the active
+`color-scheme`. Because the derivations use relative colour syntax, they
+re-derive automatically when a brand overrides the palette.
 
 ## Status colours
 
 Semantic colour tokens for callouts, form validation, and other status
-indicators. These also adapt between light and dark mode — the dark variants are
-lifted slightly for better contrast on dark backgrounds.
+indicators. These also adapt between light and dark mode --- the dark variants
+are lifted slightly for contrast on dark backgrounds.
 
 | Token               | Light                       | Dark                     |
 | ------------------- | --------------------------- | ------------------------ |
@@ -182,5 +178,5 @@ lifted slightly for better contrast on dark backgrounds.
 | `--at-error-soft`   | `rgb(220 38 38 / 10%)`      | `rgb(248 113 113 / 14%)` |
 
 The four [callout](/docs/components/callout/) variants (`info`, `tip`,
-`warning`, `error`) are wired to these tokens — `tip` uses `--at-success`, the
+`warning`, `error`) are wired to these tokens --- `tip` uses `--at-success`, the
 rest match their names.

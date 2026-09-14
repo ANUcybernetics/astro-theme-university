@@ -10,9 +10,8 @@ heroImage: ../../../assets/images/hero/abstract-03.svg
 
 import Example from "../../../components/Example.astro";
 
-The theme provides base styles for standard HTML form elements. No special
-classes are needed --- just use semantic HTML and the styles apply
-automatically.
+The theme styles standard HTML form elements directly --- no special classes
+needed.
 
 ## Text inputs
 
@@ -64,17 +63,20 @@ consistency.
   </select>
 </Example>
 
-:::info Browsers are beginning to ship `appearance: base-select`, a CSS property
-that makes `<select>` elements fully styleable without JavaScript. It's stable
-in Chrome/Edge 135+ but not yet available in Firefox or Safari. Worth watching
---- once support is broader it will replace the `appearance: none` workaround
-used here. :::
+:::info
+
+Browsers are beginning to ship `appearance: base-select`, a CSS property that
+makes `<select>` elements fully styleable without JavaScript. It's stable in
+Chrome/Edge 135+ but not yet available in Firefox or Safari. Worth watching ---
+once support is broader it will replace the `appearance: none` workaround used
+here.
+
+:::
 
 ## Checkboxes and radios
 
-Checkboxes and radio buttons use the browser's native rendering with
-[`accent-color`](https://developer.mozilla.org/en-US/docs/Web/CSS/accent-color)
-set to the theme accent.
+Checkboxes and radio buttons use the browser's native rendering, with
+`accent-color` set to the theme accent.
 
 ```html
 <label> <input type="checkbox" /> I agree to the terms </label>
@@ -172,10 +174,9 @@ Add the `disabled` attribute to any form element.
 
 ## Notes
 
-Form styles live in the `at.base` CSS layer, so they apply to all form elements
-automatically. The styles are intentionally minimal --- they provide a
-consistent, accessible foundation that you can extend with your own CSS in a
-higher-priority layer.
+Form styles live in the `at.base` layer, so they apply to all form elements
+without extra markup. They're intentionally minimal --- a consistent, accessible
+foundation you can extend with your own CSS in a higher-priority layer.
 
 Labels are `display: block` and bold by default. For inline labels (e.g. next to
 checkboxes), override with `display: flex` and `font-weight: normal` as shown in

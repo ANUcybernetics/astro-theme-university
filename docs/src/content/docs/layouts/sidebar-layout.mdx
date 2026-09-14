@@ -11,8 +11,8 @@ heroImage: ../../../assets/images/hero/abstract-03.svg
 import PropsTable from "../../../components/PropsTable.astro";
 
 SidebarLayout wraps `BaseLayout` with a sticky sidebar navigation and an article
-column for long-form content. The sidebar is optional — omit the `sidebar` prop
-and SidebarLayout collapses to "BaseLayout with a content column".
+column for long-form content. The sidebar is optional --- omit the `sidebar`
+prop and SidebarLayout collapses to "BaseLayout with a content column".
 
 ```astro
 ---
@@ -112,9 +112,9 @@ const sidebar: SidebarSection[] = SECTION_ORDER.flatMap((section) => {
 ## Responsive behaviour
 
 The sidebar is rendered as a 16rem sticky column on viewports wider than 768px.
-Below that breakpoint the sidebar is hidden entirely — consumers who want mobile
-navigation should provide a separate summary/details expander in their page
-scripts.
+Below that breakpoint the sidebar is hidden entirely --- consumers who want
+mobile navigation should provide a separate summary/details expander in their
+page scripts.
 
 ## Why the sidebar is optional
 

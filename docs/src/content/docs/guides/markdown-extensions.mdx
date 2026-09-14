@@ -1,8 +1,8 @@
 ---
 title: Markdown extensions
 description:
-  Markdown and MDX features provided by the theme, including custom heading IDs,
-  smart typography, callouts, and MDX expressions.
+  "Markdown and MDX features the theme adds: heading IDs, smart typography,
+  callouts, and MDX expressions."
 section: guides
 order: 4
 heroImage: ../../../assets/images/hero/abstract-05.svg
@@ -33,20 +33,20 @@ fragment link:
 [link from another page](/docs/guides/markdown-extensions#my-id)
 ```
 
-For example, here are some deep links to sections on this page:
-[smart typography](#smart-typography), [callouts](#callouts),
-[MDX expressions](#expressions).
+Example deep links on this page: [smart typography](#smart-typography),
+[callouts](#callouts), [MDX expressions](#expressions).
 
-A custom ID is useful when the heading text is long, might change over time, or
-you want a readable URL fragment for cross-page links. If you don't specify one,
-the ID is auto-generated from the heading text --- spaces become hyphens and
-everything is lowercased.
+A custom ID helps when heading text is long, might change, or you want a
+readable fragment for cross-page links. Otherwise the ID auto-generates from the
+heading text: spaces become hyphens, everything lowercased.
 
 ## Autolinked headings
 
-Every heading gets a `#` anchor link prepended that appears on hover. Clicking
-it (or copying the link) gives you a permalink to that section. This works with
-both custom and auto-generated IDs.
+Every heading gets a `#` anchor appended, visible on hover; clicking it (or
+copying the link) gives a permalink. This works for both custom and
+auto-generated IDs. The anchor is a mouse affordance only: it's hidden from
+assistive technology and out of the tab order, since screen-reader and keyboard
+users navigate by heading directly.
 
 ## Smart typography {#smart-typography}
 
@@ -69,19 +69,19 @@ dash.
 
 Root-absolute links and image sources in markdown (`[crits](/crits/)`,
 `![photo](/images/photo.avif)`) are automatically prefixed with the site's
-configured `base` at render time, so a site deployed under a sub-path (e.g.
-GitLab Pages at `/courses/comp4020`) doesn't ship 404s for every internal prose
-link. When `base` is `/` (the default) this is a no-op.
+configured `base` at render time. This keeps a site deployed under a sub-path
+(e.g. GitLab Pages at `/courses/comp4020`) from shipping 404s on every internal
+prose link. When `base` is `/` (the default), this is a no-op.
 
 The convention this enforces: **a root-absolute path is always site-internal**.
 To link to a page on the same domain but outside your base (say, another course
 site), use a full URL. A post-build check (part of `checkLinks`) fails the build
-if any rendered `href` or `src` escapes the base, since such a link would 404 in
+if any rendered `href` or `src` escapes the base. Such a link would 404 in
 production while resolving fine locally.
 
 Links in raw markdown consumed by machines (the `/llms.txt` outputs and any
-content APIs built from collection bodies) are unaffected --- the rewrite
-happens at the HTML layer only.
+content APIs built from collection bodies) are unaffected. The rewrite happens
+at the HTML layer only.
 
 ## Callouts {#callouts}
 
@@ -114,11 +114,29 @@ A critical issue.
 :::
 ```
 
-Always include blank lines around the `:::` markers and the content inside them.
-Without these blank lines, the formatter may reflow the text into the directive
-markers.
+Always include blank lines around the `:::` markers and their content; without
+them, the formatter may reflow the text into the directive markers.
 
-:::tip This is a live callout rendered with the `:::tip` directive. :::
+:::tip
+
+This is a live callout rendered with the `:::tip` directive.
+
+:::
+
+A `[label]` on the opening marker becomes the callout's title, and `:::danger`
+and `:::caution` are accepted as aliases for `error` and `warning`:
+
+```md
+:::warning[Heads up]
+
+Titled callout.
+
+:::
+```
+
+The same directive syntax also renders a native disclosure widget:
+`:::details[Summary text]` wraps its content in `<details>`, with the label as
+the `<summary>`.
 
 See the [Callout component docs](/docs/components/callout) for the full API and
 component syntax.
@@ -135,11 +153,17 @@ const message: string = "highlighted";
 ```
 ````
 
+## Wide tables
+
+Markdown tables render full-width. Because CSS ignores `overflow` on table
+boxes, the theme wraps every table in a `.at-table-wrap` scroll container at
+render time, so a table wider than its column scrolls sideways in place rather
+than pushing the page out.
+
 ## MDX expressions {#expressions}
 
-In `.mdx` files, you can embed JavaScript expressions using single curly braces.
-This is standard [MDX](https://mdxjs.com/) syntax, not a plugin, but it's worth
-knowing about.
+In `.mdx` files, JavaScript expressions use single curly braces. This is
+standard MDX syntax, not a theme plugin.
 
 ### Inline variables
 
@@ -185,7 +209,7 @@ import { courseCode, convenor } from "../../site-data";
 This site is for {courseCode}, convened by {convenor}.
 ```
 
-Keep this separate from `src/site-config.ts` — that file should use
-`defineSiteConfig` from `astro-theme-university/types` and only hold fields that
-match the theme's `SiteConfig` type (see
+Keep this separate from `src/site-config.ts`: that file should use
+`defineSiteConfig` from `astro-theme-university/types` and hold only fields
+matching the theme's `SiteConfig` type (see
 [configuration](/docs/getting-started/configuration/#site-config)).

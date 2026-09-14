@@ -1,24 +1,22 @@
 ---
 title: Content collections
-description: How to set up and use Astro content collections with the theme.
+description: Schema helpers the theme adds over Astro content collections.
 section: guides
 order: 3
 heroImage: ../../../assets/images/hero/abstract-02.svg
 ---
 
-[Astro's content collections](https://docs.astro.build/en/guides/content-collections/)
-give you type-safe access to your Markdown and [MDX](https://mdxjs.com/)
-content. They're the recommended way to manage structured content like blog
-posts, news items, or project pages.
+The theme adds schema helpers on top of Astro's content collections for common
+page shapes.
 
 ## Defining a collection
 
 ### The fast path: `definePageCollection`
 
-For a standard page-style collection (`title`, optional `description`, optional
-`heroImage`, `published` flag) the theme ships a helper. `heroImage` accepts a
-relative image path (validated and optimised through Astro's image pipeline) or
-an absolute `http(s)://` URL for a remote, pre-encoded hero:
+For a standard page shape (`title`, optional `description`, optional
+`heroImage`, `published`), `definePageCollection` ships the schema. `heroImage`
+accepts a relative image path (validated and optimised through Astro's image
+pipeline) or an absolute `http(s)://` URL for a remote, pre-encoded hero:
 
 ```ts
 // src/content.config.ts
@@ -30,13 +28,11 @@ const pages = definePageCollection();
 export const collections = { pages };
 ```
 
-Pass `passthrough: true` if you want to accept arbitrary additional frontmatter
-fields without updating the schema. That's the default in the base starter
-example.
+Pass `passthrough: true` to accept arbitrary extra frontmatter fields without
+updating the schema. This is the default in the base starter example.
 
-To extend the base schema with extra fields, import `pageSchema` instead and use
-it inside a regular `defineCollection` call. This lets TypeScript infer the
-extended data shape correctly:
+To extend the base schema, import `pageSchema` and use it inside a regular
+`defineCollection` call, so TypeScript still infers the extended shape:
 
 ```ts
 import { defineCollection } from "astro:content";
@@ -78,7 +74,7 @@ const posts = defineCollection({
 export const collections = { posts };
 ```
 
-Then create your content files in `src/content/posts/`:
+Content files then go in `src/content/posts/`:
 
 ```
 src/content/posts/
@@ -87,13 +83,12 @@ src/content/posts/
   announcing-something.md
 ```
 
-Each file's frontmatter must match the schema. TypeScript will flag any
-mismatches during the build.
+Frontmatter must match the schema; TypeScript flags mismatches at build time.
 
 ## Creating a dynamic route
 
-To render each post as a page, create a dynamic route file. For a blog at
-`/posts/[slug]`, create `src/pages/posts/[...slug].astro`:
+To render each post, create a dynamic route. For `/posts/[slug]`, that's
+`src/pages/posts/[...slug].astro`:
 
 ```astro
 ---
@@ -134,13 +129,13 @@ const { Content } = await render(post);
 </BaseLayout>
 ```
 
-The `getStaticPaths` function tells Astro which pages to generate at build time.
-Each post becomes its own HTML page with a URL based on the filename.
+The [starter example](/docs/getting-started/examples/) applies the same pattern
+to its `definePageCollection` collection in `src/pages/[...slug].astro`,
+rendering through `ContentLayout` so the entry's `heroImage` is picked up.
 
 ## Listing posts
 
-To create an index page that lists all posts, query the collection and render
-them however you like:
+Query the collection and render the results:
 
 ```astro
 ---
@@ -173,8 +168,8 @@ const sorted = posts.sort(
 
 ## Filtering and querying
 
-The `getCollection` function accepts an optional filter callback. Use it to
-exclude drafts, filter by tag, or limit to recent posts:
+Filter with the callback to exclude drafts, match a tag, or limit to recent
+posts:
 
 ```ts
 // Published posts only
@@ -188,13 +183,8 @@ const tagged = await getCollection("posts", ({ data }) =>
 
 ## Using MDX
 
-If your content files use `.mdx` instead of `.md`, you can import and use Astro
-or framework components directly within the content. Update the glob pattern
-accordingly:
+Update the glob pattern to include `.mdx`:
 
 ```ts
 loader: glob({ pattern: "**/*.{md,mdx}", base: "src/content/posts" }),
 ```
-
-MDX files can then import components at the top of the file and use them
-alongside Markdown content.

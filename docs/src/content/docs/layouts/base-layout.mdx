@@ -30,8 +30,8 @@ import BaseLayout from "astro-theme-university/layouts/BaseLayout.astro";
 
 ## Hero banner
 
-There are two ways to add a hero banner to a page. In `.astro` files you can use
-the named `hero` slot with the Hero component directly:
+Two ways to add a hero banner to a page. In `.astro` files, use the named `hero`
+slot with the Hero component directly:
 
 ```astro
 ---
@@ -44,10 +44,10 @@ import bannerImage from "../assets/images/banner.avif";
 </BaseLayout>
 ```
 
-The `image` prop accepts an imported image (`ImageMetadata`), which is processed
-through Astro's image pipeline for optimisation, or a `RemoteImage` object
+The `image` prop accepts an imported image (`ImageMetadata`), processed through
+Astro's image pipeline for optimisation, or a `RemoteImage` object
 (`{ src, width?, height?, srcset?, sizes? }`) for a pre-encoded external source
-— a CDN or object-store URL — rendered as a plain `<img>` with no build-time
+--- a CDN or object-store URL --- rendered as a plain `<img>` with no build-time
 processing.
 
 For MDX pages, wrap content in the layout component directly to pass imported
@@ -81,8 +81,7 @@ BaseLayout renders the complete HTML document. Inside, it provides:
   default
 - Open Graph and Twitter card meta for link previews (see
   [social cards](#social-cards) below)
-- an inline script that reads the user's theme preference from
-  [`localStorage`](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage)
+- an inline script that reads the user's theme preference from `localStorage`
   and applies it before first paint, preventing a flash of the wrong theme
 
 The layout also imports `base.css` and `components.css` from the theme, so you

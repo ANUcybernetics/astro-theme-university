@@ -47,14 +47,13 @@ institution's identity. A branding package can bundle both: a brand stylesheet
 plus a props object you spread into `BaseLayout`.
 
 The derived hover and active variants (`--at-primary-hover`,
-`--at-primary-active`) usually just work; brands with hand-tuned variants can
-override them directly.
+`--at-primary-active`) update automatically with the palette; brands with
+hand-tuned variants can override them directly.
 
 ## Overriding individual tokens
 
-For finer-grained changes, redefine semantic tokens instead of (or as well as)
-the palette. Create a CSS file in your project --- for example,
-`src/styles/overrides.css` --- and redefine the tokens you want to change:
+For finer-grained changes, redefine semantic tokens instead of, or as well as,
+the palette --- for example in `src/styles/overrides.css`:
 
 ```css
 :root {
@@ -63,24 +62,21 @@ the palette. Create a CSS file in your project --- for example,
 }
 ```
 
-Because the theme tokens are declared inside the `at.tokens` CSS layer and your
-overrides sit in unlayered CSS, your values automatically take precedence.
-There's no need to use `!important` or increase specificity. Note that most
-colour tokens resolve light and dark values with `light-dark()`, so a plain
-override applies in both modes --- use `light-dark()` yourself if you need
-mode-specific values.
+Because the theme tokens sit in the `at.tokens` layer and your overrides are
+unlayered, your values take precedence automatically --- no `!important`, no
+specificity games. Most colour tokens resolve light and dark values with
+`light-dark()`, so a plain override applies in both modes; use `light-dark()`
+yourself for mode-specific values.
 
 ## Adjusting typography
 
-To use a different body font, redefine `--at-font-body`. Make sure you also load
-the font itself. The easiest path is Astro's
+To use a different body font, redefine `--at-font-body` and load the font
+itself. The easiest path is Astro's
 [font system](https://docs.astro.build/en/guides/fonts/): `BaseLayout` emits an
 `@font-face` for every font registered in your config's top-level `fonts` array,
-and the `preloadFonts` integration option controls which of them are preloaded
-(by default only the theme body font). Fonts loaded outside the font system need
-a `<link>` in your layout's `<head>` or your own
-[`@font-face`](https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face)
-declaration.
+and the `preloadFonts` integration option controls which are preloaded (by
+default only the theme body font). Fonts loaded outside the font system need a
+`<link>` in your layout's `<head>` or your own `@font-face` declaration.
 
 ```css
 :root {
@@ -104,13 +100,12 @@ declaration.
 
 If you need different values in dark mode, use `light-dark()` in your override,
 or scope a rule to the `[data-theme="dark"]` selector. See
-[dark mode](/docs/styling/dark-mode#adding-custom-dark-mode-styles) for details
-and examples.
+[dark mode](/docs/styling/dark-mode#adding-custom-dark-mode-styles) for details.
 
 ## Practical example
 
-Here's a complete brand file that moves the theme to a crimson palette and
-tightens the type scale:
+A complete brand file, moving the theme to a crimson palette and tightening the
+type scale:
 
 ```css
 /* src/styles/brand.css */
@@ -126,5 +121,5 @@ tightens the type scale:
 }
 ```
 
-This approach keeps your customisations separate from the theme, making upgrades
-straightforward --- your overrides simply continue to replace the same tokens.
+This keeps customisations separate from the theme: upgrades stay straightforward
+because your overrides continue to replace the same tokens.

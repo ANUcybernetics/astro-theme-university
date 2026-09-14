@@ -9,11 +9,11 @@ heroImage: ../../../assets/images/hero/abstract-05.svg
 ---
 
 The theme ships no institution's identity. Everything that makes a site look
-like it belongs to a particular university is data: a palette, some logos, the
-footer's legal links and regulatory lines, an acknowledgement. Sites can pass
-all of that as props and CSS directly, but once two sites share an institution
-it's worth packaging the data once as a **brand package** and installing it
-alongside the theme.
+like it belongs to a particular university (palette, logos, the footer's legal
+links and regulatory lines, an acknowledgement) is data. Sites can pass all of
+that as props and CSS directly. But once two sites share an institution, it's
+worth packaging the data once as a **brand package** installed alongside the
+theme.
 
 Institutional brand assets are usually trademarked, so brand packages tend to
 live on an institution's own Git host rather than on a public registry. The
@@ -73,8 +73,8 @@ export const exampleBranding = {
 ```
 
 `logoCompact` matters when the lockup is a wide horizontal mark: the nav swaps
-to it below the 640px breakpoint instead of wrapping (see the
-[Nav docs](/docs/components/nav/)). `partnerships` adds a logo band to the
+to it below the 640px breakpoint instead of wrapping. See the
+[Nav docs](/docs/components/nav/). `partnerships` adds a logo band to the
 footer's dark strip.
 
 The package's `package.json` needs `"type": "module"`, an `exports` map naming
@@ -85,8 +85,8 @@ like any other source, so there's nothing to compile.
 ## Consuming a brand package
 
 Install it next to the theme, pinned to an exact tag of wherever your
-institution hosts it (any Git host works; the `&path:` suffix is only needed
-when the package sits in a subdirectory of its repo):
+institution hosts it. (Any Git host works; the `&path:` suffix is only needed
+when the package sits in a subdirectory of its repo.)
 
 ```bash
 pnpm add "git+https://git.example.edu/brand/example-brand.git#vX.Y.Z"
@@ -119,9 +119,10 @@ export const siteConfig = defineSiteConfig({
 `brandCss` imports the stylesheet on every page, so a site that spreads the
 branding into its site config never touches the brand package again. The
 alternative, `import "example-brand/brand.css"` in a layout, is equivalent for
-pages but doesn't reach deck routes; `brandCss` does, since astromotion decks
-resolve the same global styles. Props placed after the spread win, so a site
-with its own logo spreads the branding and then overrides `logo`.
+pages that use that layout but doesn't reach deck routes, which astromotion
+renders without it. `brandCss` does: Astro injects it into every page module,
+injected routes included. Props placed after the spread win, so a site with its
+own logo spreads the branding and then overrides `logo`.
 
 For decks, import the brand stylesheet after the theme's deck styles in the deck
 theme file:
@@ -143,13 +144,15 @@ A course website is a themed site plus a content model. That model lives in
 a brand-neutral package that provides:
 
 - `courseNodeSchema`, the shared frontmatter shape for course content (`title`,
-  `description`, `tags`, `related`, `links`, `spec`, `published`), which each
-  collection extends with its own fields
+  `description`, `tags`, `related`, `links`, `spec`, `published`, `unlisted`,
+  `draft`), which each collection extends with its own fields
 - `courseGraph()`, an integration that validates every `related:` reference at
   build time (a dangling reference fails the build) and emits a static JSON API
   under `/api/`
 - `RelatedContent` and `SpecList` components for detail pages, and
-  `getPublishedCollection` for listings that respect `published: false`
+  `getPublishedCollection` for listings, which drops `published: false` entries
+  in production builds (the dev server keeps them previewable) and
+  `unlisted: true` entries everywhere
 
 The three packages stack without knowing about each other: the theme renders,
 the course package models and validates, and a brand package supplies the
