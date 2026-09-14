@@ -226,16 +226,28 @@ import Icon from "./Icon.astro";
 
 <script>
   function setupFooterThemeToggle() {
-    for (const btn of document.querySelectorAll(".at-footer-theme-toggle")) {
+    for (const btn of document.querySelectorAll<HTMLButtonElement>(".at-footer-theme-toggle")) {
+      // Runs on the initial load and again on every astro:page-load (which
+      // also fires for the first page when the ClientRouter is present), so
+      // guard against binding the same button twice — two listeners would
+      // toggle the theme there and back.
+      if (btn.dataset.atBound) continue;
+      btn.dataset.atBound = "true";
       btn.addEventListener("click", () => {
         const dark = document.documentElement.dataset.theme !== "dark";
-        document.documentElement.dataset.theme = dark ? "dark" : "light";
-        localStorage.setItem("at-theme", dark ? "dark" : "light");
+        const scheme = dark ? "dark" : "light";
+        document.documentElement.dataset.theme = scheme;
+        localStorage.setItem("at-theme", scheme);
+        // dark-mode guide: keep the meta tag in sync with the resolved theme.
+        document.querySelector('meta[name="color-scheme"]')?.setAttribute("content", scheme);
         const label = dark ? "Switch to light theme" : "Switch to dark theme";
         btn.setAttribute("aria-label", label);
         btn.setAttribute("title", label);
       });
     }
   }
+  // astro:page-load only fires when the ClientRouter is on the page, so a
+  // site with clientRouter={false} needs the direct call.
+  setupFooterThemeToggle();
   document.addEventListener("astro:page-load", setupFooterThemeToggle);
 </script>
