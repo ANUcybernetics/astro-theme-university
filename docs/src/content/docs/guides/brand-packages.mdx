@@ -84,8 +84,15 @@ like any other source, so there's nothing to compile.
 
 ## Consuming a brand package
 
-Install it next to the theme (from a git tag, like the theme itself), then wire
-the two halves:
+Install it next to the theme, pinned to an exact tag of wherever your
+institution hosts it (any Git host works; the `&path:` suffix is only needed
+when the package sits in a subdirectory of its repo):
+
+```bash
+pnpm add "git+https://git.example.edu/brand/example-brand.git#vX.Y.Z"
+```
+
+Then wire the two halves:
 
 ```ts
 // astro.config.ts
