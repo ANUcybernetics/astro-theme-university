@@ -21,6 +21,8 @@ export default defineConfig({
   integrations: [
     universityTheme({
       defaultLayout: "src/layouts/PageLayout.astro",
+      // Generates /llms.txt from src/llms.md plus the page index.
+      llmsTxt: true,
       preloadFonts: ["--font-public-sans", "--font-lora"],
     }),
   ],

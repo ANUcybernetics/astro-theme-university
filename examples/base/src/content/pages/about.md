@@ -18,14 +18,28 @@ page script to list all entries programmatically.
 The theme supports four callout variants via the container directive syntax —
 `info`, `tip`, `warning`, and `error`. No imports needed:
 
-:::info Callouts work inside any markdown or MDX file. :::
+:::info
 
-:::tip Use `tip` for success states, positive notes, or "pro tips". :::
+Callouts work inside any markdown or MDX file.
 
-:::warning Use `warning` to flag things that need attention but aren't errors.
 :::
 
-:::error Use `error` for hard failures, breaking changes, and things to avoid.
+:::tip
+
+Use `tip` for success states, positive notes, or "pro tips".
+
+:::
+
+:::warning
+
+Use `warning` to flag things that need attention but aren't errors.
+
+:::
+
+:::error
+
+Use `error` for hard failures, breaking changes, and things to avoid.
+
 :::
 
 ## Code blocks
