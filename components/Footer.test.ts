@@ -6,7 +6,7 @@ describe("Footer", () => {
   test("renders no institutional content by default", async () => {
     const container = await AstroContainer.create();
     const html = await container.renderToString(Footer, {
-      props: { name: "Test Site" },
+      props: {},
     });
 
     expect(html).not.toContain("at-footer-band");
@@ -20,7 +20,6 @@ describe("Footer", () => {
     const container = await AstroContainer.create();
     const html = await container.renderToString(Footer, {
       props: {
-        name: "Test Site",
         acknowledgement: {
           title: "Community acknowledgement",
           text: "Test University acknowledges the traditional owners.",
@@ -46,7 +45,6 @@ describe("Footer", () => {
     const container = await AstroContainer.create();
     const html = await container.renderToString(Footer, {
       props: {
-        name: "Test Site",
         contact: {
           email: "test@example.edu",
           phone: "+61 2 6125 0000",
@@ -64,7 +62,6 @@ describe("Footer", () => {
     const container = await AstroContainer.create();
     const html = await container.renderToString(Footer, {
       props: {
-        name: "Test Site",
         socials: [{ platform: "facebook", url: "https://facebook.com/example" }],
       },
     });
@@ -77,7 +74,7 @@ describe("Footer", () => {
   test("renders licence info when provided", async () => {
     const container = await AstroContainer.create();
     const html = await container.renderToString(Footer, {
-      props: { name: "Test Site", licence: "CC-BY-4.0" },
+      props: { licence: "CC-BY-4.0" },
     });
 
     expect(html).toContain("Creative Commons Attribution 4.0 International");
@@ -87,7 +84,7 @@ describe("Footer", () => {
   test("renders the theme toggle button when colorScheme is 'auto' (default)", async () => {
     const container = await AstroContainer.create();
     const html = await container.renderToString(Footer, {
-      props: { name: "Test" },
+      props: {},
     });
     expect(html).toContain("at-footer-theme-toggle");
   });
@@ -95,7 +92,7 @@ describe("Footer", () => {
   test("omits the theme toggle button when colorScheme is forced", async () => {
     const container = await AstroContainer.create();
     const html = await container.renderToString(Footer, {
-      props: { name: "Test", colorScheme: "dark" },
+      props: { colorScheme: "dark" },
     });
     expect(html).not.toContain("at-footer-theme-toggle");
   });
@@ -104,7 +101,6 @@ describe("Footer", () => {
     const container = await AstroContainer.create();
     const html = await container.renderToString(Footer, {
       props: {
-        name: "Test",
         acknowledgement: { text: "Acknowledgement text only." },
       },
     });

@@ -9,8 +9,6 @@ import type {
 export type { PartnershipLink, AcknowledgementInfo };
 
 export interface FooterProps {
-  /** Site or organisational unit name. */
-  name: string;
   /** Contact details displayed in the footer. */
   contact?: ContactInfo;
   /** Social media links displayed as icons. */
@@ -37,7 +35,6 @@ export interface FooterProps {
 type Props = FooterProps;
 
 const {
-  name,
   contact,
   socials,
   licence,
