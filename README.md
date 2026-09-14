@@ -5,6 +5,8 @@ progressively enhanced components, content helpers, post-build checks
 (accessibility and broken links), Pagefind search, and a Reveal.js deck theme
 for [astromotion](https://github.com/ANUcybernetics/astromotion) slide decks.
 
+**Documentation:** <https://anucybernetics.github.io/astro-theme-university/>
+
 The theme is deliberately institutional in feel — sticky nav with logo or text
 wordmark, hero banners, a footer with legal links, partnership band, and
 acknowledgement section — but ships no institution's branding. Brands are data:
@@ -18,10 +20,32 @@ acknowledgement section — but ships no institution's branding. Brands are data
   `partnerships`, `meta`, and `acknowledgement` to `BaseLayout`. Keep them in
   one object and spread it: `<BaseLayout {...myBranding} title={title}>`.
 
-## Usage
+An institution typically packages both halves as a small **brand package** (a
+stylesheet plus a branding object) that sites install alongside the theme; the
+docs'
+[brand packages guide](https://anucybernetics.github.io/astro-theme-university/docs/guides/brand-packages/)
+walks through building one. Course websites add
+[astro-course-university](https://github.com/ANUcybernetics/astro-course-university)
+for the content model and build-time validation.
+
+## Quick start
+
+The fastest route is to copy the starter in `examples/base` — a complete site
+with the theme wired up and a GitHub Pages deploy workflow:
 
 ```bash
-pnpm add "git+https://github.com/ANUcybernetics/astro-theme-university.git#vX.Y.Z"  # pin the latest release tag
+git clone https://github.com/ANUcybernetics/astro-theme-university.git
+cp -r astro-theme-university/examples/base my-site
+cd my-site && pnpm install && pnpm dev
+```
+
+To add the theme to an existing Astro project instead, install it from its
+latest
+[release tag](https://github.com/ANUcybernetics/astro-theme-university/tags) (it
+isn't published to npm):
+
+```bash
+pnpm add "git+https://github.com/ANUcybernetics/astro-theme-university.git#vX.Y.Z"
 ```
 
 ```ts
@@ -44,8 +68,9 @@ import BaseLayout from "astro-theme-university/layouts/BaseLayout.astro";
 </BaseLayout>
 ```
 
-See the docs site (`pnpm dev` in this repo) for the full component, layout, and
-token reference.
+The
+[installation guide](https://anucybernetics.github.io/astro-theme-university/docs/getting-started/installation/)
+covers the peer dependencies and project setup in full.
 
 ## Development
 
@@ -60,6 +85,9 @@ pnpm test:examples # only the example builds under tests/
 pnpm typecheck     # integration surface + docs astro check
 pnpm dev           # docs site
 ```
+
+The docs site deploys to GitHub Pages from `main`
+(`.github/workflows/docs.yml`).
 
 Releases: `scripts/release.sh <patch|minor|major|x.y.z> [reason]` — tags
 `vX.Y.Z` and pushes. Consumers pin exact release tags.

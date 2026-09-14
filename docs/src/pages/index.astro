@@ -1,5 +1,6 @@
 ---
 import Code from "astro-theme-university/components/Code.astro";
+import { withBase } from "astro-theme-university/url";
 import BaseLayout from "astro-theme-university/layouts/BaseLayout.astro";
 import Hero from "astro-theme-university/components/Hero.astro";
 import Callout from "astro-theme-university/components/Callout.astro";
@@ -42,9 +43,14 @@ import heroComponents from "../assets/images/hero/abstract-03.svg";
 
   <h2>Quick start</h2>
 
-  <p>Install the theme and its peer dependencies:</p>
+  <p>
+    Install the theme from its latest <a
+      href="https://github.com/ANUcybernetics/astro-theme-university/tags"
+      >release tag</a
+    > alongside its peer dependencies:
+  </p>
   <Code
-    code="pnpm add astro astro-theme-university @astrojs/mdx sharp pagefind lightningcss @iconify-json/iconoir"
+    code={`pnpm add astro "git+https://github.com/ANUcybernetics/astro-theme-university.git#vX.Y.Z" @astrojs/mdx sharp pagefind lightningcss @iconify-json/iconoir`}
     lang="sh"
   />
 
@@ -125,6 +131,6 @@ export default defineConfig({
   </CardGrid>
 
   <p style="margin-block-start: var(--at-spacing-xl);">
-    <a href="/docs/" class="at-button">Browse the full documentation &rarr;</a>
+    <a href={withBase("/docs/")} class="at-button">Browse the full documentation &rarr;</a>
   </p>
 </BaseLayout>

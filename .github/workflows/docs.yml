@@ -1,0 +1,61 @@
+name: docs
+
+# Builds the documentation site in docs/ and publishes it to GitHub Pages at
+# https://anucybernetics.github.io/astro-theme-university/. The site is
+# neutral (no institutional trademarks), so a public host is fine.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      # node and pnpm both come from mise.toml (see ci.yml).
+      - uses: jdx/mise-action@v4
+      - uses: actions/cache@v6
+        with:
+          path: ~/.local/share/pnpm/store
+          key: pnpm-store-${{ hashFiles('pnpm-lock.yaml') }}
+          restore-keys: pnpm-store-
+      - uses: actions/cache@v6
+        with:
+          path: docs/node_modules/.astro
+          key: astro-cache-${{ hashFiles('pnpm-lock.yaml') }}
+          restore-keys: astro-cache-
+      - run: pnpm install --frozen-lockfile
+      # The site deploys under the repo name, so every internal link has to
+      # carry the base prefix; the theme's own link checker fails the build
+      # if one doesn't.
+      - run: pnpm build
+        env:
+          SITE_URL: https://anucybernetics.github.io
+          BASE_PATH: /astro-theme-university
+      - uses: actions/configure-pages@v6
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: docs/dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - id: deploy
+        uses: actions/deploy-pages@v5
