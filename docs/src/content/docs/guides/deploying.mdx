@@ -13,59 +13,63 @@ provider.
 
 ## [GitHub Pages](https://pages.github.com/)
 
-The simplest approach is the official
-[Astro GitHub Action](https://github.com/withastro/action). Add a workflow file:
+The [starter example](/docs/getting-started/examples/) ships a ready-made
+workflow at `.github/workflows/deploy.yml`; copy it into any site. It provisions
+Node and pnpm from the project's `mise.toml`, builds with `SITE_URL` and
+`BASE_PATH` derived from the repository name, and publishes `dist/` through the
+official Pages actions:
 
 ```yaml
 # .github/workflows/deploy.yml
-name: Deploy to GitHub Pages
+name: deploy
 
 on:
   push:
     branches: [main]
+  workflow_dispatch:
 
 permissions:
   contents: read
   pages: write
   id-token: write
 
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: withastro/action@v3
+      - uses: actions/checkout@v7
+      - uses: jdx/mise-action@v4
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+        env:
+          SITE_URL: https://${{ github.repository_owner }}.github.io
+          BASE_PATH: /${{ github.event.repository.name }}
+      - uses: actions/configure-pages@v6
+      - uses: actions/upload-pages-artifact@v5
         with:
-          package-manager: pnpm@latest
+          path: dist
 
   deploy:
     needs: build
     runs-on: ubuntu-latest
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+      url: ${{ steps.deploy.outputs.page_url }}
     steps:
-      - id: deployment
-        uses: actions/deploy-pages@v4
+      - id: deploy
+        uses: actions/deploy-pages@v5
 ```
 
-Set the `site` field in your `astro.config.ts`:
-
-```js
-export default defineConfig({
-  site: "https://your-username.github.io",
-});
-```
-
-If your repository isn't deployed at the root (e.g. it's at
-`your-username.github.io/my-repo`), also set the `base` path:
-
-```js
-export default defineConfig({
-  site: "https://your-username.github.io",
-  base: "/my-repo",
-});
-```
+In the repository settings, set Pages → Source to "GitHub Actions" once. A
+project site is served at `https://<owner>.github.io/<repo>/`, so `BASE_PATH` is
+`/<repo>`; for a user or organisation site (a repository named
+`<owner>.github.io`) set it to `/`. The theme's link checker verifies that every
+internal link carries the base prefix, so a link that would 404 on the live site
+fails the build instead.
 
 ## [Cloudflare Pages](https://pages.cloudflare.com/)
 

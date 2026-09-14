@@ -10,8 +10,8 @@ heroImage: ../../../assets/images/hero/abstract-05.svg
 
 The quickest way to get started is to copy the starter example in the
 `examples/` directory. It's a self-contained Astro project with the theme
-pre-configured, a CI config for GitLab Pages-style deployment, and example
-content you can replace with your own.
+pre-configured, a GitHub Pages deploy workflow, and example content you can
+replace with your own.
 
 ## Quick start
 
@@ -25,6 +25,9 @@ pnpm install
 pnpm dev
 ```
 
+The example pins the theme to the release it shipped with. To move to a newer
+release later, change the tag in `package.json` and run `pnpm install`.
+
 ## What's in the base example
 
 A minimal themed site with a single `pages` content collection. Good for project
@@ -34,15 +37,28 @@ Includes:
 
 - `PageLayout` for MDX pages with optional hero images
 - a `pages` content collection for markdown/MDX pages
-- `site-config.ts` for site name and navigation
+- `site-config.ts` for site name, navigation, favicon, and licence
+- a `mise.toml` pinning Node and pnpm, so `mise install` sets up a matching
+  toolchain
+- a GitHub Actions workflow that builds and deploys to GitHub Pages
 
 ## Deployment
 
-The example ships with a `.gitlab-ci.yml` for GitLab Pages-style deployment:
-commit `pnpm-lock.yaml`, push to `main`, and CI builds and deploys
-automatically. The config reads `SITE_URL` and `BASE_PATH` from CI variables ---
-set them to match your host, or adapt the config (see
-[deploying](/docs/guides/deploying/)) for other platforms.
+Push the copied site to a GitHub repository, enable GitHub Pages with "GitHub
+Actions" as the source, and every push to `main` builds and deploys. The
+workflow derives `SITE_URL` and `BASE_PATH` from the repository name, so a
+project site lands at `https://<owner>.github.io/<repo>/` with every internal
+link carrying the `/<repo>/` prefix. For another host, or a GitLab Pages
+instance, set the two variables to match and see
+[deploying](/docs/guides/deploying/).
+
+## Course websites
+
+A course site is the same starter plus
+[astro-course-university](https://github.com/ANUcybernetics/astro-course-university),
+which adds the content model (topics, labs, assessments, people), a build-time
+check that every cross-reference resolves, and a generated JSON API. See the
+[brand packages and course sites](/docs/guides/brand-packages/) guide.
 
 ## Next steps
 

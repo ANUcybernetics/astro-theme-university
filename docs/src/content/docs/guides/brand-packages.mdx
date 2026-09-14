@@ -1,0 +1,176 @@
+---
+title: Brand packages and course sites
+description:
+  Package an institution's identity as data the theme consumes, and add the
+  course-site content model on top.
+section: guides
+order: 1
+heroImage: ../../../assets/images/hero/abstract-05.svg
+---
+
+The theme ships no institution's identity. Everything that makes a site look
+like it belongs to a particular university is data: a palette, some logos, the
+footer's legal links and regulatory lines, an acknowledgement. Sites can pass
+all of that as props and CSS directly, but once two sites share an institution
+it's worth packaging the data once as a **brand package** and installing it
+alongside the theme.
+
+Institutional brand assets are usually trademarked, so brand packages tend to
+live on an institution's own Git host rather than on a public registry. The
+theme doesn't care where the package comes from; only that it exports the two
+halves below.
+
+## Anatomy of a brand package
+
+A brand package is a plain npm package with no build step. Two exports do the
+work:
+
+**A stylesheet** that overrides the palette. Because the theme declares its
+tokens inside `@layer at.tokens`, unlayered declarations win the cascade
+regardless of import order, so the file is just custom properties:
+
+```css
+/* brand.css */
+:root {
+  --at-primary: #7c2d12;
+  --at-secondary: #0e7490;
+  --at-tertiary: #6d28d9;
+}
+```
+
+Every semantic token, and the deck tint scales, re-derive from these three (see
+[customisation](/docs/styling/customisation/)). A brand with hand-tuned link or
+hover colours pins those tokens in the same file.
+
+**A branding object** shaped to spread straight into `BaseLayout` or
+`defineSiteConfig`. It carries the props the theme renders only when given:
+
+```ts
+// index.ts
+import type { SiteConfig } from "astro-theme-university/types";
+import lockup from "./assets/lockup.svg";
+import lockupDark from "./assets/lockup-white.svg";
+import crest from "./assets/crest.svg";
+import favicon from "./assets/favicon.svg";
+
+export const exampleBranding = {
+  logo: lockup,
+  logoDark: lockupDark,
+  logoCompact: crest,
+  favicon,
+  legalLinks: [
+    { text: "Copyright", href: "https://www.example.edu/copyright" },
+    { text: "Privacy", href: "https://www.example.edu/privacy" },
+  ],
+  meta: ["Example University, Springfield | Provider ID: EX-0000"],
+  acknowledgement: {
+    title: "Acknowledgement",
+    text: "Example University acknowledges the traditional custodians of the land on which it stands.",
+    logo: lockupDark,
+    logoAlt: "Example University",
+  },
+} satisfies Partial<SiteConfig>;
+```
+
+`logoCompact` matters when the lockup is a wide horizontal mark: the nav swaps
+to it below the 640px breakpoint instead of wrapping (see the
+[Nav docs](/docs/components/nav/)). `partnerships` adds a logo band to the
+footer's dark strip.
+
+The package's `package.json` needs `"type": "module"`, an `exports` map naming
+`.`, `./brand.css`, and `./assets/*`, and a `files` list covering them. Because
+the object imports SVGs, the package is consumed through Astro's Vite pipeline
+like any other source, so there's nothing to compile.
+
+## Consuming a brand package
+
+Install it next to the theme (from a git tag, like the theme itself), then wire
+the two halves:
+
+```ts
+// astro.config.ts
+import { defineConfig } from "astro/config";
+import universityTheme from "astro-theme-university";
+
+export default defineConfig({
+  integrations: [universityTheme({ brandCss: "example-brand/brand.css" })],
+});
+```
+
+```ts
+// src/site-config.ts
+import { defineSiteConfig } from "astro-theme-university/types";
+import { exampleBranding } from "example-brand";
+
+export const siteConfig = defineSiteConfig({
+  ...exampleBranding,
+  name: "My Research Group",
+  links: [{ text: "Home", href: "/" }],
+});
+```
+
+`brandCss` imports the stylesheet on every page, so a site that spreads the
+branding into its site config never touches the brand package again. The
+alternative, `import "example-brand/brand.css"` in a layout, is equivalent for
+pages but doesn't reach deck routes; `brandCss` does, since astromotion decks
+resolve the same global styles. Props placed after the spread win, so a site
+with its own logo spreads the branding and then overrides `logo`.
+
+For decks, import the brand stylesheet after the theme's deck styles in the deck
+theme file:
+
+```css
+/* src/decks/theme.css */
+@import url("astro-theme-university/styles/deck.css");
+@import url("example-brand/brand.css");
+```
+
+A brand package can also ship deck partials (a closing logo slide, say) that any
+deck includes by bare module specifier; see
+[lecture decks](/docs/guides/lecture-decks/).
+
+## Course sites
+
+A course website is a themed site plus a content model. That model lives in
+[astro-course-university](https://github.com/ANUcybernetics/astro-course-university),
+a brand-neutral package that provides:
+
+- `courseNodeSchema`, the shared frontmatter shape for course content (`title`,
+  `description`, `tags`, `related`, `links`, `spec`, `published`), which each
+  collection extends with its own fields
+- `courseGraph()`, an integration that validates every `related:` reference at
+  build time (a dangling reference fails the build) and emits a static JSON API
+  under `/api/`
+- `RelatedContent` and `SpecList` components for detail pages, and
+  `getPublishedCollection` for listings that respect `published: false`
+
+The three packages stack without knowing about each other: the theme renders,
+the course package models and validates, and a brand package supplies the
+identity. A minimal `astro.config.ts` for a course site is:
+
+```ts
+import { defineConfig } from "astro/config";
+import universityTheme from "astro-theme-university";
+import courseGraph from "astro-course-university";
+import { astromotion, deckRemarkPlugins } from "astromotion";
+
+export default defineConfig({
+  site: process.env.SITE_URL,
+  base: process.env.BASE_PATH,
+  integrations: [
+    universityTheme({
+      defaultLayout: "src/layouts/PageLayout.astro",
+      brandCss: "example-brand/brand.css",
+      extraRemarkPlugins: deckRemarkPlugins,
+    }),
+    courseGraph({
+      collections: [{ key: "topics" }, { key: "labs" }, { key: "assessments" }],
+    }),
+    astromotion({ theme: "./src/decks/theme.css" }),
+  ],
+});
+```
+
+The course package's README documents the collections config, refs, specs and
+the generated API. Institutions that maintain a brand package usually keep a
+course-site starter beside it, already wired to all three.

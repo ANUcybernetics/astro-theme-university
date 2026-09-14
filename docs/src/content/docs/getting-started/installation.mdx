@@ -8,14 +8,55 @@ order: 1
 heroImage: ../../../assets/images/hero/abstract-06.svg
 ---
 
+The quickest way to a working site is to
+[copy the starter example](/docs/getting-started/examples/), which has all of
+this done. This page is the manual route: adding the theme to a project you
+create yourself, or to an existing Astro project.
+
+## Create the project
+
+The theme isn't published to npm; it's installed straight from a tagged release
+of its public Git repository, with [pnpm](https://pnpm.io/). Start with a
+`package.json` that declares the project as an ES module and gives you the usual
+Astro scripts:
+
+```json
+{
+  "name": "my-site",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "typecheck": "astro check"
+  }
+}
+```
+
+Next to it, a `pnpm-workspace.yaml` that tells pnpm which install scripts may
+run. Without it, the first install stops with "Ignored build scripts":
+
+```yaml
+allowBuilds:
+  esbuild: true
+  sharp: false
+```
+
+`esbuild` needs its postinstall to fetch the platform-specific binary. `sharp`
+is set to `false` because its install script falls through to a from-source
+build when a system `libvips` is present (macOS with Homebrew, for instance),
+and the prebuilt `@img/sharp-*` platform binary works at runtime regardless.
+
 ## Install the package
 
-The theme is distributed from exact tagged releases of its public Git
-repository. Install it alongside the required peer dependencies using
-[pnpm](https://pnpm.io/):
+Find the latest tag on the
+[tags page](https://github.com/ANUcybernetics/astro-theme-university/tags) and
+pin it exactly. Install it alongside the required peer dependencies:
 
 ```bash
 pnpm add astro "git+https://github.com/ANUcybernetics/astro-theme-university.git#vX.Y.Z" @astrojs/mdx sharp pagefind lightningcss @iconify-json/iconoir
+pnpm add -D @astrojs/check "typescript@^6"
 ```
 
 The theme requires [Astro](https://astro.build/) ^7.0.0. `@astrojs/mdx` is
@@ -28,50 +69,13 @@ iconify-set packages from the consumer's `package.json` (not the theme's), so
 the set has to live as a direct dep. The theme's interactive controls use native
 browser APIs and add no UI-framework dependency.
 
-:::tip
+`@astrojs/check` and `typescript` are what `pnpm typecheck` runs. TypeScript
+stays on 6.x for now: `astro check` relies on a programmatic API the native
+TypeScript 7 compiler doesn't ship yet.
 
-**Build-script approvals.** pnpm 11 asks for explicit approval before running
-build scripts on installed packages. Add a `pnpm-workspace.yaml` at your project
-root with:
-
-```yaml
-allowBuilds:
-  esbuild: true
-  sharp: false
-```
-
-`esbuild` needs its postinstall to fetch the platform-specific binary; `sharp`
-is set to `false` because its install script falls through to a from-source
-build when a system `libvips` is present (e.g. on macOS with Homebrew), and the
-prebuilt `@img/sharp-*` platform binary works at runtime regardless. Without
-these entries, every `pnpm install` warns "Ignored build scripts" and `sharp`
-may fail to load at build time.
-
-:::
-
-:::warning
-
-**Git-deps caching quirk.** While the theme is still distributed from the git
-repo (i.e. you've pinned it as
-`git+https://github.com/ANUcybernetics/astro-theme-university.git#main` rather
-than an npm version), pnpm caches its resolution of `#main` to a specific commit
-and **does not re-fetch on subsequent `pnpm install` runs**. If you run an
-install after the upstream has moved forward and your site seems to be stuck on
-an older theme version, the escape hatch is:
-
-```bash
-rm -rf node_modules pnpm-lock.yaml
-pnpm store prune
-pnpm install
-```
-
-That forces pnpm to re-resolve `#main` to the current HEAD. Pinning a specific
-commit hash (`#<sha>&path:…`) avoids the issue entirely and gives you
-reproducible builds. This is a git-dep-only quirk — once the packages are
-published to npm, `pnpm update` handles version bumps cleanly and this note goes
-away.
-
-:::
+Upgrading later is a deliberate edit: change the tag in `package.json` and run
+`pnpm install`. pnpm never moves a git dependency on its own, which is what
+makes an exact tag a reproducible pin.
 
 ## Add the integration
 
@@ -100,15 +104,23 @@ The theme integration automatically:
 - runs broken-link and axe-core accessibility checks, with optional `/llms.txt`
   generation; astromotion owns deck-specific checks when installed
 
-If you're coming from an older template that installed Svelte only for the
-theme, remove `svelte`, `@astrojs/svelte`, `svelte-check`, and the explicit
-`svelte()` integration. Keep an independently chosen framework when your own
-site components use it.
+The theme is framework-free. If you're coming from an older template that
+installed Svelte only for the theme, remove `svelte`, `@astrojs/svelte`,
+`svelte-check`, and the explicit `svelte()` integration; keep a framework only
+when your own components use it.
 
 ## Create your first page
 
-With the integration in place, you can use the theme's `BaseLayout` in any Astro
-page:
+Add a `tsconfig.json` that extends Astro's strict preset (this is what resolves
+imports like `astro-theme-university/layouts/BaseLayout.astro`):
+
+```json
+{
+  "extends": "astro/tsconfigs/strict"
+}
+```
+
+Then use the theme's `BaseLayout` in any Astro page:
 
 ```astro
 ---
@@ -123,7 +135,8 @@ import BaseLayout from "astro-theme-university/layouts/BaseLayout.astro";
 ```
 
 Run `pnpm dev` and open the page in your browser. You should see the themed
-layout with a navigation bar and footer.
+layout with a navigation bar and footer, and `pnpm build` produces a static site
+in `dist/` after running the accessibility and link checks.
 
 The next step is to [configure your site](/docs/getting-started/configuration/)
 with a name and navigation links.

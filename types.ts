@@ -1,8 +1,9 @@
 /**
  * Shared type definitions for the astro-theme-university theme.
  *
- * Consumers can import these types (and the `defineSiteConfig` helper) from
- * the package root: `import type { SiteConfig } from "astro-theme-university"`.
+ * Consumers import these types (and the `defineSiteConfig` helper) from the
+ * `astro-theme-university/types` subpath, which keeps site-config modules
+ * free of the integration code the package root pulls in.
  */
 
 import type { ImageMetadata } from "astro";
@@ -142,7 +143,7 @@ export interface SiteConfig {
  * type checking. Use instead of a plain object literal in `src/site-config.ts`:
  *
  * ```ts
- * import { defineSiteConfig } from "astro-theme-university";
+ * import { defineSiteConfig } from "astro-theme-university/types";
  *
  * export const siteConfig = defineSiteConfig({
  *   name: "My Site",
