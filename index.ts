@@ -30,6 +30,7 @@ import {
   findUnroutedEntries,
   generateLlmsFullTxt,
   generateLlmsTxt,
+  type LlmsEntry,
   readSiteEntries,
 } from "./llms-txt.js";
 
@@ -60,6 +61,9 @@ const themeDeckCss = fileURLToPath(new URL("./styles/deck.css", import.meta.url)
 interface AstromotionModule {
   astromotion: (options: DeckOptions) => AstroIntegration;
   deckRemarkPlugins: RemarkPlugins;
+  /** astromotion ≥ 0.30; optional so an older pin still builds (without its
+   *  decks in llms.txt) rather than failing the build. */
+  deckTextEntries?: (options?: { root?: string }) => Promise<LlmsEntry[]>;
 }
 
 // astromotion is an optional peer, resolved here at module load: Astro
@@ -168,6 +172,9 @@ export default function universityTheme(options: ThemeOptions = {}): AstroIntegr
   let registeredFontVariables: string[] = [];
   let projectRootUrl: URL | undefined;
   let cacheDirPath: string | undefined;
+  // Whether decks are in the build at all — registered by `decks` or by the
+  // site itself. Only then are there deck routes for llms.txt to list.
+  let hasDecks = false;
 
   return {
     name: "astro-theme-university",
@@ -199,6 +206,7 @@ export default function universityTheme(options: ThemeOptions = {}): AstroIntegr
           );
         }
         let deckRemarkPlugins: RemarkPlugins = [];
+        hasDecks = existingIntegrationNames.has("astromotion") || Boolean(options.decks);
         if (options.decks) {
           if (existingIntegrationNames.has("astromotion")) {
             logger.warn(
@@ -523,6 +531,19 @@ export default function universityTheme(options: ThemeOptions = {}): AstroIntegr
         if (shouldGenerateLlmsTxt) {
           const entries = await readSiteEntries(srcDir);
 
+          // Decks are injected routes fed from src/decks, so the content
+          // collector cannot see them. astromotion pairs each deck's readable
+          // text with the URL it builds at; its `published: false` and
+          // `listed: false` decks are already filtered out, as the content
+          // collector filters their equivalents.
+          if (hasDecks && astromotionModule?.deckTextEntries && projectRootUrl) {
+            entries.push(
+              ...(await astromotionModule.deckTextEntries({
+                root: fileURLToPath(projectRootUrl),
+              })),
+            );
+          }
+
           // Entry URLs come from source file paths, not the router — catch
           // the drift where a markdown file exists but no route renders it.
           const unrouted = findUnroutedEntries(distPath, entries);
@@ -530,7 +551,7 @@ export default function universityTheme(options: ThemeOptions = {}): AstroIntegr
             const lines = unrouted.slice(0, 30).map((url) => `  ${url}`);
             if (unrouted.length > 30) lines.push(`  ... and ${unrouted.length - 30} more`);
             throw new Error(
-              `Found ${unrouted.length} llms.txt entr${unrouted.length === 1 ? "y" : "ies"} with no built page in dist (each markdown file under src/content or src/pages must be rendered at the URL its path implies):\n${lines.join("\n")}`,
+              `Found ${unrouted.length} llms.txt entr${unrouted.length === 1 ? "y" : "ies"} with no built page in dist (every markdown file under src/content or src/pages, and every deck under src/decks, must be rendered at the URL its path implies):\n${lines.join("\n")}`,
             );
           }
 

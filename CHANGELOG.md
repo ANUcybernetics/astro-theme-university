@@ -1,5 +1,24 @@
 # Changelog
 
+## 0.16.0
+
+**Decks in `llms.txt`.** On a site with decks in the build, `llmsTxt: true` now
+lists each deck at the URL its route serves and carries its readable text into
+`/llms-full.txt`, via astromotion's `deckTextEntries`. The decks were the one
+part of a deck-bearing site an agent visitor couldn't read: they live under
+`src/decks/` as injected routes, so the collector that walks `src/content` and
+`src/pages` never saw them.
+
+Speaker notes are included (they're already in the deck's HTML); authoring
+comments are not (they're stripped from it). `published: false` and
+`listed: false` decks are left out, as their content-collection equivalents are.
+Nothing to configure: it applies whether the theme registered astromotion
+through `decks` or the site registered it itself, and needs astromotion 0.30 or
+newer --- an older pin builds as before, without its decks in the output.
+
+The post-build check that every llms.txt entry has a page in dist now covers
+deck entries too.
+
 ## 0.15.0
 
 **`decks` option.** `universityTheme({ decks: true })` registers astromotion
