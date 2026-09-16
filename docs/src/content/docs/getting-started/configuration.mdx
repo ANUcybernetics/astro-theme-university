@@ -134,8 +134,8 @@ Slide decks are included too, on a site with decks in the build: each deck under
 `src/decks/` is listed at the URL its route serves, and its readable text goes
 into `/llms-full.txt` the way a page's does. Speaker notes are included, since
 they are already in the deck's HTML; authoring comments are not, since they are
-stripped from it. A deck marked `published: false` or `listed: false` is left
-out, as is its equivalent in a content collection. This needs astromotion 0.30
+stripped from it. A deck marked `published: false` or `unlisted: true` is left
+out, the same keys a content collection entry uses. This needs astromotion 0.31
 or newer, whether the theme registers it for you through `decks` or your site
 registers it itself.
 

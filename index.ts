@@ -534,8 +534,8 @@ export default function universityTheme(options: ThemeOptions = {}): AstroIntegr
           // Decks are injected routes fed from src/decks, so the content
           // collector cannot see them. astromotion pairs each deck's readable
           // text with the URL it builds at; its `published: false` and
-          // `listed: false` decks are already filtered out, as the content
-          // collector filters their equivalents.
+          // `unlisted: true` decks are already filtered out, the same keys the
+          // content collector filters on.
           if (hasDecks && astromotionModule?.deckTextEntries && projectRootUrl) {
             entries.push(
               ...(await astromotionModule.deckTextEntries({

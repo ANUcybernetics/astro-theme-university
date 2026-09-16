@@ -128,7 +128,7 @@ describe("decks in llms.txt", () => {
       decks: {
         "shown.deck.mdx": "---\ntitle: Shown\n---\n\n# Shown\n",
         "draft.deck.mdx": "---\ntitle: Draft\npublished: false\n---\n\n# Draft\n",
-        "hidden.deck.mdx": "---\ntitle: Hidden\nlisted: false\n---\n\n# Hidden\n",
+        "hidden.deck.mdx": "---\ntitle: Hidden\nunlisted: true\n---\n\n# Hidden\n",
       },
       built: ["decks/shown"],
       registerAstromotion: true,
