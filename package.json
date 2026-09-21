@@ -30,6 +30,7 @@
     "icons/",
     "a11y-checker.ts",
     "a11y-worker.mjs",
+    "token-checker.ts",
     "contrast.ts",
     "llms-txt.ts",
     "url.ts",

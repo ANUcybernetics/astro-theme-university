@@ -1,5 +1,26 @@
 # Changelog
 
+## 0.17.0
+
+**Undefined theme tokens fail the build.** A new post-build check, `checkTokens`
+(on by default), reports every `var(--at-*)` reference to a custom property
+nothing in the built CSS defines.
+
+`--at-` is the theme's namespace, so a reference into it that resolves to
+nothing is a typo or an invented name. A fallback makes it worse rather than
+safer: `var(--at-background-muted, #eee8dc)` looks like a themed value but the
+literal silently becomes the real one, and a literal does not follow the colour
+scheme --- so the page reads as designed in one mode and unreadably in the
+other. That is the one contrast failure the token-level check in `contrast.ts`
+cannot see, because it proves the palette is AA-clean rather than that the page
+used the palette. axe cannot see it either: it runs in JSDOM, where
+`color-contrast` has no canvas to sample and lands in `incomplete`, which the
+scan deliberately drops rather than emit thousands of non-verdicts.
+
+Both halves are read out of `dist`, so the definitions are whatever the theme
+and the brand layer actually shipped, and a consumer needs no token list of its
+own. Give your own variables your own prefix.
+
 ## 0.16.0
 
 **Decks in `llms.txt`.** On a site with decks in the build, `llmsTxt: true` now

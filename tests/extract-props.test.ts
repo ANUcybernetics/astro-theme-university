@@ -96,6 +96,7 @@ describe("extract-props", () => {
       "search",
       "checkLinks",
       "checkA11y",
+      "checkTokens",
       "llmsTxt",
       "mdx",
       "icon",

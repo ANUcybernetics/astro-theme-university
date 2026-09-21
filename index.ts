@@ -25,6 +25,7 @@ import remarkDefaultLayout from "./remark-default-layout.js";
 import rehypeBaseLinks from "./rehype-base-links.js";
 import rehypeTableWrap from "./rehype-table-wrap.js";
 import { checkA11y } from "./a11y-checker.js";
+import { checkTokens } from "./token-checker.js";
 import { checkBaseLinks } from "./link-checker.js";
 import {
   findUnroutedEntries,
@@ -107,6 +108,9 @@ export interface ThemeOptions {
   checkLinks?: boolean;
   /** Check for accessibility violations after build (default: true) */
   checkA11y?: boolean;
+  /** Fail the build on `var(--at-*)` references to tokens nothing defines
+   *  (default: true) */
+  checkTokens?: boolean;
   /** Generate /llms.txt and /llms-full.txt from content collections and
    *  src/pages markdown (default: false) */
   llmsTxt?: boolean;
@@ -157,6 +161,7 @@ export default function universityTheme(options: ThemeOptions = {}): AstroIntegr
   const shouldSearch = options.search !== false;
   const shouldCheckLinks = options.checkLinks !== false;
   const shouldCheckA11y = options.checkA11y !== false;
+  const shouldCheckTokens = options.checkTokens !== false;
   const shouldGenerateLlmsTxt = options.llmsTxt === true;
   const shouldAddMdx = options.mdx !== false;
   const shouldAddIcon = options.icon !== false;
@@ -463,7 +468,13 @@ export default function universityTheme(options: ThemeOptions = {}): AstroIntegr
         }
       },
       "astro:build:done": async ({ dir, logger }) => {
-        if (!shouldSearch && !shouldCheckA11y && !shouldCheckLinks && !shouldGenerateLlmsTxt)
+        if (
+          !shouldSearch &&
+          !shouldCheckA11y &&
+          !shouldCheckTokens &&
+          !shouldCheckLinks &&
+          !shouldGenerateLlmsTxt
+        )
           return;
         let distPath: string;
         try {
@@ -506,6 +517,26 @@ export default function universityTheme(options: ThemeOptions = {}): AstroIntegr
             if (violations.length > 30) lines.push(`  ... and ${violations.length - 30} more`);
             throw new Error(
               `Found ${violations.length} accessibility violation(s):\n${lines.join("\n")}`,
+            );
+          }
+        }
+
+        if (shouldCheckTokens) {
+          const { checked, violations } = await checkTokens(distPath);
+          if (violations.length === 0) {
+            logger.info(`Checked ${checked} style files — every theme token resolves.`);
+          } else {
+            const lines = violations
+              .slice(0, 30)
+              .map(
+                (v) => `  ${v.file}: var(${v.token}) is not defined by the theme or brand layer`,
+              );
+            if (violations.length > 30) lines.push(`  ... and ${violations.length - 30} more`);
+            throw new Error(
+              `Found ${violations.length} undefined theme token reference(s). ` +
+                `A var(--at-*) fallback silently replaces the token with a literal that no longer ` +
+                `follows the colour scheme, so this is checked rather than allowed to degrade. ` +
+                `Use a token the theme defines, or your own prefix for your own variables:\n${lines.join("\n")}`,
             );
           }
         }

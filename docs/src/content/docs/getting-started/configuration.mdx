@@ -25,6 +25,7 @@ export default defineConfig({
       name: "My Research Group",
       checkLinks: true,
       checkA11y: true,
+      checkTokens: true,
     }),
   ],
 });
@@ -32,11 +33,18 @@ export default defineConfig({
 
 <PropsTable component="ThemeOptions" />
 
-Both `checkLinks` and `checkA11y` default to `true`; set either to `false` to
-skip it temporarily. When the site is deployed under a `base` sub-path,
-`checkLinks` also verifies that every rendered internal link carries the base
-prefix (see
+`checkLinks`, `checkA11y` and `checkTokens` all default to `true`; set any to
+`false` to skip it temporarily. When the site is deployed under a `base`
+sub-path, `checkLinks` also verifies that every rendered internal link carries
+the base prefix (see
 [base-path-aware links](/docs/guides/markdown-extensions#base-links)).
+
+`checkTokens` fails the build on a `var(--at-*)` reference to a custom property
+nothing defines. `--at-` is the theme's namespace, so a name it doesn't define
+is a typo or an invention, and a fallback makes it worse: the literal quietly
+becomes the real value and stops following the colour scheme, which reads as
+correct in one mode and unreadable in the other. Give your own variables your
+own prefix.
 
 ### Default layout
 
