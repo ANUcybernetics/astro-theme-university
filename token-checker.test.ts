@@ -55,3 +55,26 @@ describe("token checker", () => {
     expect((await checkTokens(dist)).violations).toEqual([]);
   });
 });
+
+describe("theme vocabulary", () => {
+  it("allows the theme's own opt-in hooks, which nothing defines by design", async () => {
+    // deck.css reads these behind a fallback so a consumer can override the
+    // artwork; leaving them unset is how you decline, so a build that ships a
+    // deck must not fail on them.
+    const dist = await distWith({
+      "index.html":
+        "<style>.hero{background:var(--at-deck-hero-scrim,#000)}" +
+        ".impact{background-image:var(--at-deck-impact-bg-image,none)}</style>",
+    });
+    expect((await checkTokens(dist)).violations).toEqual([]);
+  });
+
+  it("still flags a name the theme never uses, fallback or not", async () => {
+    const dist = await distWith({
+      "index.html": "<style>.p{background:var(--at-background-muted,#eee8dc)}</style>",
+    });
+    expect((await checkTokens(dist)).violations).toEqual([
+      { file: "index.html", token: "--at-background-muted" },
+    ]);
+  });
+});

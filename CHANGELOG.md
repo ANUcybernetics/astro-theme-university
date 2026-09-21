@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.17.1
+
+**`checkTokens` no longer flags the theme's own opt-in hooks.** `deck.css` reads
+`var(--at-deck-hero-scrim, ...)` and `var(--at-deck-impact-bg-image, none)` so a
+consumer can replace that artwork, and leaving them unset is how you decline ---
+nothing defines them by design. 0.17.0 could not tell those apart from an
+invented name, since both are an undefined token behind a fallback, so every
+site that ships a deck failed to build.
+
+What separates them is authorship, not syntax: the check now also reads the
+theme's own stylesheets and treats every `--at-*` the theme defines _or_
+references as part of its vocabulary. A hook stays legal to reference, a name
+the theme never uses is still an error, and adding a hook to `deck.css` needs no
+second place updated.
+
 ## 0.17.0
 
 **Undefined theme tokens fail the build.** A new post-build check, `checkTokens`
