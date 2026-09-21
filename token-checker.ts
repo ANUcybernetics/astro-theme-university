@@ -7,14 +7,18 @@ export interface TokenViolation {
   token: string;
 }
 
-async function collectStyleFiles(dir: string): Promise<string[]> {
+async function collectStyleFiles(
+  dir: string,
+  // Astro inlines small stylesheets into <style> blocks, so a built page's CSS
+  // can land in a .css file or in the HTML, and the same rule often lands in
+  // both. The theme's own sources are scanned with a different pair.
+  extensions: readonly string[] = [".css", ".html"],
+): Promise<string[]> {
   const files: string[] = [];
   for (const entry of await readdir(dir, { withFileTypes: true })) {
     const full = join(dir, entry.name);
-    if (entry.isDirectory()) files.push(...(await collectStyleFiles(full)));
-    // Astro inlines small stylesheets into <style> blocks, so a page's CSS can
-    // land in either place — and the same rule often lands in both.
-    else if (entry.name.endsWith(".css") || entry.name.endsWith(".html")) files.push(full);
+    if (entry.isDirectory()) files.push(...(await collectStyleFiles(full, extensions)));
+    else if (extensions.some((ext) => entry.name.endsWith(ext))) files.push(full);
   }
   return files;
 }
