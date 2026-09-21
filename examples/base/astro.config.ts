@@ -24,6 +24,9 @@ export default defineConfig({
       // Generates /llms.txt from src/llms.md plus the page index.
       llmsTxt: true,
       preloadFonts: ["--font-public-sans", "--font-lora"],
+      // Registers astromotion for src/decks/*.deck.mdx, with the theme's
+      // deck stylesheet as the default theme.
+      decks: true,
     }),
   ],
 });

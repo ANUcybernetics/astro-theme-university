@@ -23,6 +23,10 @@ pnpm typecheck
   schema in `src/content.config.ts`), rendered at `/<slug>/` by
   `src/pages/[...slug].astro`.
 - `src/llms.md` --- the hand-written preamble for the generated `/llms.txt`.
+- `src/decks/example.deck.mdx` --- a slide deck, built at `/decks/example/` by
+  [astromotion](https://github.com/ANUcybernetics/astromotion) (`decks: true` in
+  `astro.config.ts`). Delete the file and the option together if the site
+  doesn't need decks.
 - `.github/workflows/deploy.yml` --- builds and deploys to GitHub Pages on every
   push to `main`. Set Pages → Source to "GitHub Actions" in the repository
   settings once; the workflow derives the site URL and base path from the

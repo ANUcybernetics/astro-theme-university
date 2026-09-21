@@ -153,6 +153,15 @@ describe("example builds", () => {
         f.startsWith("hero-vector"),
       );
       expect(emitted).toHaveLength(2);
+
+      // The example ships a deck (decks: true, src/decks/example.deck.mdx) so
+      // this build exercises deck.css — the only page in this suite that does.
+      // checkTokens scans all built CSS for the theme's own vocabulary
+      // (definitions and references in styles/, components/, layouts/,
+      // pages/), and deck.css's opt-in hooks (e.g. --at-deck-hero-scrim,
+      // --at-deck-impact-bg-image) are references with no definition
+      // anywhere: drop them from that vocabulary and this build fails.
+      expect(existsSync(join(tempDir, "dist", "decks", "example", "index.html"))).toBe(true);
     });
   }
 });
