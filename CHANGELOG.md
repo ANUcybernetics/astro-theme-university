@@ -1,5 +1,26 @@
 # Changelog
 
+## Unreleased
+
+**`citations`: pandoc-style `[@key]` citations from a bibliography.** Set
+`citations: { bibliography, csl }` and the theme renders pandoc's citation
+syntax with citeproc, through the same CSL engine `pandoc --citeproc` uses, so
+an existing `references.bib` works unchanged. One markdown processor already
+serves content collections, `src/pages` and `.deck.mdx`, so citations reach all
+three at once.
+
+`rehype-citation` is an optional peer, resolved like astromotion: sites that
+never cite anything do not inherit citation-js and citeproc.
+
+Pandoc's per-page `nocite` frontmatter is supported on top of the plugin, which
+takes `noCite` only as a plugin-wide option --- setting that globally would
+append every entry to every page. `nocite: "@*"` is how a bibliography page
+lists works it never cites.
+
+The theme styles the `csl-bib-body`/`csl-entry` markup citeproc emits, with a
+hanging indent (`--at-csl-hanging-indent`) and a deck variant sized by
+`--r-csl-size` that goes two-column from ten entries up.
+
 ## 0.17.1
 
 **`checkTokens` no longer flags the theme's own opt-in hooks.** `deck.css` reads

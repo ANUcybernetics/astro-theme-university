@@ -644,3 +644,30 @@ body.reveal-viewport {
     padding: 0 !important;
   }
 }
+
+@layer at.components {
+  /* A deck's reference list, rendered where its `[^ref]` marker sits. Give it
+     a slide of its own: a whole lecture's citations do not share a slide well,
+     and a scrolling box on a slide is content the room cannot read. */
+  :where(.reveal .slides) section .csl-bib-body {
+    font-size: var(--r-csl-size, 0.5em);
+    text-align: left;
+    margin-block-start: 0.5em;
+  }
+
+  :where(.reveal .slides) section .csl-entry {
+    margin-block-end: 0.5em;
+    padding-inline-start: 1.5em;
+    text-indent: -1.5em;
+    line-height: 1.35;
+    overflow-wrap: break-word;
+    break-inside: avoid;
+  }
+
+  /* From ten entries up, a single column runs off the bottom of the slide. */
+  :where(.reveal .slides) section .csl-bib-body:has(.csl-entry:nth-child(10)) {
+    columns: 2;
+    column-gap: 2em;
+    font-size: var(--r-csl-size-dense, 0.42em);
+  }
+}

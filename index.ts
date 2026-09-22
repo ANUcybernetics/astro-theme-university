@@ -20,6 +20,11 @@ import remarkCustomHeadingId from "remark-custom-heading-id";
 // @ts-expect-error astro-broken-links-checker ships no type declarations
 import astroBrokenLinksChecker from "astro-broken-links-checker";
 import remarkCallout from "./remark-callout.js";
+import {
+  type CitationAttacher,
+  type CitationOptions,
+  createCitationPlugin,
+} from "./rehype-citations.js";
 import { headingAnchorPlugins } from "./markdown.js";
 import remarkDefaultLayout from "./remark-default-layout.js";
 import rehypeBaseLinks from "./rehype-base-links.js";
@@ -74,6 +79,14 @@ interface AstromotionModule {
 // there.
 const astromotionModule = (await import("astromotion").catch(() => undefined)) as
   | AstromotionModule
+  | undefined;
+
+// rehype-citation is an optional peer, resolved here for the same reason as
+// astromotion above. It pulls in citation-js and citeproc, so sites that never
+// cite anything should not have to install it; a missing peer only matters
+// when `citations` is set, and is reported there.
+const rehypeCitationModule = (await import("rehype-citation").catch(() => undefined)) as
+  | { default: CitationAttacher }
   | undefined;
 
 export interface DeckOptions {
@@ -147,6 +160,17 @@ export interface ThemeOptions {
    *  the site registers astromotion itself — then it also owns the remark
    *  plugins (`extraRemarkPlugins: deckRemarkPlugins`). (default: false) */
   decks?: boolean | DeckOptions;
+  /** Render pandoc-style citations --- `[@key]`, `[@a; @b]`, `@key` in text,
+   *  `[-@key]` --- against a bibliography, with citeproc through a CSL style.
+   *  One markdown processor serves content collections, `src/pages` and
+   *  `.deck.mdx` decks, so this covers all three. Needs the optional
+   *  `rehype-citation` peer installed.
+   *
+   *  Every file that cites something also needs a `[^ref]` marker, which is
+   *  where its reference list is rendered. Without one the list is appended at
+   *  the end of the document, which on a deck puts it outside the last
+   *  `<section>` and so on no slide at all. */
+  citations?: CitationOptions;
   /** Extra remark plugins to run BEFORE the theme's default list — e.g. a topic
    *  splicer whose output must then flow through the theme's directive plugins
    *  (custom heading ids, callouts). */
@@ -297,6 +321,18 @@ export default function universityTheme(options: ThemeOptions = {}): AstroIntegr
           });
         }
 
+        const citationPlugins: RehypePlugins = [];
+        if (options.citations) {
+          if (!rehypeCitationModule) {
+            throw new Error(
+              "astro-theme-university: `citations` needs the rehype-citation package installed (pnpm add rehype-citation).",
+            );
+          }
+          citationPlugins.push(
+            createCitationPlugin(rehypeCitationModule.default, options.citations),
+          );
+        }
+
         updateConfig({
           markdown: {
             processor: unified({
@@ -324,6 +360,7 @@ export default function universityTheme(options: ThemeOptions = {}): AstroIntegr
               rehypePlugins: [
                 ...headingAnchorPlugins,
                 rehypeTableWrap,
+                ...citationPlugins,
                 ...(options.extraRehypePlugins ?? []),
                 // Last, so links produced by consumer rehype plugins are
                 // rewritten too. No-op when base is "/".
