@@ -127,12 +127,13 @@ export function generateLlmsFullTxt(options: LlmsTxtOptions, entries: LlmsEntry[
   return sections.join("\n---\n\n");
 }
 
-async function collectFiles(dir: string): Promise<string[]> {
+async function collectFiles(dir: string, skipUnderscored: boolean): Promise<string[]> {
   const results: string[] = [];
 
   async function walk(current: string): Promise<void> {
     const entries = await readdir(current, { withFileTypes: true });
     for (const entry of entries) {
+      if (skipUnderscored && entry.name.startsWith("_")) continue;
       const fullPath = join(current, entry.name);
       if (entry.isDirectory()) {
         await walk(fullPath);
@@ -160,9 +161,14 @@ function filePathToUrl(filePath: string, contentDir: string): string {
   return `/${slug}/`;
 }
 
-export async function readContentEntries(contentDir: string): Promise<LlmsEntry[]> {
+/** `skipUnderscored` mirrors Astro's routing rule for src/pages: a file or
+ *  directory whose name starts with `_` never becomes a route. */
+export async function readContentEntries(
+  contentDir: string,
+  { skipUnderscored = false }: { skipUnderscored?: boolean } = {},
+): Promise<LlmsEntry[]> {
   if (!existsSync(contentDir)) return [];
-  const files = await collectFiles(contentDir);
+  const files = await collectFiles(contentDir, skipUnderscored);
   const entries: LlmsEntry[] = [];
 
   for (const filePath of files) {
@@ -203,7 +209,7 @@ export async function readSiteEntries(srcDir: string): Promise<LlmsEntry[]> {
     ...entry,
     url: entry.url.replace(/^\/pages\//, "/"),
   }));
-  const pageEntries = await readContentEntries(join(srcDir, "pages"));
+  const pageEntries = await readContentEntries(join(srcDir, "pages"), { skipUnderscored: true });
 
   // A file in src/pages owns its route, so on a URL collision the page wins.
   const pageUrls = new Set(pageEntries.map((e) => e.url));

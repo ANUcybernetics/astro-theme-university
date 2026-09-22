@@ -489,6 +489,22 @@ describe("readSiteEntries", () => {
     },
   );
 
+  fsTest(
+    "skips underscore-prefixed pages and directories, as Astro's router does",
+    async ({ tmpDir }) => {
+      await mkdir(join(tmpDir, "pages", "_drafts"), { recursive: true });
+      await writeFile(join(tmpDir, "pages", "about.md"), "---\ntitle: About\n---\n\nBody.\n");
+      await writeFile(join(tmpDir, "pages", "_draft.mdx"), "---\ntitle: Draft\n---\n\nBody.\n");
+      await writeFile(
+        join(tmpDir, "pages", "_drafts", "later.md"),
+        "---\ntitle: Later\n---\n\nBody.\n",
+      );
+
+      const entries = await readSiteEntries(tmpDir);
+      expect(entries.map((e) => e.url)).toEqual(["/about/"]);
+    },
+  );
+
   fsTest("tolerates a missing pages or content directory", async ({ tmpDir }) => {
     await mkdir(join(tmpDir, "content"), { recursive: true });
     await writeFile(join(tmpDir, "content", "only.md"), "---\ntitle: Only\n---\n\nBody.\n");
