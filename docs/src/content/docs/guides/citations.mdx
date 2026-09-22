@@ -1,0 +1,107 @@
+---
+title: Citations
+description:
+  "Pandoc-style [@key] citations from a bibliography, rendered with citeproc
+  through a CSL style, on content pages and slide decks alike."
+section: guides
+order: 7
+heroImage: ../../../assets/images/hero/abstract-05.svg
+---
+
+Academic sites cite things. The `citations` option renders pandoc's citation
+syntax against a bibliography file, using the same CSL engine (`citeproc`) that
+`pandoc --citeproc` uses, so a `references.bib` you already maintain for papers
+works here unchanged.
+
+## Setup
+
+Install the optional peer and point the theme at a bibliography:
+
+```sh
+pnpm add rehype-citation
+```
+
+```js
+// astro.config.ts
+universityTheme({
+  citations: {
+    bibliography: "references.bib",
+    csl: "apa",
+  },
+});
+```
+
+`bibliography` takes BibTeX, CSL-JSON or BibJSON. `csl` takes a built-in style
+name (`apa`, `vancouver`, `harvard1`, `chicago`, `mla`) or a path to your own
+`.csl` file; both resolve against `path`, which defaults to the project root.
+
+The theme runs one markdown processor for content collections, `src/pages` and
+`.deck.mdx` decks, so citations work in all three with no further setup.
+
+## Writing citations
+
+The syntax is pandoc's:
+
+```md
+A bracketed citation [@doet], with a locator [@doet, p. 12].
+
+Two works at once [@doet; @affordances].
+
+@doet in text, and [-@doet] with the author suppressed.
+
+## References
+
+[^ref]
+```
+
+## Every citing file needs a `[^ref]` marker
+
+`[^ref]` is where the reference list is rendered. **A file that cites something
+without one is a bug**, and a quiet one: the list is appended at the end of the
+document instead. On a page that is merely untidy; on a deck it lands outside
+the last `<section>`, belonging to no slide, where nobody will ever see it.
+
+On content pages the convention is a `## References` heading with the marker
+under it. On a deck, give the list a slide of its own at the end --- a lecture's
+worth of references does not share a slide well, and shrinking it until it fits
+alongside other content is how you get a scrolling box the room cannot read.
+
+## Rendering a whole bibliography
+
+Pandoc's `nocite` is supported per page, so a "Bibliography" page can list works
+it never cites:
+
+```mdx
+---
+title: Bibliography
+nocite: "@*"
+---
+
+[^ref]
+```
+
+## Styling
+
+citeproc emits `<div class="csl-bib-body">` wrapping one
+`<div class="csl-entry">` per work --- divs, not a list. Do not wrap them in a
+`ul`/`ol` for semantics: the a11y checker is strict about what may sit inside a
+list, so that is how you would create a violation, not fix one.
+
+The theme gives entries a hanging indent, sized by `--at-csl-hanging-indent`.
+Deck reference lists are sized by `--r-csl-size`, dropping to two columns and
+`--r-csl-size-dense` from ten entries up.
+
+## Gotchas
+
+- **`linkCitations` is off by default.** With it on, `rehype-citation` nests
+  anchors incorrectly across a multi-work citation, producing one malformed link
+  rather than two.
+- **Avoid a colon in a citation key.** BibDesk-style keys like `Edmonds:2018tr`
+  are dropped inside content collection files: the citation renders as literal
+  text and takes the page's whole reference list with it, with no build error.
+  The same key works in `src/pages` and in decks, which makes it easy to miss.
+  Rename the key.
+- **Never write an at-sign in a `.bib` comment.** `citation-js` ignores `%` and
+  reads any at-sign outside an entry as the start of a new one, so an example
+  citation in a header comment stops the whole file parsing. The build then
+  fails with a bare Vite error whose reported location is an unrelated page.

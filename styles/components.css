@@ -1080,3 +1080,24 @@
     }
   }
 }
+
+/* Reference lists rendered by rehype-citation when the site sets `citations`.
+   citeproc emits divs rather than a list — `.csl-bib-body` wrapping one
+   `.csl-entry` per work — which is deliberate: the a11y checker is strict
+   about what may sit inside a `ul`/`ol`, so do not wrap this in one. All the
+   theme does is give the style its hanging indent and some breathing room. */
+@layer at.components {
+  .csl-bib-body {
+    margin-block-start: 1rem;
+  }
+
+  .csl-entry {
+    margin-block-end: 0.75rem;
+    padding-inline-start: var(--at-csl-hanging-indent, 1.5em);
+    text-indent: calc(-1 * var(--at-csl-hanging-indent, 1.5em));
+    line-height: 1.5;
+    /* citeproc renders DOIs and URLs as plain text, so let a long one wrap
+       instead of forcing a horizontal scrollbar on a narrow screen. */
+    overflow-wrap: break-word;
+  }
+}
