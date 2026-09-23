@@ -9,4 +9,4 @@ allowBuilds:
 # tag — a floating ref here freezes at whatever commit main pointed to when
 # the lockfile entry was first resolved, then silently never moves.
 overrides:
-  astromotion: github:ANUcybernetics/astromotion#v0.31.1
+  astromotion: github:ANUcybernetics/astromotion#v0.31.3
