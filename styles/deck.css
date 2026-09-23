@@ -125,8 +125,10 @@ body.reveal-viewport {
      this is only the default, and at zero specificity (`> *` beats nothing),
      so a child that genuinely owns its geometry --- a full-bleed layer, an
      absolutely positioned overlay --- overrides it with any ordinary rule.
-     Block layout collapses adjacent margins, so this never doubles up with a
-     following element's own margin-block-start. */
+     Slides lay out as grid (and astromotion's split columns as flex), where
+     adjacent margins add rather than collapse, so every element spaces below
+     itself only: a margin-block-start would stack onto the gap the element
+     before it already owns. */
   > * {
     margin-block-end: 1.5rem;
   }
@@ -253,8 +255,12 @@ body.reveal-viewport {
     border: 1px solid var(--at-primary);
   }
 
+  /* The UA's 1em block margins, zeroed at the start per the flow-spacing rule
+     above: left in place they put the code block's font-size on both sides of
+     it, so the gap above (the previous element's own gap plus 1em) came out
+     roughly double the gap below. */
   pre {
-    margin-inline: 0;
+    margin: 0 0 1.5rem;
     border-radius: calc(var(--at-border-radius) * 4 / 3);
     padding: 1.25em;
     background: rgb(255 255 255 / 5%);
