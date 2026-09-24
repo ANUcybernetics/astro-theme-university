@@ -349,21 +349,15 @@ body.reveal-viewport {
        .slide-bg in DOM order at the same z-index, so it paints over the
        image; content gets z-index: 1 below, so it paints over the scrim.
 
-       The scrim is a 1x256 RGBA PNG, black with alpha 20% at the top and 80%
-       at the bottom, stretched over the slide: the same dimming the website
-       Hero draws with a translucent gradient in components.css, but as an
-       image rather than a gradient. On screen the two are indistinguishable
-       (256 alpha steps over 720px). The difference is what Chrome writes to
-       a PDF and what each renderer then makes of it. A gradient whose alpha
-       varies becomes a shading behind a luminosity soft mask, which
-       Ghostscript's pdfwrite (astromotion-pdf's compressor) hollows out, so
-       the slide prints white titles on undimmed artwork. An opaque gradient
-       under mix-blend-mode: multiply survives Ghostscript but not macOS
-       Quartz: Preview, Safari and Quick Look draw the raw file too bright
-       and the compressed one as a near-uniform darkening of the whole
-       slide. An image with an alpha soft mask is the one transparency
-       primitive every writer and renderer agrees on, so it needs no blend
-       mode, no isolation and no post-processing.
+       Black from 20% alpha at the top to 80% at the bottom, drawn with the
+       primitive each medium handles natively. On screen it is a CSS
+       gradient. In a PDF (an astromotion export, or printing the deck) it is
+       a 1x256 RGBA url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAEACAYAAAByPhyYAAAAIElEQVR42mNiYGAwZgISjCCCAQtrVGJUYlRiVGJ4SgAAhLkCzbiKsDcAAAAASUVORK5CYII=") stretched over the slide, because Chrome writes a
+       gradient whose alpha varies as a shading behind a luminosity soft
+       mask, which PDFium (Chrome's own PDF viewer), pdf.js and iOS Safari
+       mishandle. An image with an alpha soft mask is the transparency
+       primitive every PDF renderer agrees on. The two are indistinguishable
+       at slide scale (256 alpha steps over 720px).
 
        Regenerate the data URI with:
 
@@ -371,28 +365,44 @@ body.reveal-viewport {
          a = [round(51 + 153 * i / 255) for i in range(256)]
          chunk = lambda t, d: struct.pack(">I", len(d)) + t + d + struct.pack(">I", zlib.crc32(t + d))
          rows = b"".join(bytes([2, 0, 0, 0, x - (a[i - 1] if i else 0)]) for i, x in enumerate(a))
-         png = b"\x89PNG\r\n\x1a\n" + chunk(b"IHDR", struct.pack(">IIBBBBB", 1, 256, 8, 6, 0, 0, 0))
+         png = b"\x89url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAEACAYAAAByPhyYAAAAIElEQVR42mNiYGAwZgISjCCCAQtrVGJUYlRiVGJ4SgAAhLkCzbiKsDcAAAAASUVORK5CYII=")\r\n\x1a\n" + chunk(b"IHDR", struct.pack(">IIBBBBB", 1, 256, 8, 6, 0, 0, 0))
          png += chunk(b"IDAT", zlib.compress(rows, 9)) + chunk(b"IEND", b"")
          print(base64.b64encode(png).decode())
 
        (filter type 2 stores each row as its delta from the row above, which
        is why 256 rows compress to 89 bytes.)
 
-       An override via --at-deck-hero-scrim should likewise be an image with
-       an alpha channel (a data URI or a url()). A translucent gradient or a
-       mask-image brings the soft mask back, and a blend mode brings the
-       Quartz misdraw back; either exports wrong while the browser shows the
-       slide you designed. */
+       --at-deck-hero-scrim overrides the screen scrim with any background.
+       --at-deck-hero-scrim-print overrides the PDF one, and should likewise
+       be an image with an alpha channel: a translucent gradient, mask-image
+       or blend mode there exports differently in every viewer. */
     &::after {
       content: "";
       position: absolute;
       inset: 0;
       background: var(
-          --at-deck-hero-scrim,
+        --at-deck-hero-scrim,
+        linear-gradient(to top, rgb(0 0 0 / 80%), rgb(0 0 0 / 20%))
+      );
+      pointer-events: none;
+    }
+
+    :root[data-astromotion-export] &::after {
+      background: var(
+          --at-deck-hero-scrim-print,
           url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAEACAYAAAByPhyYAAAAIElEQVR42mNiYGAwZgISjCCCAQtrVGJUYlRiVGJ4SgAAhLkCzbiKsDcAAAAASUVORK5CYII=")
         )
         0 0 / 100% 100% no-repeat;
-      pointer-events: none;
+    }
+
+    @media print {
+      &::after {
+        background: var(
+            --at-deck-hero-scrim-print,
+            url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAEACAYAAAByPhyYAAAAIElEQVR42mNiYGAwZgISjCCCAQtrVGJUYlRiVGJ4SgAAhLkCzbiKsDcAAAAASUVORK5CYII=")
+          )
+          0 0 / 100% 100% no-repeat;
+      }
     }
 
     > :not(.slide-bg) {

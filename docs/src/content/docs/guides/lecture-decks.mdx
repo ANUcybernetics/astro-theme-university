@@ -168,29 +168,28 @@ light one; see `--at-on-primary`), so match the artwork to it.
 ## The hero scrim
 
 A `hero` slide dims its background image behind the title with a scrim that runs
-from 20% black at top to 80% at bottom. Retint or restrength it through
-`--at-deck-hero-scrim`, which takes any CSS image:
+from 20% black at top to 80% at bottom. On screen it is a CSS gradient; in a PDF
+(an `astromotion-pdf` export, or printing the deck) it becomes a tiny PNG with
+an alpha channel, a 1x256 ramp stretched over the slide. The two look the same.
+They differ because Chrome writes a gradient whose alpha varies as a shading
+behind a luminosity soft mask, which PDFium (Chrome's own PDF viewer), pdf.js
+and iOS Safari mishandle, while an image with an alpha channel is the one kind
+of transparency every PDF renderer agrees on.
+
+Each has its own override. `--at-deck-hero-scrim` takes any CSS background and
+restyles the screen scrim; `--at-deck-hero-scrim-print` restyles the PDF one and
+should be a raster image with alpha too:
 
 ```css
 :root {
-  --at-deck-hero-scrim: url("/decks/hero-scrim.png");
+  --at-deck-hero-scrim: linear-gradient(to top, rgb(0 0 0 / 70%), transparent);
+  --at-deck-hero-scrim-print: url("/decks/hero-scrim.png");
 }
 ```
 
-The default scrim is a tiny PNG with an alpha channel (a 1x256 ramp stretched
-over the slide), not a CSS gradient. An override should be a raster image with
-alpha too. The reason is PDF export. Chrome writes a gradient whose alpha varies
-as a shading behind a soft mask. Ghostscript (the compressor behind
-`astromotion-pdf`) hollows that mask out, so the exported deck silently prints
-white titles on undimmed artwork. An opaque gradient under
-`mix-blend-mode: multiply` survives Ghostscript, but macOS Preview, Safari and
-Quick Look draw it wrong: too bright before compression, near-uniform darkening
-after. An image with an alpha channel is the one kind of transparency every PDF
-writer and renderer agrees on. So don't put a translucent gradient, a
-`mask-image` or a blend mode in the override. The browser will show the slide
-you designed, but the exported PDF won't match it. (An opaque gradient exports
-fine, but it covers the artwork entirely, so it only makes sense on a hero with
-no background image.)
+Keep translucent gradients, `mask-image` and blend modes out of the print
+override: the browser shows the slide you designed, but each PDF viewer draws it
+differently.
 
 ## Table headers
 
