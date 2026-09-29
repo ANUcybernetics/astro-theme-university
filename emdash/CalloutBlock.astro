@@ -1,0 +1,14 @@
+---
+import Callout, { type CalloutProps } from "../components/Callout.astro";
+
+interface Props {
+  node: { text?: string; tone?: CalloutProps["type"] };
+}
+
+const { node } = Astro.props;
+const paragraphs = (node.text ?? "").split(/\n\s*\n/).filter((p) => p.trim());
+---
+
+<Callout type={node.tone}>
+  {paragraphs.map((p) => <p>{p}</p>)}
+</Callout>

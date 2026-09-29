@@ -2,7 +2,8 @@
   // Type-checks the integration entry point and its (astro-free) import
   // closure: the remark plugins, a11y/deck checkers, llms-txt and types. This
   // is the pure-TypeScript surface that consumers (e.g. llms-unplugged) compile
-  // directly from source, so a regression here breaks them downstream.
+  // directly from source, so a regression here breaks them downstream. The
+  // EmDash plugin entries are in it for the same reason.
   //
   // It deliberately does NOT cover the .astro components or `schemas/page.ts`
   // (astro:content) — those need Astro's virtual module types and are the job
@@ -18,5 +19,5 @@
     "declarationMap": false,
     "sourceMap": false
   },
-  "include": ["index.ts", "types-shim.d.ts"]
+  "include": ["index.ts", "emdash/index.ts", "emdash/plugin.ts", "types-shim.d.ts"]
 }

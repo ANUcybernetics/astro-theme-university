@@ -1,0 +1,79 @@
+---
+import { getMenuWithCacheHint, getSiteSettingsWithCacheHint } from "emdash";
+import { createPublicPageContext } from "emdash/page";
+import { EmDashBodyEnd, EmDashBodyStart, EmDashHead } from "emdash/ui";
+import BaseLayout, { type BaseLayoutProps } from "../layouts/BaseLayout.astro";
+
+export interface EmDashLayoutProps
+  extends Omit<BaseLayoutProps, "name" | "links" | "search" | "seoMeta"> {
+  /** Page description; falls back to the site tagline. */
+  description?: string | null;
+  /** Title for Open Graph and plugin contributions, when it differs from `title`. */
+  pageTitle?: string | null;
+  /** Social card image URL. */
+  image?: string | null;
+  canonical?: string | null;
+  /** The entry this page renders, so plugins can contribute to content pages. */
+  content?: { collection: string; id: string; slug?: string | null };
+  /** EmDash menu rendered as the nav links (default `"primary"`). */
+  menu?: string;
+}
+
+type Props = EmDashLayoutProps;
+
+const {
+  title,
+  description,
+  pageTitle,
+  image,
+  canonical,
+  content,
+  menu = "primary",
+  ...baseProps
+} = Astro.props;
+
+const [settingsResult, menuResult] = await Promise.all([
+  getSiteSettingsWithCacheHint(),
+  getMenuWithCacheHint(menu),
+]);
+if (Astro.cache?.enabled) {
+  Astro.cache.set(settingsResult.cacheHint);
+  Astro.cache.set(menuResult.cacheHint);
+}
+
+const siteTitle = settingsResult.data?.title ?? "Site";
+// EmDash's getSeoMeta() already joins the site name with " | ".
+const fullTitle =
+  title === siteTitle || title.endsWith(` | ${siteTitle}`) ? title : `${title} | ${siteTitle}`;
+const pageDescription = description ?? settingsResult.data?.tagline;
+const links = (menuResult.data?.items ?? []).map((item) => ({ text: item.label, href: item.url }));
+
+const page = createPublicPageContext({
+  Astro,
+  kind: content ? "content" : "custom",
+  pageType: "website",
+  title: fullTitle,
+  pageTitle: pageTitle ?? title,
+  description: pageDescription,
+  canonical,
+  image,
+  content,
+  siteName: siteTitle,
+});
+---
+
+<BaseLayout
+  {...baseProps}
+  title={fullTitle}
+  description={pageDescription ?? undefined}
+  name={siteTitle}
+  links={links}
+  search={false}
+  seoMeta={false}
+>
+  <EmDashHead slot="head" page={page} />
+  <EmDashBodyStart slot="body-start" page={page} />
+  <slot name="hero" slot="hero" />
+  <slot />
+  <EmDashBodyEnd slot="body-end" page={page} />
+</BaseLayout>

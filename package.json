@@ -40,6 +40,7 @@
     "markdown.ts",
     "remark-default-layout.ts",
     "match-card-items.ts",
+    "emdash/",
     "components/",
     "layouts/",
     "pages/",
@@ -62,6 +63,10 @@
     "./url": "./url.ts",
     "./llms-txt": "./llms-txt.ts",
     "./contrast": "./contrast.ts",
+    "./emdash": "./emdash/index.ts",
+    "./emdash/plugin": "./emdash/plugin.ts",
+    "./emdash/components": "./emdash/components.ts",
+    "./emdash/EmDashLayout.astro": "./emdash/EmDashLayout.astro",
     "./package.json": "./package.json"
   },
   "scripts": {
@@ -105,6 +110,7 @@
     "@types/mdast": "^4.0.4",
     "@types/unist": "^3.0.3",
     "astro": "^7.3.2",
+    "emdash": "^1.0.1",
     "eslint-plugin-no-only-tests": "^3.4.0",
     "eslint-plugin-perfectionist": "^5.11.1",
     "eslint-plugin-unused-imports": "^4.4.1",
@@ -127,11 +133,15 @@
     "@iconify-json/iconoir": "^1.2.0",
     "astro": "^7.0.0",
     "astromotion": ">=0.1.0",
+    "emdash": ">=1.0.0",
     "lightningcss": "^1.32.0",
     "pagefind": "^1.0.0"
   },
   "peerDependenciesMeta": {
     "astromotion": {
+      "optional": true
+    },
+    "emdash": {
       "optional": true
     },
     "pagefind": {

@@ -18,6 +18,8 @@ minimumReleaseAgeExclude:
   - "@astrojs/internal-helpers"
   - "@astrojs/markdown-remark"
   - "@astrojs/mdx"
+  - emdash
+  - "@emdash-cms/*"
 
 # Pin astromotion to the GitHub repo (no npm release), at an exact release
 # tag — a floating ref here freezes at whatever commit main pointed to when

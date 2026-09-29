@@ -27,6 +27,13 @@ Components take branding as props: `logo`/`logoDark`/`favicon` have no defaults
 (Nav falls back to a text wordmark), and Footer renders only the data it is
 given (`legalLinks`, `partnerships`, `meta`, `acknowledgement`).
 
+## EmDash adapter
+
+`emdash/` adapts the theme to [EmDash](https://emdashcms.com) CMS sites (see the
+README). `emdash` is an optional peer: nothing outside `emdash/` may import it,
+and changes for EmDash must stay additive for static sites. A block type's
+`action_id`s are stored in saved content, so renaming one is breaking.
+
 ## Commands
 
 - `pnpm test` --- every vitest suite, including the slow fresh-consumer example
