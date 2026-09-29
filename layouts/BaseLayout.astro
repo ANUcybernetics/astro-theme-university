@@ -36,6 +36,10 @@ export interface BaseLayoutProps {
   links?: NavLink[];
   /** Whether to show the search button and dialog. */
   search?: boolean;
+  /** Emit the description and Open Graph meta tags (default true). Set false
+   *  when a host framework, such as a CMS head component in the `head` slot,
+   *  owns SEO meta, so the page doesn't carry two sets. */
+  seoMeta?: boolean;
   /** Enable Astro's `<ClientRouter>` for view transitions between pages. */
   clientRouter?: boolean;
 
@@ -109,6 +113,7 @@ const {
   name = "Site",
   links = [],
   search,
+  seoMeta = true,
   clientRouter = true,
 
   heroTitle,
@@ -175,16 +180,18 @@ const resolvedSocialImage = resolveSocialImage(socialImage);
       <Font cssVariable={cssVariable} preload={preloadFontVariables.includes(cssVariable)} />
     ))}
     <title>{title}</title>
-    {description && <meta name="description" content={description} />}
+    {seoMeta && description && <meta name="description" content={description} />}
     {unlisted && <meta name="robots" content="noindex" />}
-    <OpenGraph
-      title={title}
-      description={description}
-      name={name}
-      type={socialType}
-      image={resolvedSocialImage}
-      imageAlt={socialImageAlt}
-    />
+    {seoMeta && (
+      <OpenGraph
+        title={title}
+        description={description}
+        name={name}
+        type={socialType}
+        image={resolvedSocialImage}
+        imageAlt={socialImageAlt}
+      />
+    )}
     <meta name="generator" content={Astro.generator} />
     {favicon && <link rel="icon" type={favicon.format === "svg" ? "image/svg+xml" : undefined} href={favicon.src} />}
     {llmsTxtHref && (
@@ -213,6 +220,7 @@ const resolvedSocialImage = resolveSocialImage(socialImage);
     <slot name="head" />
   </head>
   <body data-pagefind-ignore={unlisted ? "all" : undefined}>
+    <slot name="body-start" />
     <a href="#main" class="visually-hidden">Skip to main content</a>
     <Nav
       name={name}
@@ -233,5 +241,6 @@ const resolvedSocialImage = resolveSocialImage(socialImage);
     <Footer contact={contact} socials={socials} licence={licence} colorScheme={colorScheme} acknowledgement={acknowledgement} legalLinks={legalLinks} partnerships={partnerships} meta={meta}>
       <slot name="footer-legal" slot="footer-legal" />
     </Footer>
+    <slot name="body-end" />
   </body>
 </html>

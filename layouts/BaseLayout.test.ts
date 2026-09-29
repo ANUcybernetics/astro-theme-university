@@ -105,6 +105,38 @@ describe("BaseLayout", () => {
     expect(html).toMatch(/<head>[\s\S]*custom-head-marker[\s\S]*<\/head>/);
   });
 
+  test("renders body-start before the skip link and body-end after the footer", async () => {
+    const container = await createContainer();
+    const html = await container.renderToString(BaseLayout, {
+      props: { title: "Test" },
+      slots: {
+        "body-start": '<div id="body-start-marker"></div>',
+        "body-end": '<div id="body-end-marker"></div>',
+      },
+    });
+    expect(html).toMatch(/<body[^>]*>\s*<div id="body-start-marker">[\s\S]*Skip to main content/);
+    expect(html).toMatch(/<\/footer>[\s\S]*<div id="body-end-marker"><\/div>\s*<\/body>/);
+  });
+
+  test("emits description and Open Graph meta by default", async () => {
+    const container = await createContainer();
+    const html = await container.renderToString(BaseLayout, {
+      props: { title: "Test", description: "About the page" },
+    });
+    expect(html).toContain('<meta name="description" content="About the page"');
+    expect(html).toContain('property="og:title"');
+  });
+
+  test("seoMeta={false} leaves description and Open Graph meta to the host", async () => {
+    const container = await createContainer();
+    const html = await container.renderToString(BaseLayout, {
+      props: { title: "Test", description: "About the page", seoMeta: false },
+    });
+    expect(html).toContain("<title>Test</title>");
+    expect(html).not.toContain('name="description"');
+    expect(html).not.toContain("og:");
+  });
+
   test("an http(s) heroImage string renders a hero with that URL", async () => {
     const container = await createContainer();
     const html = await container.renderToString(BaseLayout, {
