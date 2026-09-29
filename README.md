@@ -1,9 +1,10 @@
 # astro-theme-university
 
-An Astro 7 theme package for university-style static sites — layouts,
-progressively enhanced components, content helpers, post-build checks
-(accessibility and broken links), Pagefind search, and a Reveal.js deck theme
-for [astromotion](https://github.com/ANUcybernetics/astromotion) slide decks.
+An Astro 7 theme package for university-style sites — layouts, progressively
+enhanced components, content helpers, post-build checks (accessibility and
+broken links), Pagefind search, and a Reveal.js deck theme for
+[astromotion](https://github.com/ANUcybernetics/astromotion) slide decks. It
+builds static sites and also styles [EmDash](#emdash-sites) CMS sites.
 
 **Documentation:** <https://anucybernetics.github.io/astro-theme-university/>
 
@@ -71,6 +72,74 @@ import BaseLayout from "astro-theme-university/layouts/BaseLayout.astro";
 The
 [installation guide](https://anucybernetics.github.io/astro-theme-university/docs/getting-started/installation/)
 covers the peer dependencies and project setup in full.
+
+## EmDash sites
+
+The same look and branding work in sites run by [EmDash](https://emdashcms.com),
+the Astro-based CMS. EmDash "themes" are templates copied into each new site, so
+nothing changes after the copy; here the theme stays a dependency instead, and a
+theme bump reaches EmDash sites the same way it reaches static ones. The
+`astro-theme-university/emdash` subpath adds:
+
+- `EmDashLayout` --- `BaseLayout` with the site name, tagline and nav taken from
+  EmDash's settings and a menu (`"primary"` by default), and EmDash's head and
+  body hooks placed where plugins expect them. EmDash owns SEO meta, so the
+  theme's description and Open Graph tags are switched off.
+- `universityBlocks()` --- an EmDash plugin that adds the theme's block types
+  (currently a callout) to the rich-text editor and renders them, plus EmDash's
+  built-in code block, with the theme's components. Block types are defined in
+  code, so a site picks up new ones from a version bump with no seed or
+  migration.
+
+Start from an EmDash template (`npm create emdash@latest`), install the theme
+(and a brand package, if you use one) as above, and register it beside EmDash:
+
+```js
+// astro.config.mjs
+import react from "@astrojs/react";
+import { defineConfig } from "astro/config";
+import emdash from "emdash/astro";
+import universityTheme from "astro-theme-university";
+import { universityBlocks } from "astro-theme-university/emdash";
+
+export default defineConfig({
+  output: "server",
+  integrations: [
+    react(),
+    universityTheme({ search: false, brandCss: "my-brand-package/brand.css" }),
+    emdash({ plugins: [universityBlocks()] /* database, storage, … */ }),
+  ],
+});
+```
+
+Then make the template's base layout a thin wrapper (the template's pages
+already pass the props it takes: `title`, `description`, `content`, `canonical`
+and so on), spreading the brand object ahead of them:
+
+```astro
+---
+// src/layouts/Base.astro
+import EmDashLayout, { type EmDashLayoutProps } from "astro-theme-university/emdash/EmDashLayout.astro";
+import { myBranding } from "my-brand-package";
+
+type Props = EmDashLayoutProps;
+---
+
+<EmDashLayout {...myBranding} {...Astro.props}>
+  <slot />
+</EmDashLayout>
+```
+
+Rich text needs no other wiring: headings, lists, links, quotes and code take
+the theme's styles as they are. Some things work differently from a static
+build:
+
+- EmDash renders pages on request, so the post-build accessibility, link and
+  token checks have no built pages to scan, and Pagefind has none to index. Use
+  EmDash's `LiveSearch` for search.
+- Logos and the favicon come from the brand object, not EmDash's settings.
+- A block type's field names are stored in every saved block, so renaming one is
+  a breaking change: content saved under the old name loses that field.
 
 ## Development
 
