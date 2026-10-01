@@ -5,7 +5,7 @@ settings:
   excludeLinksFromLockfile: false
 
 overrides:
-  astromotion: github:ANUcybernetics/astromotion#v0.32.0
+  astromotion: github:ANUcybernetics/astromotion#v0.34.4
   yaml@>=2.0.0 <2.8.3: ^2.9.0
 
 importers:
@@ -31,8 +31,8 @@ importers:
         specifier: ^1.2.0
         version: 1.2.0
       astromotion:
-        specifier: github:ANUcybernetics/astromotion#v0.32.0
-        version: https://codeload.github.com/ANUcybernetics/astromotion/tar.gz/b8921901f10f965bcb86fe57a8def2f3605b284a(@astrojs/mdx@8.0.1(@astrojs/markdown-remark@7.3.1(supports-color@10.2.2))(@astrojs/markdown-satteri@0.4.1)(astro@7.3.2(@astrojs/markdown-remark@7.3.1(supports-color@10.2.2))(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.3)(@types/node@26.1.2)(yaml@2.9.1)))(astro@7.3.2(@astrojs/markdown-remark@7.3.1(supports-color@10.2.2))(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.3)(@types/node@26.1.2)(yaml@2.9.1))(supports-color@10.2.2)
+        specifier: github:ANUcybernetics/astromotion#v0.34.4
+        version: https://codeload.github.com/ANUcybernetics/astromotion/tar.gz/2458df880b31351915c259f2f2fa4f89325b0243(@astrojs/mdx@8.0.1(@astrojs/markdown-remark@7.3.1(supports-color@10.2.2))(@astrojs/markdown-satteri@0.4.1)(astro@7.3.2(@astrojs/markdown-remark@7.3.1(supports-color@10.2.2))(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.3)(@types/node@26.1.2)(yaml@2.9.1)))(astro@7.3.2(@astrojs/markdown-remark@7.3.1(supports-color@10.2.2))(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.3)(@types/node@26.1.2)(yaml@2.9.1))(supports-color@10.2.2)
       axe-core:
         specifier: ^4.11.4
         version: 4.13.0
@@ -141,7 +141,7 @@ importers:
         version: 11.0.5
       vitest:
         specifier: ^5.0.0
-        version: 5.0.0(@types/node@26.1.2)(jsdom@30.0.1)(vite@8.2.1(@types/node@26.1.2)(esbuild@0.28.1)(yaml@2.9.1))
+        version: 5.0.0(@types/node@26.1.2)(jsdom@30.0.1)(vite@8.3.1(@types/node@26.1.2)(esbuild@0.28.1)(yaml@2.9.1))
 
   docs:
     dependencies:
@@ -158,8 +158,8 @@ importers:
         specifier: workspace:*
         version: link:..
       astromotion:
-        specifier: github:ANUcybernetics/astromotion#v0.32.0
-        version: https://codeload.github.com/ANUcybernetics/astromotion/tar.gz/b8921901f10f965bcb86fe57a8def2f3605b284a(@astrojs/mdx@8.0.1(@astrojs/markdown-remark@7.3.1(supports-color@10.2.2))(@astrojs/markdown-satteri@0.4.1)(astro@7.3.2(@astrojs/markdown-remark@7.3.1(supports-color@10.2.2))(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.3)(@types/node@26.1.2)(yaml@2.9.1)))(astro@7.3.2(@astrojs/markdown-remark@7.3.1(supports-color@10.2.2))(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.3)(@types/node@26.1.2)(yaml@2.9.1))(supports-color@10.2.2)
+        specifier: github:ANUcybernetics/astromotion#v0.34.4
+        version: https://codeload.github.com/ANUcybernetics/astromotion/tar.gz/2458df880b31351915c259f2f2fa4f89325b0243(@astrojs/mdx@8.0.1(@astrojs/markdown-remark@7.3.1(supports-color@10.2.2))(@astrojs/markdown-satteri@0.4.1)(astro@7.3.2(@astrojs/markdown-remark@7.3.1(supports-color@10.2.2))(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.3)(@types/node@26.1.2)(yaml@2.9.1)))(astro@7.3.2(@astrojs/markdown-remark@7.3.1(supports-color@10.2.2))(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.3)(@types/node@26.1.2)(yaml@2.9.1))(supports-color@10.2.2)
       sharp:
         specifier: ^0.35.4
         version: 0.35.4(@types/node@26.1.2)
@@ -2385,11 +2385,6 @@ packages:
 
   ajv-formats@3.0.1:
     resolution: {integrity: sha512-8iUql50EUR+uUcdRQ3HDqa6EVyo3docL8g5WJ3FNcWmu62IbkGUue/pEyLBW8VGKKucTPgqeks4fIU1DA4yowQ==}
-    peerDependencies:
-      ajv: ^8.0.0
-    peerDependenciesMeta:
-      ajv:
-        optional: true
 
   ajv-i18n@4.2.0:
     resolution: {integrity: sha512-v/ei2UkCEeuKNXh8RToiFsUclmU+G57LO1Oo22OagNMENIw+Yb8eMwvHu7Vn9fmkjJyv6XclhJ8TbuigSglPkg==}
@@ -2479,9 +2474,9 @@ packages:
       '@astrojs/markdown-remark':
         optional: true
 
-  astromotion@https://codeload.github.com/ANUcybernetics/astromotion/tar.gz/b8921901f10f965bcb86fe57a8def2f3605b284a:
-    resolution: {gitHosted: true, integrity: sha512-Teb0P8QYV0aWy7mExxV5ZVqM+uK/ydbjttLmCSUz9mk5wt0XY3itb62ezKzWtm7VmTEKvT0bs2Rl7ATRG69JRg==, tarball: https://codeload.github.com/ANUcybernetics/astromotion/tar.gz/b8921901f10f965bcb86fe57a8def2f3605b284a}
-    version: 0.32.0
+  astromotion@https://codeload.github.com/ANUcybernetics/astromotion/tar.gz/2458df880b31351915c259f2f2fa4f89325b0243:
+    resolution: {gitHosted: true, integrity: sha512-guMXeYI0ms53TBlx20PDVOopjJvfGUjS75kkd76VlujaAYPlPHqMEkKYTZu5j7o8ZN2XR4Um/XIjcWjAt6dvOQ==, tarball: https://codeload.github.com/ANUcybernetics/astromotion/tar.gz/2458df880b31351915c259f2f2fa4f89325b0243}
+    version: 0.34.4
     engines: {node: '>=24'}
     hasBin: true
     peerDependencies:
@@ -6519,7 +6514,7 @@ snapshots:
     dependencies:
       '@hono/node-server': 2.1.1(hono@4.13.9)
       ajv: 8.20.0
-      ajv-formats: 3.0.1(ajv@8.20.0)
+      ajv-formats: 3.0.1
       content-type: 1.0.5
       cors: 2.8.6
       cross-spawn: 7.0.6
@@ -7369,14 +7364,14 @@ snapshots:
       '@rolldown/pluginutils': 1.0.1
       vite: 8.3.1(@types/node@26.1.2)(esbuild@0.28.1)(yaml@2.9.1)
 
-  '@vitest/mocker@5.0.0(vite@8.2.1(@types/node@26.1.2)(esbuild@0.28.1)(yaml@2.9.1))':
+  '@vitest/mocker@5.0.0(vite@8.3.1(@types/node@26.1.2)(esbuild@0.28.1)(yaml@2.9.1))':
     dependencies:
       '@jridgewell/trace-mapping': 0.3.31
       '@vitest/spy': 5.0.0
       estree-walker: 3.0.3
       magic-string: 1.3.1
     optionalDependencies:
-      vite: 8.2.1(@types/node@26.1.2)(esbuild@0.28.1)(yaml@2.9.1)
+      vite: 8.3.1(@types/node@26.1.2)(esbuild@0.28.1)(yaml@2.9.1)
 
   '@vitest/spy@5.0.0': {}
 
@@ -7453,8 +7448,8 @@ snapshots:
     optionalDependencies:
       ajv: 8.20.0
 
-  ajv-formats@3.0.1(ajv@8.20.0):
-    optionalDependencies:
+  ajv-formats@3.0.1:
+    dependencies:
       ajv: 8.20.0
 
   ajv-i18n@4.2.0(ajv@8.20.0):
@@ -7625,7 +7620,7 @@ snapshots:
       - uploadthing
       - yaml
 
-  astromotion@https://codeload.github.com/ANUcybernetics/astromotion/tar.gz/b8921901f10f965bcb86fe57a8def2f3605b284a(@astrojs/mdx@8.0.1(@astrojs/markdown-remark@7.3.1(supports-color@10.2.2))(@astrojs/markdown-satteri@0.4.1)(astro@7.3.2(@astrojs/markdown-remark@7.3.1(supports-color@10.2.2))(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.3)(@types/node@26.1.2)(yaml@2.9.1)))(astro@7.3.2(@astrojs/markdown-remark@7.3.1(supports-color@10.2.2))(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.3)(@types/node@26.1.2)(yaml@2.9.1))(supports-color@10.2.2):
+  astromotion@https://codeload.github.com/ANUcybernetics/astromotion/tar.gz/2458df880b31351915c259f2f2fa4f89325b0243(@astrojs/mdx@8.0.1(@astrojs/markdown-remark@7.3.1(supports-color@10.2.2))(@astrojs/markdown-satteri@0.4.1)(astro@7.3.2(@astrojs/markdown-remark@7.3.1(supports-color@10.2.2))(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.3)(@types/node@26.1.2)(yaml@2.9.1)))(astro@7.3.2(@astrojs/markdown-remark@7.3.1(supports-color@10.2.2))(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.3)(@types/node@26.1.2)(yaml@2.9.1))(supports-color@10.2.2):
     dependencies:
       '@astrojs/mdx': 8.0.1(@astrojs/markdown-remark@7.3.1(supports-color@10.2.2))(@astrojs/markdown-satteri@0.4.1)(astro@7.3.2(@astrojs/markdown-remark@7.3.1(supports-color@10.2.2))(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.3)(@types/node@26.1.2)(yaml@2.9.1))
       '@qrgrid/core': 0.2.4
@@ -10807,10 +10802,10 @@ snapshots:
     optionalDependencies:
       vite: 8.2.1(@types/node@26.1.2)(esbuild@0.28.1)(yaml@2.9.1)
 
-  vitest@5.0.0(@types/node@26.1.2)(jsdom@30.0.1)(vite@8.2.1(@types/node@26.1.2)(esbuild@0.28.1)(yaml@2.9.1)):
+  vitest@5.0.0(@types/node@26.1.2)(jsdom@30.0.1)(vite@8.3.1(@types/node@26.1.2)(esbuild@0.28.1)(yaml@2.9.1)):
     dependencies:
       '@types/chai': 5.2.3
-      '@vitest/mocker': 5.0.0(vite@8.2.1(@types/node@26.1.2)(esbuild@0.28.1)(yaml@2.9.1))
+      '@vitest/mocker': 5.0.0(vite@8.3.1(@types/node@26.1.2)(esbuild@0.28.1)(yaml@2.9.1))
       chai: 6.2.2
       es-module-lexer: 2.3.2
       expect-type: 1.4.0
@@ -10821,7 +10816,7 @@ snapshots:
       tinybench: 6.1.4
       tinyexec: 1.3.0
       tinyglobby: 0.2.17
-      vite: 8.2.1(@types/node@26.1.2)(esbuild@0.28.1)(yaml@2.9.1)
+      vite: 8.3.1(@types/node@26.1.2)(esbuild@0.28.1)(yaml@2.9.1)
       why-is-node-running: 2.3.0
     optionalDependencies:
       '@types/node': 26.1.2
