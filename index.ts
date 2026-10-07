@@ -17,6 +17,7 @@ import { promisify } from "node:util";
 import remarkDirective from "remark-directive";
 import remarkSmartypants from "remark-smartypants";
 import remarkCustomHeadingId from "remark-custom-heading-id";
+import yamlGrammar from "shiki/langs/yaml.mjs";
 // @ts-expect-error astro-broken-links-checker ships no type declarations
 import astroBrokenLinksChecker from "astro-broken-links-checker";
 import remarkCallout from "./remark-callout.js";
@@ -336,6 +337,11 @@ export default function universityTheme(options: ThemeOptions = {}): AstroIntegr
                 dark: themeDark,
               },
               defaultColor: false,
+              // Shiki's markdown grammar embeds YAML lazily, and Astro loads
+              // grammars only for the fence languages it meets, so a
+              // ```markdown fence's frontmatter renders unhighlighted unless
+              // YAML is already loaded.
+              langs: yamlGrammar,
             },
           },
           vite: {

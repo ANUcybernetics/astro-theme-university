@@ -154,6 +154,17 @@ describe("example builds", () => {
       );
       expect(emitted).toHaveLength(2);
 
+      // Shiki's markdown grammar highlights frontmatter through a lazily
+      // embedded YAML grammar, which Astro never loads unless something asks
+      // for it. The getting-started page's ```markdown fence is the only
+      // frontmatter in this example, so a key tokenised on its own means the
+      // theme's YAML preload is in place; without it the whole line is one span.
+      const gettingStartedHtml = readFileSync(
+        join(tempDir, "dist", "getting-started", "index.html"),
+        "utf-8",
+      );
+      expect(gettingStartedHtml).toMatch(/<span[^>]*>title<\/span>/);
+
       // The example ships a deck (decks: true, src/decks/example.deck.mdx) so
       // this build exercises deck.css — the only page in this suite that does.
       // checkTokens scans all built CSS for the theme's own vocabulary

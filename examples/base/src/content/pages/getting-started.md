@@ -17,12 +17,15 @@ live in the dev server.
 
 ## Adding more pages
 
-Create another `.md` or `.mdx` file in `src/content/pages/`. It needs at least:
+Create another `.md` or `.mdx` file in `src/content/pages/`. It needs at least a
+`title`:
 
-```yaml
+```markdown
 ---
 title: My new page
 ---
+
+The page body goes here.
 ```
 
 To link to your new page from a nav or from this page, use its slug:
