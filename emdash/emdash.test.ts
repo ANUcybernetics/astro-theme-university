@@ -3,6 +3,7 @@ import { describe, expect, test } from "vitest";
 import pkg from "../package.json" with { type: "json" };
 import CalloutBlock from "./CalloutBlock.astro";
 import CodeBlock from "./CodeBlock.astro";
+import CtaBlock from "./CtaBlock.astro";
 import { blockComponents } from "./components.js";
 import { universityBlocks } from "./index.js";
 import { createPlugin } from "./plugin.js";
@@ -67,6 +68,27 @@ describe("CalloutBlock", () => {
       props: { node: { _type: "callout", text: "Note." } },
     });
     expect(html).toContain("at-callout--info");
+  });
+});
+
+describe("CtaBlock", () => {
+  test("renders a themed button link", async () => {
+    const container = await AstroContainer.create();
+    const html = await container.renderToString(CtaBlock, {
+      props: { node: { _type: "cta", text: "Apply now", url: "/apply/", variant: "outline" } },
+    });
+    expect(html).toContain('href="/apply/"');
+    expect(html).toContain("at-button");
+    expect(html).toContain("at-button--outline");
+    expect(html).toContain("Apply now");
+  });
+
+  test("renders nothing for an unsafe or missing link", async () => {
+    const container = await AstroContainer.create();
+    const html = await container.renderToString(CtaBlock, {
+      props: { node: { _type: "cta", text: "Click", url: "javascript:alert(1)" } },
+    });
+    expect(html).not.toContain("<a");
   });
 });
 

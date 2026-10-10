@@ -1,0 +1,20 @@
+---
+import { safeHref } from "./inline.js";
+
+interface Props {
+  node: { text?: string; url?: string; variant?: "solid" | "outline" };
+}
+
+const { node } = Astro.props;
+const href = safeHref(node.url);
+---
+
+{
+  node.text && href && (
+    <p>
+      <a class:list={["at-button", node.variant === "outline" && "at-button--outline"]} href={href}>
+        {node.text}
+      </a>
+    </p>
+  )
+}

@@ -32,4 +32,25 @@ export const portableTextBlocks: PortableTextBlockConfig[] = [
       },
     ],
   },
+  {
+    type: "cta",
+    label: "Button",
+    icon: "link",
+    description: "A call-to-action button linking to a page or file",
+    category: "Sections",
+    fields: [
+      { type: "text_input", action_id: "text", label: "Label" },
+      { type: "text_input", action_id: "url", label: "Link", placeholder: "/apply/ or https://…" },
+      {
+        type: "select",
+        action_id: "variant",
+        label: "Style",
+        options: [
+          { label: "Solid", value: "solid" },
+          { label: "Outline", value: "outline" },
+        ],
+        initial_value: "solid",
+      },
+    ],
+  },
 ];

@@ -9,6 +9,10 @@ const INLINE = /\[([^\]]+)\]\(([^)\s]+)\)|\*\*([^*]+)\*\*|\*([^*]+)\*/g;
 // (`javascript:` above all) is left as the text they typed.
 const SAFE_HREF = /^(?:https?:\/\/|mailto:|tel:|\/(?!\/)|#)/i;
 
+/** The href itself when it is one an editor may link to, else undefined. */
+export const safeHref = (href: string | undefined): string | undefined =>
+  href && SAFE_HREF.test(href) ? href : undefined;
+
 /**
  * Splits a block's plain-text field into inline segments. Block fields are
  * plain text inputs, so this small markdown subset is how a callout carries a
