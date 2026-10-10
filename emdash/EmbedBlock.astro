@@ -1,0 +1,37 @@
+---
+import { Embed } from "emdash/ui";
+import YouTubeEmbed from "../components/YouTubeEmbed.astro";
+
+interface Props {
+  node: { _type: "embed"; _key: string; url: string; caption?: string };
+}
+
+const { node } = Astro.props;
+// A YouTube video renders as the theme's click-to-load embed, which fetches
+// nothing from YouTube until the visitor plays it. EmDash's own embed loads
+// the full player, its scripts and its cookies with the page.
+const youtubeId =
+  /(?:youtube(?:-nocookie)?\.com\/(?:watch\?(?:.*&)?v=|embed\/|shorts\/)|youtu\.be\/)([\w-]{11})/.exec(
+    node.url ?? "",
+  )?.[1];
+---
+
+{
+  youtubeId && node.caption ? (
+    <figure>
+      <YouTubeEmbed id={youtubeId} title={node.caption} />
+      <figcaption>{node.caption}</figcaption>
+    </figure>
+  ) : youtubeId ? (
+    <YouTubeEmbed id={youtubeId} />
+  ) : (
+    <Embed node={node} />
+  )
+}
+
+<style>
+  /* The browser default indents a figure; an embed sits flush with the text. */
+  figure {
+    margin-inline: 0;
+  }
+</style>

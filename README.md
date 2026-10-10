@@ -88,7 +88,8 @@ theme bump reaches EmDash sites the same way it reaches static ones. The
 - `universityBlocks()` --- an EmDash plugin that adds the theme's block types (a
   callout, whose text takes `[text](url)` links, `**bold**` and `*emphasis*`,
   and a call-to-action button) to the rich-text editor and renders them, plus
-  EmDash's built-in code block, with the theme's components. Block types are
+  EmDash's built-in code block and YouTube embeds (click-to-load, so the player
+  is fetched only when played), with the theme's components. Block types are
   defined in code, so a site picks up new ones from a version bump with no seed
   or migration.
 

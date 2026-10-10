@@ -58,6 +58,21 @@ export default getViteConfig(
           return null;
         },
       },
+      // EmbedBlock falls back to EmDash's own renderer, whose module pulls in
+      // two virtual modules the emdash() integration provides in a site.
+      {
+        name: "test:emdash-stub",
+        resolveId(id: string) {
+          return id.startsWith("virtual:emdash/") ? `\0${id}` : null;
+        },
+        load(id: string) {
+          if (id === "\0virtual:emdash/block-components") {
+            return "export const pluginBlockComponents = {};\n";
+          }
+          if (id === "\0virtual:emdash/config") return "export default {};\n";
+          return null;
+        },
+      },
     ],
     test: {
       server: {

@@ -4,6 +4,7 @@ import pkg from "../package.json" with { type: "json" };
 import CalloutBlock from "./CalloutBlock.astro";
 import CodeBlock from "./CodeBlock.astro";
 import CtaBlock from "./CtaBlock.astro";
+import EmbedBlock from "./EmbedBlock.astro";
 import { blockComponents } from "./components.js";
 import { universityBlocks } from "./index.js";
 import { createPlugin } from "./plugin.js";
@@ -89,6 +90,20 @@ describe("CtaBlock", () => {
       props: { node: { _type: "cta", text: "Click", url: "javascript:alert(1)" } },
     });
     expect(html).not.toContain("<a");
+  });
+});
+
+describe("EmbedBlock", () => {
+  test("renders a YouTube video as a click-to-load embed", async () => {
+    const container = await AstroContainer.create();
+    const html = await container.renderToString(EmbedBlock, {
+      props: {
+        node: { _type: "embed", _key: "a", url: "https://www.youtube.com/watch?v=wiCco2CbrkE" },
+      },
+    });
+    expect(html).toContain("lite-youtube");
+    expect(html).toContain("wiCco2CbrkE");
+    expect(html).not.toContain("<iframe");
   });
 });
 
