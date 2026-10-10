@@ -11,7 +11,13 @@ export const portableTextBlocks: PortableTextBlockConfig[] = [
     description: "A highlighted note, tip, warning or error",
     category: "Sections",
     fields: [
-      { type: "text_input", action_id: "text", label: "Text", multiline: true },
+      {
+        type: "text_input",
+        action_id: "text",
+        label: "Text",
+        multiline: true,
+        placeholder: "Links as [text](https://…), **bold**, *emphasis*",
+      },
       {
         type: "select",
         action_id: "tone",

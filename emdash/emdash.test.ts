@@ -40,6 +40,27 @@ describe("CalloutBlock", () => {
     expect(html).toContain("<p>Second.</p>");
   });
 
+  test("renders markdown links, bold and emphasis in its text", async () => {
+    const container = await AstroContainer.create();
+    const html = await container.renderToString(CalloutBlock, {
+      props: {
+        node: { _type: "callout", text: "See [the guide](/guide/) for **all** the *details*." },
+      },
+    });
+    expect(html).toContain('<a href="/guide/">the guide</a>');
+    expect(html).toContain("<strong>all</strong>");
+    expect(html).toContain("<em>details</em>");
+  });
+
+  test("leaves a link with an unsafe scheme as plain text", async () => {
+    const container = await AstroContainer.create();
+    const html = await container.renderToString(CalloutBlock, {
+      props: { node: { _type: "callout", text: "[click](javascript:alert(1))" } },
+    });
+    expect(html).not.toContain("<a ");
+    expect(html).toContain("[click](javascript:alert(1))");
+  });
+
   test("defaults to the info tone", async () => {
     const container = await AstroContainer.create();
     const html = await container.renderToString(CalloutBlock, {

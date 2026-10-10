@@ -1,14 +1,34 @@
 ---
 import Callout, { type CalloutProps } from "../components/Callout.astro";
+import { parseInline } from "./inline.js";
 
 interface Props {
   node: { text?: string; tone?: CalloutProps["type"] };
 }
 
 const { node } = Astro.props;
-const paragraphs = (node.text ?? "").split(/\n\s*\n/).filter((p) => p.trim());
+const paragraphs = (node.text ?? "")
+  .split(/\n\s*\n/)
+  .filter((p) => p.trim())
+  .map(parseInline);
 ---
 
 <Callout type={node.tone}>
-  {paragraphs.map((p) => <p>{p}</p>)}
+  {
+    paragraphs.map((segments) => (
+      <p>
+        {segments.map((segment) =>
+          segment.type === "link" ? (
+            <a href={segment.href}>{segment.text}</a>
+          ) : segment.type === "strong" ? (
+            <strong>{segment.text}</strong>
+          ) : segment.type === "em" ? (
+            <em>{segment.text}</em>
+          ) : (
+            segment.text
+          ),
+        )}
+      </p>
+    ))
+  }
 </Callout>

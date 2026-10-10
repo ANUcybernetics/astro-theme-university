@@ -86,10 +86,10 @@ theme bump reaches EmDash sites the same way it reaches static ones. The
   body hooks placed where plugins expect them. EmDash owns SEO meta, so the
   theme's description and Open Graph tags are switched off.
 - `universityBlocks()` --- an EmDash plugin that adds the theme's block types
-  (currently a callout) to the rich-text editor and renders them, plus EmDash's
-  built-in code block, with the theme's components. Block types are defined in
-  code, so a site picks up new ones from a version bump with no seed or
-  migration.
+  (currently a callout, whose text takes `[text](url)` links, `**bold**` and
+  `*emphasis*`) to the rich-text editor and renders them, plus EmDash's built-in
+  code block, with the theme's components. Block types are defined in code, so a
+  site picks up new ones from a version bump with no seed or migration.
 
 Start from an EmDash template (`npm create emdash@latest`), install the theme
 (and a brand package, if you use one) as above, and register it beside EmDash:
