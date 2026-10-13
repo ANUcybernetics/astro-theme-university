@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.20.0
+
+**Tables drop their zebra stripes for hairline row rules, and sit flush.** Body
+rows are separated by a 1px `--at-divider` rule where alternate rows were
+tinted, and the first and last columns lose their outer padding so a table's
+text and rules line up with the prose around it. Decks get the same flush edges,
+and a deck's row-header cells now carry the row rule too.
+
+**Markdown column alignment works.** `:--` and `--:` reach the page as an
+`align` attribute, which the theme's blanket `text-align: start` on every cell
+overrode, so a right-aligned column rendered left-aligned. The theme now only
+corrects the centred default of an unaligned `th`. Right-aligned cells also get
+tabular lining figures.
+
+Breaking: `--at-table-stripe` is gone. A brand layer or site that set it can
+delete the declaration; one that reads it now fails `checkTokens`.
+
 ## 0.19.0
 
 **Table headers are a rule, not a filled band.** The header row on the web is

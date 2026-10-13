@@ -153,6 +153,28 @@ const message: string = "highlighted";
 ```
 ````
 
+## Tables
+
+A table marks its header row with weight and a single rule in the brand colour,
+separates rows with hairlines, and sits flush with the text block on both sides.
+Column alignment is markdown's own: `--:` right-aligns a column, which is what a
+column of numbers wants, and the theme sets its figures at a fixed width so the
+digits line up.
+
+```md
+| Model     | Parameters (M) | Accuracy |
+| :-------- | -------------: | -------: |
+| Baseline  |             86 |    71.4% |
+| Distilled |             22 |    69.8% |
+| Proposed  |            111 |    78.2% |
+```
+
+| Model     | Parameters (M) | Accuracy |
+| :-------- | -------------: | -------: |
+| Baseline  |             86 |    71.4% |
+| Distilled |             22 |    69.8% |
+| Proposed  |            111 |    78.2% |
+
 ## Wide tables
 
 Markdown tables render full-width. Because CSS ignores `overflow` on table

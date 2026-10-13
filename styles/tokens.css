@@ -136,10 +136,6 @@
       oklch(from var(--at-primary) 95% 0.005 h / 12%)
     );
     --at-table-header-rule: var(--at-primary);
-    --at-table-stripe: light-dark(
-      rgb(from var(--at-primary) r g b / 6%),
-      rgb(from var(--at-primary) r g b / 8%)
-    );
 
     /* Semantic status colours (for callouts, form validation, etc.) */
     --at-info: light-dark(var(--at-tertiary), #38bdf8);

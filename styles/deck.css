@@ -293,7 +293,26 @@ body.reveal-viewport {
     th,
     td {
       padding: 0.75rem 1rem;
+    }
+
+    /* Outer edges sit flush with the slide's text block. */
+    :is(th, td):first-child {
+      padding-inline-start: 0;
+    }
+
+    :is(th, td):last-child {
+      padding-inline-end: 0;
+    }
+
+    /* A markdown column alignment arrives as an `align` attribute, which any
+       `text-align` declaration outranks — so only the browser's centred
+       default for an unaligned `th` is corrected here. */
+    th:not([align]) {
       text-align: start;
+    }
+
+    :is(th, td)[align="right"] {
+      font-variant-numeric: tabular-nums lining-nums;
     }
 
     /* improve-text-layout-and-legibility: balance header text the same way
@@ -314,7 +333,7 @@ body.reveal-viewport {
       border-block-end: 2px solid var(--at-deck-table-header-rule);
     }
 
-    tbody td {
+    tbody :is(th, td) {
       border-block-end: 1px solid var(--at-divider);
     }
   }

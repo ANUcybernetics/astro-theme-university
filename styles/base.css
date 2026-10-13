@@ -350,7 +350,33 @@
   th,
   td {
     padding: var(--at-spacing-sm) var(--at-spacing-md);
+  }
+
+  /* Outer edges sit flush: the first column's text starts on the prose
+     margin and the rules stop where the text block does. */
+  :is(th, td):first-child {
+    padding-inline-start: 0;
+  }
+
+  :is(th, td):last-child {
+    padding-inline-end: 0;
+  }
+
+  /* A markdown column alignment (`:--`, `--:`) arrives as an `align`
+     attribute, which any `text-align` declaration outranks — so only the
+     browser's centred default for an unaligned `th` is corrected here. */
+  th:not([align]) {
     text-align: start;
+  }
+
+  /* A right-aligned column is a column of numbers: fixed-width figures make
+     the digits line up down it. */
+  :is(th, td)[align="right"] {
+    font-variant-numeric: tabular-nums lining-nums;
+  }
+
+  tbody :is(th, td) {
+    border-block-end: 1px solid var(--at-divider);
   }
 
   /* improve-text-layout-and-legibility: balance header text the same way
@@ -358,10 +384,6 @@
   th {
     font-weight: 600;
     text-wrap: balance;
-  }
-
-  tbody tr:nth-child(even) {
-    background: var(--at-table-stripe);
   }
 
   hr {
