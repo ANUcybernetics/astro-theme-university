@@ -93,7 +93,7 @@
     "astro-broken-links-checker": "^1.1.0",
     "astro-icon": "^1.2.0",
     "axe-core": "^4.11.4",
-    "jsdom": "^30.0.1",
+    "jsdom": "^30.1.1",
     "linkedom": "^0.18.13",
     "rehype-autolink-headings": "^7.1.0",
     "rehype-slug": "^6.0.0",
