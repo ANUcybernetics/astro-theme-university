@@ -340,9 +340,11 @@
     margin-block: 0;
   }
 
-  thead {
-    background: var(--at-table-header-bg);
-    color: var(--at-table-header-text);
+  /* The header row is marked by weight and one rule in the brand colour, not
+     a filled band — the fill was the loudest thing on the page, spent on the
+     row that says least. */
+  thead th {
+    border-block-end: 2px solid var(--at-table-header-rule);
   }
 
   th,
@@ -354,6 +356,7 @@
   /* improve-text-layout-and-legibility: balance header text the same way
      headings are balanced — short labels, evenly broken. */
   th {
+    font-weight: 600;
     text-wrap: balance;
   }
 

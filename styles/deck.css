@@ -50,17 +50,11 @@
     --at-on-primary: oklch(from var(--at-primary) clamp(0.16, (0.58 - l) * 1000, 1) 0 h);
     --at-on-primary-alt: oklch(from var(--at-primary) clamp(0.16, (l - 0.58) * 1000, 1) 0 h);
 
-    /* Table headers are deck-scoped rather than the --at-table-header-*
-     tokens base.css uses, for two reasons. Cascade: tokens.css declares
-     those in this same layer, and a deck page loads both files, so which
-     one won would come down to import order. Design: the web side's solid
-     brand fill is a light-surface treatment — on a near-black slide the
-     same fill is the highest-contrast object on it, out-shouting the
-     heading above, and white-on-primary is only ~3:1 for a mid-lightness
-     brand colour. A tint plus brand-coloured text reads as a header at
-     projection distance without becoming the subject of the slide. */
-    --at-deck-table-header-bg: rgb(from var(--at-primary) r g b / 14%);
-    --at-deck-table-header-text: var(--at-primary);
+    /* The header rule is deck-scoped rather than the --at-table-header-rule
+     token base.css uses: tokens.css declares that one in this same layer,
+     and a deck page loads both files, so which one won would come down to
+     import order. Softer than the web rule because on a near-black slide a
+     full-strength brand line out-shouts the heading above it. */
     --at-deck-table-header-rule: rgb(from var(--at-primary) r g b / 55%);
 
     /* Reveal.js variables */
@@ -310,14 +304,9 @@ body.reveal-viewport {
 
     /* Every `th` is a header, wherever it sits. A matrix table — one whose
        body rows carry `<th scope="row">` labels — has two header axes that
-       mean the same thing, so filling only the column axis invents a
-       hierarchy that isn't in the markup. Tinting all of them costs an
-       ordinary table nothing (it has no body headers) and makes a matrix
-       read symmetrically. The rule under thead is what still marks a true
-       header row where there is one. */
+       mean the same thing, so both carry the same weight. The rule under
+       thead is what marks a true header row where there is one. */
     :is(thead, tbody) th {
-      background: var(--at-deck-table-header-bg);
-      color: var(--at-deck-table-header-text);
       font-weight: 600;
     }
 

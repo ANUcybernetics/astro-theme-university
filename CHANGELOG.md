@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.19.0
+
+**Table headers are a rule, not a filled band.** The header row on the web is
+now semibold text over a 2px rule in the brand colour, where it was a solid
+`--at-primary` fill with contrasting text. Decks drop their header tint and
+brand-coloured header text the same way and keep their softer rule. Zebra
+striping is unchanged.
+
+Breaking: `--at-table-header-bg` and `--at-table-header-text` are gone, replaced
+by `--at-table-header-rule`; `--at-deck-table-header-bg` and
+`--at-deck-table-header-text` are gone too. A site that set any of them should
+set the rule token instead, and one that reads them now fails `checkTokens`.
+
 ## 0.17.1
 
 **`checkTokens` no longer flags the theme's own opt-in hooks.** `deck.css` reads

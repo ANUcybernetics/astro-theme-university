@@ -193,23 +193,18 @@ differently.
 
 ## Table headers
 
-Decks style tables from their own tokens rather than the `--at-table-header-*`
-pair the web side uses. The web treatment is a solid brand fill with white text.
-That works on a light page, but on a near-black slide it becomes the
-highest-contrast object in view. Decks instead tint the header cells and colour
-the text with the brand colour:
+A table marks its header row with weight and a single rule in the brand colour,
+on the web and in decks alike. Decks draw the rule from their own token rather
+than the web side's `--at-table-header-rule`, and at a softer strength: on a
+near-black slide a full-strength brand line competes with the heading above it.
 
 ```css
 :root {
-  --at-deck-table-header-bg: rgb(from var(--at-primary) r g b / 14%);
-  --at-deck-table-header-text: var(--at-primary);
   --at-deck-table-header-rule: rgb(from var(--at-primary) r g b / 55%);
 }
 ```
 
-The tint applies to every `th`, not just the ones in `thead`. A matrix table has
+Every `th` is set semibold, not just the ones in `thead`. A matrix table has
 body rows carrying `<th scope="row">` labels --- think a grid of counts with
 words down the side and across the top. Its two header axes mean the same thing,
-so filling only the top one would imply a hierarchy the markup doesn't have.
-Ordinary tables are unaffected, since they have no body headers; the
-`--at-deck-table-header-rule` underline is what still marks a true header row.
+so both carry the same weight; the rule is what marks a true header row.
