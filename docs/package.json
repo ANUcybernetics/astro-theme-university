@@ -12,12 +12,12 @@
     "typecheck": "astro check"
   },
   "dependencies": {
-    "@astrojs/mdx": "^8.0.1",
-    "@iconify-json/iconoir": "^1.2.11",
-    "astro": "^7.3.2",
+    "@astrojs/mdx": "^8.0.3",
+    "@iconify-json/iconoir": "^1.2.12",
+    "astro": "^7.3.8",
     "astro-theme-university": "workspace:*",
     "astromotion": "github:ANUcybernetics/astromotion#v0.34.4",
-    "sharp": "^0.35.4"
+    "sharp": "^0.35.5"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.10",
