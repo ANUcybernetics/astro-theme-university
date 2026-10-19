@@ -7,6 +7,9 @@
  */
 
 import type { ImageMetadata } from "astro";
+import type { ThemeLabels } from "./labels.js";
+
+export type { ThemeLabels };
 
 /**
  * An image served from elsewhere — a CDN or object-store bucket — already
@@ -94,6 +97,13 @@ export interface AcknowledgementInfo {
 export interface SiteConfig {
   /** Site or organisational unit name. Used in nav, footer, and page titles. */
   name: string;
+  /** BCP 47 language of the page, for `<html lang>` (default "en"). */
+  lang?: string;
+  /** Where the nav's logo links (default the site base). A site with a
+   *  home page per language points it at the current language's. */
+  homeHref?: string;
+  /** Translations of the theme's own chrome; see `ThemeLabels`. */
+  labels?: Partial<ThemeLabels>;
   /** Navigation links displayed in the top bar. */
   links?: NavLink[];
   /** Contact details displayed in the footer. */

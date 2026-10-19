@@ -5,6 +5,7 @@ import type {
   PartnershipLink,
   AcknowledgementInfo,
 } from "../types.js";
+import { type ThemeLabels, resolveLabels } from "../labels.js";
 
 export type { PartnershipLink, AcknowledgementInfo };
 
@@ -30,6 +31,8 @@ export interface FooterProps {
    *  The theme ships no
    *  institutional defaults — branding packages supply this as data. */
   acknowledgement?: AcknowledgementInfo;
+  /** Translations of the footer's labels; any left out stay English. */
+  labels?: Partial<ThemeLabels>;
 }
 
 type Props = FooterProps;
@@ -43,7 +46,10 @@ const {
   meta: metaLines = [],
   colorScheme = "auto",
   acknowledgement,
+  labels: labelOverrides,
 } = Astro.props;
+const labels = resolveLabels(labelOverrides);
+const [licenceBefore, licenceAfter = ""] = labels.licence.split("{licence}");
 
 // The dark band renders when there's anything to put in it.
 const showBand = !!acknowledgement?.logo || partnershipLinks.length > 0;
@@ -96,18 +102,18 @@ import Icon from "./Icon.astro";
       <div class="at-footer-inner">
         {contact && (
           <section class="at-footer-contact">
-            <h2>Contact us</h2>
+            <h2>{labels.contactUs}</h2>
             {contact.description && <p>{contact.description}</p>}
             <dl class="at-footer-contact-details">
               {contact.address && (
                 <>
-                  <dt>Mailing address</dt>
+                  <dt>{labels.mailingAddress}</dt>
                   <dd>{contact.address}</dd>
                 </>
               )}
               {contact.email && (
                 <>
-                  <dt>Email</dt>
+                  <dt>{labels.email}</dt>
                   <dd>
                     <a href={`mailto:${contact.email}`}>{contact.email}</a>
                   </dd>
@@ -115,7 +121,7 @@ import Icon from "./Icon.astro";
               )}
               {contact.phone && (
                 <>
-                  <dt>Phone</dt>
+                  <dt>{labels.phone}</dt>
                   <dd>
                     <a href={`tel:${contact.phone.replace(/\s/g, "")}`}>
                       {contact.phone}
@@ -128,7 +134,7 @@ import Icon from "./Icon.astro";
         )}
 
         {socials && socials.length > 0 && (
-          <nav aria-label="Social links" class="at-footer-socials">
+          <nav aria-label={labels.socialLinks} class="at-footer-socials">
             {socials.map((s) => (
               <a href={s.url} aria-label={s.platform}>
                 <Icon name={s.platform} />
@@ -168,7 +174,7 @@ import Icon from "./Icon.astro";
   <div class="at-footer-inner at-footer-bottom">
     {acknowledgement && (
       <div class="at-footer-acknowledgement">
-        <h2>{acknowledgement.title ?? "Acknowledgement"}</h2>
+        <h2>{acknowledgement.title ?? labels.acknowledgement}</h2>
         <p>{acknowledgement.text}</p>
       </div>
     )}
@@ -178,9 +184,7 @@ import Icon from "./Icon.astro";
         <>
           <hr />
           <p class="at-footer-licence">
-            Unless otherwise indicated, this site is licensed under a{" "}
-            <a href={licenceInfo.url} rel="license">{licenceInfo.name}</a>{" "}
-            licence.
+            {licenceBefore}<a href={licenceInfo.url} rel="license">{licenceInfo.name}</a>{licenceAfter}
           </p>
         </>
       )
@@ -189,7 +193,7 @@ import Icon from "./Icon.astro";
     {hasLegalRow && <hr />}
 
     {hasLegalRow && (
-    <nav aria-label="Legal" class="at-footer-legal">
+    <nav aria-label={labels.legal} class="at-footer-legal">
       {
         legalLinks.map((link, i) => (
           <>
@@ -204,8 +208,10 @@ import Icon from "./Icon.astro";
           <span aria-hidden="true">|</span>
           <button
             class="at-footer-theme-toggle"
-            aria-label="Switch to dark theme"
-            title="Switch to dark theme"
+            aria-label={labels.switchToDark}
+            title={labels.switchToDark}
+            data-label-dark={labels.switchToDark}
+            data-label-light={labels.switchToLight}
           >
             <Icon name="sun-light" size={16} class="at-theme-icon-sun" />
             <Icon name="half-moon" size={16} class="at-theme-icon-moon" />
@@ -237,7 +243,7 @@ import Icon from "./Icon.astro";
         localStorage.setItem("at-theme", scheme);
         // dark-mode guide: keep the meta tag in sync with the resolved theme.
         document.querySelector('meta[name="color-scheme"]')?.setAttribute("content", scheme);
-        const label = dark ? "Switch to light theme" : "Switch to dark theme";
+        const label = (dark ? btn.dataset.labelLight : btn.dataset.labelDark)!;
         btn.setAttribute("aria-label", label);
         btn.setAttribute("title", label);
       });

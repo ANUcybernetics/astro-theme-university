@@ -129,6 +129,25 @@ still emit the text tags and declare `twitter:card` as `summary` rather than
 Use `socialType` for pages that aren't ordinary pages --- `"article"` for posts
 and news, `"profile"` for people.
 
+## Other languages
+
+`lang` sets `<html lang>`, which also decides the language Pagefind indexes a
+page under, so each language gets its own search results. `labels` translates
+the theme's own chrome: the skip link, the nav's menu and search buttons, the
+search dialog and the footer. Pass any of the `ThemeLabels` keys (exported from
+`astro-theme-university/labels` with their English defaults); the rest stay
+English. `noResults` takes a `{query}` placeholder and `licence` a `{licence}`
+one. `homeHref` points the logo at the current language's home page.
+
+```astro
+<BaseLayout
+  title="Themen"
+  lang="de"
+  homeHref="/de/"
+  labels={{ menu: "Menü", search: "Suche", skipToContent: "Zum Inhalt springen" }}
+>
+```
+
 ## Site config pattern
 
 Most props on BaseLayout are the same across every page --- site name,

@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.21.0
+
+**Pages in other languages.** BaseLayout takes `lang` for `<html lang>` (it was
+always `en`), `labels` to translate the theme's own chrome, and `homeHref` to
+point the nav's logo at a language's home page. `labels` is a partial
+`ThemeLabels` (`astro-theme-university/labels`); keys left out keep their
+English defaults, so existing sites render as before. All three are also
+`SiteConfig` fields.
+
 ## 0.20.0
 
 **Tables drop their zebra stripes for hairline row rules, and sit flush.** Body

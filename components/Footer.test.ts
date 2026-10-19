@@ -107,4 +107,23 @@ describe("Footer", () => {
     expect(html).not.toContain("at-footer-band");
     expect(html).toContain("Acknowledgement text only.");
   });
+
+  test("translates the licence line and theme toggle", async () => {
+    const container = await AstroContainer.create();
+    const html = await container.renderToString(Footer, {
+      props: {
+        licence: "CC-BY-SA-4.0",
+        labels: {
+          licence: "Sauf indication contraire, ce site est sous licence {licence}.",
+          switchToDark: "Passer au thème sombre",
+        },
+      },
+    });
+
+    expect(html).toMatch(
+      /Sauf indication contraire, ce site est sous licence <a [^>]*>Creative Commons[^<]*<\/a>\./,
+    );
+    expect(html).toContain('aria-label="Passer au thème sombre"');
+    expect(html).toContain('data-label-light="Switch to light theme"');
+  });
 });

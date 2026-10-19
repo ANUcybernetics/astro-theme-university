@@ -43,4 +43,22 @@ describe("Nav", () => {
     expect(html).not.toContain("at-nav-logo--has-dark");
     expect(html).not.toContain("at-nav-logo--dark");
   });
+
+  test("translates its labels and links the logo to homeHref", async () => {
+    const container = await createContainer();
+    const html = await container.renderToString(Nav, {
+      props: {
+        name: "Test",
+        links: [{ text: "Themen", href: "/de/topics/" }],
+        homeHref: "/de/",
+        labels: { mainNav: "Hauptmenü", menu: "Menü", searchPlaceholder: "Suchen..." },
+      },
+    });
+    expect(html).toContain('aria-label="Hauptmenü"');
+    expect(html).toContain('aria-label="Menü"');
+    expect(html).toContain('placeholder="Suchen..."');
+    expect(html).toMatch(/href="\/de\/" class="at-nav-brand"/);
+    // labels it wasn't given stay English
+    expect(html).toContain('aria-label="Search results"');
+  });
 });

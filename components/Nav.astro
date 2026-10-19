@@ -2,6 +2,7 @@
 import Icon from "./Icon.astro";
 import SearchDialog from "./SearchDialog.astro";
 import type { NavLink } from "../types.js";
+import { type ThemeLabels, resolveLabels } from "../labels.js";
 import { withBase } from "../url.js";
 
 export interface NavProps {
@@ -24,17 +25,32 @@ export interface NavProps {
   logoCompact?: ImageMetadata;
   /** Compact logo (dark mode). Only used when `logoCompact` is provided. */
   logoCompactDark?: ImageMetadata;
+  /** Where the logo links (default the site base). */
+  homeHref?: string;
+  /** Translations of the nav's labels; any left out stay English. */
+  labels?: Partial<ThemeLabels>;
 }
 
 type Props = NavProps;
 
-const { name, links = [], search = true, logo, logoDark, logoCompact, logoCompactDark } = Astro.props;
+const {
+  name,
+  links = [],
+  search = true,
+  logo,
+  logoDark,
+  logoCompact,
+  logoCompactDark,
+  homeHref,
+  labels: labelOverrides,
+} = Astro.props;
+const labels = resolveLabels(labelOverrides);
 const currentPath = Astro.url.pathname;
 ---
 
-<nav class="at-nav" aria-label="Main">
+<nav class="at-nav" aria-label={labels.mainNav}>
   <div class="at-nav-inner">
-    <a href={import.meta.env.BASE_URL} class="at-nav-brand">
+    <a href={homeHref ? withBase(homeHref) : import.meta.env.BASE_URL} class="at-nav-brand">
       {logo ? (
         <>
           <span class="at-nav-logo-full">
@@ -87,7 +103,7 @@ const currentPath = Astro.url.pathname;
             class="at-icon-button at-nav-toggle"
             aria-expanded="false"
             aria-controls="at-nav-menu"
-            aria-label="Menu"
+            aria-label={labels.menu}
           >
             <Icon name="menu" size={20} class="at-nav-icon-open" />
             <Icon name="xmark" size={20} class="at-nav-icon-close" />
@@ -117,8 +133,8 @@ const currentPath = Astro.url.pathname;
       search && (
         <button
           class="at-icon-button at-search-trigger"
-          aria-label="Search (Cmd+K)"
-          title="Search (Cmd+K)"
+          aria-label={labels.searchButton}
+          title={labels.searchButton}
           data-search-trigger
         >
           <Icon name="search" size={20} />
@@ -126,7 +142,7 @@ const currentPath = Astro.url.pathname;
       )
     }
   </div>
-  {search && <SearchDialog basePath={import.meta.env.BASE_URL} />}
+  {search && <SearchDialog basePath={import.meta.env.BASE_URL} labels={labels} />}
 </nav>
 
 <script>

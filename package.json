@@ -23,6 +23,7 @@
     "CHANGELOG.md",
     "index.ts",
     "types.ts",
+    "labels.ts",
     "types-shim.d.ts",
     "virtual.d.ts",
     "link-checker.ts",
@@ -53,6 +54,7 @@
   "exports": {
     ".": "./index.ts",
     "./types": "./types.ts",
+    "./labels": "./labels.ts",
     "./markdown": "./markdown.ts",
     "./images": "./images.ts",
     "./components/*": "./components/*",

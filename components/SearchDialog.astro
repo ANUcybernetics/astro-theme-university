@@ -1,18 +1,26 @@
 ---
+import { type ThemeLabels, resolveLabels } from "../labels.js";
+
 export interface Props {
   /** Site base path used to load the generated Pagefind index. */
   basePath?: string;
+  /** Translations of the dialog's labels; any left out stay English. */
+  labels?: Partial<ThemeLabels>;
 }
 
-const { basePath = "/" } = Astro.props;
+const { basePath = "/", labels: labelOverrides } = Astro.props;
+const labels = resolveLabels(labelOverrides);
 const pagefindBase = basePath.endsWith("/") ? basePath : `${basePath}/`;
 ---
 
 <dialog
   class="at-search-dialog"
-  aria-label="Search"
+  aria-label={labels.search}
   data-at-search-dialog
   data-pagefind-base={pagefindBase}
+  data-label-searching={labels.searching}
+  data-label-unavailable={labels.searchUnavailable}
+  data-label-no-results={labels.noResults}
 >
   <div class="at-search-panel">
     <div class="at-search-header">
@@ -37,9 +45,9 @@ const pagefindBase = basePath.endsWith("/") ? basePath : `${basePath}/`;
       </svg>
       <input
         type="search"
-        placeholder="Search..."
+        placeholder={labels.searchPlaceholder}
         class="at-search-input"
-        aria-label="Search"
+        aria-label={labels.search}
         autocomplete="off"
         data-at-search-input
       />
@@ -48,7 +56,7 @@ const pagefindBase = basePath.endsWith("/") ? basePath : `${basePath}/`;
     <ul
       class="at-search-results"
       role="listbox"
-      aria-label="Search results"
+      aria-label={labels.searchResults}
       data-at-search-results
       hidden
     ></ul>
@@ -163,17 +171,17 @@ const pagefindBase = basePath.endsWith("/") ? basePath : `${basePath}/`;
         status.hidden = true;
         return;
       }
-      showStatus("Searching…");
+      showStatus(dialog.dataset.labelSearching!);
       const api = await loadPagefind();
       if (sequence !== searchSequence) return;
       if (!api) {
-        showStatus("Search index not available.");
+        showStatus(dialog.dataset.labelUnavailable!);
         return;
       }
       const response = await api.search(trimmed);
       const found = await Promise.all(response.results.slice(0, 10).map((hit) => hit.data()));
       if (sequence !== searchSequence) return;
-      if (found.length === 0) showStatus(`No results for “${trimmed}”`);
+      if (found.length === 0) showStatus(dialog.dataset.labelNoResults!.replace("{query}", trimmed));
       else render(found);
     }
 

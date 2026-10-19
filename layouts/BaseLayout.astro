@@ -11,6 +11,7 @@ import "astro-theme-university/styles/base.css";
 import "astro-theme-university/styles/components.css";
 import OpenGraph from "../components/OpenGraph.astro";
 import { resolveHeroImage, resolveSocialImage } from "../images.js";
+import { type ThemeLabels, resolveLabels } from "../labels.js";
 import type {
   NavLink,
   SocialLink,
@@ -32,6 +33,13 @@ export interface BaseLayoutProps {
   unlisted?: boolean;
   /** Site name displayed in the nav and footer. */
   name?: string;
+  /** BCP 47 language of the page, for `<html lang>` (default "en"). */
+  lang?: string;
+  /** Where the nav's logo links (default the site base). */
+  homeHref?: string;
+  /** Translations of the theme's own chrome (skip link, search, footer);
+   *  any left out stay English. */
+  labels?: Partial<ThemeLabels>;
   /** Navigation links displayed in the top bar. */
   links?: NavLink[];
   /** Whether to show the search button and dialog. */
@@ -111,6 +119,9 @@ const {
   description,
   unlisted = false,
   name = "Site",
+  lang = "en",
+  homeHref,
+  labels: labelOverrides,
   links = [],
   search,
   seoMeta = true,
@@ -145,12 +156,13 @@ const {
 
 const { class: mainClass, ...mainRest } = mainAttrs;
 
+const labels = resolveLabels(labelOverrides);
 const resolvedHeroImage = resolveHeroImage(heroImage);
 const resolvedSocialImage = resolveSocialImage(socialImage);
 ---
 
 <!doctype html>
-<html lang="en" data-theme={colorScheme === "auto" ? undefined : colorScheme}>
+<html lang={lang} data-theme={colorScheme === "auto" ? undefined : colorScheme}>
   <head>
     <meta charset="utf-8" />
     {/* Declare the cascade-layer order up front, before any stylesheet. The
@@ -209,8 +221,8 @@ const resolvedSocialImage = resolveSocialImage(socialImage);
           document.documentElement.dataset.theme = t;
           var schemeMeta = document.querySelector('meta[name="color-scheme"]');
           if (schemeMeta) schemeMeta.content = t;
-          var label = t === "dark" ? "Switch to light theme" : "Switch to dark theme";
           document.querySelectorAll(".at-footer-theme-toggle").forEach(function (btn) {
+            var label = t === "dark" ? btn.dataset.labelLight : btn.dataset.labelDark;
             btn.setAttribute("aria-label", label);
             btn.setAttribute("title", label);
           });
@@ -221,7 +233,7 @@ const resolvedSocialImage = resolveSocialImage(socialImage);
   </head>
   <body data-pagefind-ignore={unlisted ? "all" : undefined}>
     <slot name="body-start" />
-    <a href="#main" class="visually-hidden">Skip to main content</a>
+    <a href="#main" class="visually-hidden">{labels.skipToContent}</a>
     <Nav
       name={name}
       links={links}
@@ -230,6 +242,8 @@ const resolvedSocialImage = resolveSocialImage(socialImage);
       logoDark={logoDark}
       logoCompact={logoCompact}
       logoCompactDark={logoCompactDark}
+      homeHref={homeHref}
+      labels={labels}
     />
     {heroTitle && resolvedHeroImage && (
       <Hero title={heroTitle} image={resolvedHeroImage} imageAlt={heroImageAlt ?? ""} />
@@ -238,7 +252,7 @@ const resolvedSocialImage = resolveSocialImage(socialImage);
     <main id="main" class:list={["at-main", mainClass]} {...mainRest}>
       <slot />
     </main>
-    <Footer contact={contact} socials={socials} licence={licence} colorScheme={colorScheme} acknowledgement={acknowledgement} legalLinks={legalLinks} partnerships={partnerships} meta={meta}>
+    <Footer contact={contact} socials={socials} licence={licence} colorScheme={colorScheme} acknowledgement={acknowledgement} legalLinks={legalLinks} partnerships={partnerships} meta={meta} labels={labels}>
       <slot name="footer-legal" slot="footer-legal" />
     </Footer>
     <slot name="body-end" />
