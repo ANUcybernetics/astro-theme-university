@@ -234,7 +234,10 @@
   }
 
   @media (width >= 640px) {
+    /* one row: links that don't fit scroll (with the fade below) rather than
+       wrap the search button onto a line of its own */
     .at-nav-inner {
+      flex-wrap: nowrap;
       gap: 0 var(--at-spacing-lg);
     }
 
@@ -255,6 +258,7 @@
       flex-direction: row;
       gap: var(--at-spacing-sm);
       width: auto;
+      min-width: 0;
       padding: 0;
       order: 0;
       overflow-x: auto;

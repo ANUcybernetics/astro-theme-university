@@ -9,6 +9,11 @@ point the nav's logo at a language's home page. `labels` is a partial
 English defaults, so existing sites render as before. All three are also
 `SiteConfig` fields.
 
+**Nav links scroll rather than wrap.** On desktop a row of links too wide for
+the content column now scrolls behind the fade it was always meant to show;
+before, the list couldn't shrink, so the search button wrapped onto a line of
+its own.
+
 ## 0.20.0
 
 **Tables drop their zebra stripes for hairline row rules, and sit flush.** Body
