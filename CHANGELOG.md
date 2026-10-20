@@ -4,9 +4,9 @@
 
 **Every indexed page gets a markdown twin.** With `llmsTxt` on, each page in
 llms.txt is also written as markdown beside its HTML (`/topics/x/` →
-`/topics/x/index.html.md`), and that page's `<link rel="alternate"
-type="text/markdown">` now points at its own twin instead of the site-wide
-llms.txt. Pages outside the index keep the llms.txt link.
+`/topics/x/index.html.md`), and that page's
+`<link rel="alternate" type="text/markdown">` now points at its own twin instead
+of the site-wide llms.txt. Pages outside the index keep the llms.txt link.
 
 **llms.txt is sectioned and sized.** The page index is grouped into one `##`
 section per top-level path with more than one page, headed by the listing page's
