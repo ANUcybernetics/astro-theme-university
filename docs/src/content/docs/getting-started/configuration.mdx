@@ -118,16 +118,34 @@ This site documents our projects, publications, and team members. Key areas
 include quantum computing, climate modelling, and policy analysis.
 ```
 
-The theme appends an auto-generated `## Pages` section listing all published
-content pages with their titles and descriptions. If `src/llms.md` doesn't
-exist, the theme falls back to a minimal header using the site name from your
-theme options.
+The theme appends a line linking `/llms-full.txt` with its size, then the page
+index: every published page with its title and description, grouped into one
+`##` section per top-level path that holds more than one page (headed by that
+path's listing page title), with the rest under `## Pages`. Numbered URLs sort
+numerically, so `week-10` follows `week-9`. If `src/llms.md` doesn't exist, the
+theme falls back to a minimal header using the site name from your theme
+options. Root-relative links in the preamble (`[API](/api/index.json)`) are
+rewritten to absolute URLs under your `site` and `base`, since an agent reading
+the file has no page to resolve them against.
 
-Every page also advertises the file to agent visitors with a
-`<link rel="alternate" type="text/markdown" href="/llms.txt">` in the head, so a
-crawler that reads the head can find it without relying on the well-known-path
-convention. The link is emitted only when `llmsTxt: true`, and its `href`
-respects your configured `base` path.
+Every indexed page also gets a markdown twin beside its HTML, at the HTML path
+plus `.md` (`/topics/x/` → `/topics/x/index.html.md`), and its head carries a
+`<link rel="alternate" type="text/markdown">` pointing at that twin --- so an
+agent handed one page's URL gets that page as markdown rather than the
+whole-site index. Pages that aren't indexed (unlisted ones, `.astro`-only
+routes) keep a link to `/llms.txt` instead. The links are emitted only when
+`llmsTxt` is on, and respect your configured `base` path.
+
+For context the site can generate from its own data --- key dates, say, which a
+hand-written preamble would restate and let drift --- pass the object form:
+
+```ts
+universityTheme({
+  llmsTxt: { extra: async () => "## Key dates\n\n- Assignment 1: 17 August" },
+});
+```
+
+The returned markdown sits between the preamble and the page index.
 
 Entry URLs are derived from each markdown file's path under `src/content/` and
 `src/pages/`: the `pages` collection renders at the site root
@@ -139,11 +157,12 @@ fails if any entry would point at a page that doesn't exist --- for example when
 a collection renders under a different route than its directory name implies.
 
 Slide decks are included too, on a site with decks in the build: each deck under
-`src/decks/` is listed at the URL its route serves, and its readable text goes
-into `/llms-full.txt` the way a page's does. Speaker notes are included, since
-they are already in the deck's HTML; authoring comments are not, since they are
+`src/decks/` is listed at the URL its route serves, and its readable text
+becomes its markdown twin. Decks are left out of `/llms-full.txt`, since their
+prose restates pages it already carries. Speaker notes are included, since they
+are already in the deck's HTML; authoring comments are not, since they are
 stripped from it. A deck marked `published: false` or `unlisted: true` is left
-out, the same keys a content collection entry uses. This needs astromotion 0.31
+out, the same keys a content collection entry uses. This needs astromotion 0.36
 or newer, whether the theme registers it for you through `decks` or your site
 registers it itself.
 

@@ -156,7 +156,57 @@ describe("generateLlmsTxt", () => {
   test("handles empty entries", () => {
     const result = generateLlmsTxt(OPTIONS, []);
     expect(result).toContain("# Test Site");
-    expect(result).toContain("## Pages");
+    expect(result).not.toContain("## ");
+  });
+
+  test("gives each multi-page path segment its own section, headed by its listing page", () => {
+    const result = generateLlmsTxt(OPTIONS, [
+      { url: "/", title: "Home", body: "" },
+      { url: "/about/", title: "About", body: "" },
+      { url: "/topics/", title: "All topics", body: "" },
+      { url: "/topics/a/", title: "A", body: "" },
+      { url: "/lectures/week-1/", title: "W1", body: "" },
+      { url: "/lectures/week-2/", title: "W2", body: "" },
+    ]);
+    const headings = result.split("\n").filter((l) => l.startsWith("## "));
+    expect(headings).toEqual(["## Pages", "## Lectures", "## All topics"]);
+    const pages = result.slice(result.indexOf("## Pages"), result.indexOf("## Lectures"));
+    expect(pages).toContain("[Home]");
+    expect(pages).toContain("[About]");
+  });
+
+  test("orders numbered URLs numerically", () => {
+    const result = generateLlmsTxt(OPTIONS, [
+      { url: "/w/week-10/", title: "Ten", body: "" },
+      { url: "/w/week-2/", title: "Two", body: "" },
+      { url: "/w/week-1/", title: "One", body: "" },
+    ]);
+    expect(result.indexOf("[One]")).toBeLessThan(result.indexOf("[Two]"));
+    expect(result.indexOf("[Two]")).toBeLessThan(result.indexOf("[Ten]"));
+  });
+
+  test("absolutises root-relative links in the preamble and the extra block", () => {
+    const result = generateLlmsTxt(
+      {
+        ...OPTIONS,
+        siteUrl: "https://example.com/courses/demo/",
+        preamble: "# Demo\n\nSee [the API](/api/index.json).",
+        extra: "## Key dates\n\n- [A1](/assessments/a1/) due Monday",
+      },
+      [],
+    );
+    expect(result).toContain("[the API](https://example.com/courses/demo/api/index.json)");
+    expect(result).toContain("[A1](https://example.com/courses/demo/assessments/a1/)");
+    expect(result.indexOf("## Key dates")).toBeGreaterThan(result.indexOf("See [the API]"));
+  });
+
+  test("links llms-full.txt with its size when given one", () => {
+    const result = generateLlmsTxt({ ...OPTIONS, fullTextLength: 40_000 }, [
+      { url: "/a/", title: "A", body: "", excludeFromFullText: true },
+    ]);
+    expect(result).toContain("[llms-full.txt](https://example.com/llms-full.txt)");
+    expect(result).toContain("about 10k tokens; slide decks are left out");
+    expect(result).toContain("index.html.md");
   });
 
   test("uses preamble instead of generated header when provided", () => {
@@ -234,6 +284,17 @@ describe("absolutiseLinks", () => {
     const result = absolutiseLinks(input, OPTIONS.siteUrl);
     expect(result).toContain("[link](/inside/code/)");
     expect(result).toContain("[real](https://example.com/outside/)");
+  });
+});
+
+describe("generateLlmsFullTxt excludes", () => {
+  test("leaves out entries marked excludeFromFullText", () => {
+    const result = generateLlmsFullTxt(OPTIONS, [
+      { url: "/a/", title: "Kept", body: "kept body" },
+      { url: "/b/", title: "Deck", body: "deck body", excludeFromFullText: true },
+    ]);
+    expect(result).toContain("kept body");
+    expect(result).not.toContain("deck body");
   });
 });
 

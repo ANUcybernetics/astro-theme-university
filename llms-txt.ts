@@ -12,6 +12,10 @@ export interface LlmsEntry {
    *  not-yet-final, and both llms outputs carry the marker so machine
    *  readers get the same epistemic signal as the on-page badge. */
   draft?: boolean;
+  /** Listed in llms.txt and given its own markdown page, but left out of
+   *  llms-full.txt. Slide decks set it: their prose restates pages the full
+   *  text already carries. */
+  excludeFromFullText?: boolean;
 }
 
 export interface LlmsTxtOptions {
@@ -19,6 +23,25 @@ export interface LlmsTxtOptions {
   siteDescription?: string;
   siteUrl: string;
   preamble?: string;
+  /** Markdown placed after the preamble and before the page index, for
+   *  site-generated context (key dates, say) a hand-written preamble would
+   *  restate and let drift. */
+  extra?: string;
+  /** Character length of llms-full.txt, so the index can say what fetching
+   *  it costs. */
+  fullTextLength?: number;
+}
+
+/** URL order with numeric collation: `/week-10/` sorts after `/week-9/`. */
+function byUrl(a: LlmsEntry, b: LlmsEntry): number {
+  return a.url.localeCompare(b.url, "en", { numeric: true });
+}
+
+/** The markdown twin of a built page, per the llms.txt convention: the
+ *  page's HTML path with `.md` appended (`topics/x/index.html` →
+ *  `topics/x/index.html.md`). */
+export function markdownPath(builtPage: string): string {
+  return `${builtPage}.md`;
 }
 
 export function parseFrontmatter(source: string): {
@@ -82,49 +105,97 @@ export function absolutiseLinks(body: string, siteUrl: string): string {
     .join("\n");
 }
 
+/** One page as standalone markdown: the body every llms output shares. */
+export function renderEntryMarkdown(entry: LlmsEntry, siteUrl: string): string {
+  const lines = [`# ${entry.title}`, ""];
+  if (entry.description) {
+    lines.push(`> ${entry.description}`, "");
+  }
+  if (entry.draft) {
+    lines.push(`_Draft: this page is published but not yet final._`, "");
+  }
+  lines.push(absolutiseLinks(entry.body.trim(), siteUrl), "");
+  return lines.join("\n");
+}
+
+/** Group entries into llms.txt sections by their first path segment. A
+ *  segment with more than one page becomes its own section, headed by its
+ *  listing page's title (or the segment name); the rest share "Pages". */
+function sectionise(entries: LlmsEntry[]): { heading: string; entries: LlmsEntry[] }[] {
+  const groups = new Map<string, LlmsEntry[]>();
+  for (const entry of entries) {
+    const segment = entry.url.split("/")[1] ?? "";
+    groups.set(segment, [...(groups.get(segment) ?? []), entry]);
+  }
+
+  const pages: LlmsEntry[] = [];
+  const sections: { heading: string; entries: LlmsEntry[] }[] = [];
+  for (const [segment, group] of groups) {
+    if (!segment || group.length === 1) {
+      pages.push(...group);
+      continue;
+    }
+    const listing = group.find((e) => e.url === `/${segment}/`);
+    const heading = listing?.title ?? segment.charAt(0).toUpperCase() + segment.slice(1);
+    sections.push({ heading, entries: group });
+  }
+
+  return pages.length > 0 ? [{ heading: "Pages", entries: pages }, ...sections] : sections;
+}
+
 export function generateLlmsTxt(options: LlmsTxtOptions, entries: LlmsEntry[]): string {
-  const sorted = [...entries].toSorted((a, b) => a.url.localeCompare(b.url));
+  const root = options.siteUrl.replace(/\/$/, "");
+  const sorted = [...entries].toSorted(byUrl);
   const lines: string[] = [];
 
   if (options.preamble) {
-    lines.push(options.preamble.trimEnd(), "", "## Pages", "");
+    lines.push(absolutiseLinks(options.preamble.trimEnd(), options.siteUrl), "");
   } else {
     lines.push(`# ${options.siteName}`, "");
     if (options.siteDescription) {
       lines.push(`> ${options.siteDescription}`, "");
     }
-    lines.push("## Pages", "");
   }
 
-  for (const entry of sorted) {
-    const url = `${options.siteUrl.replace(/\/$/, "")}${entry.url}`;
-    const marker = entry.draft ? " (draft)" : "";
-    if (entry.description) {
-      lines.push(`- [${entry.title}](${url})${marker}: ${entry.description}`);
-    } else {
-      lines.push(`- [${entry.title}](${url})${marker}`);
+  if (options.fullTextLength !== undefined) {
+    const tokens = Math.round(options.fullTextLength / 4 / 1000);
+    const skipsDecks = entries.some((e) => e.excludeFromFullText);
+    lines.push(
+      `Every page below is also served as markdown at its HTML path plus \`.md\` ` +
+        `(\`${root}/a/\` → \`${root}/a/index.html.md\`), linked from its head. ` +
+        `[llms-full.txt](${root}/llms-full.txt) has every page's text in one file ` +
+        `(about ${tokens}k tokens${skipsDecks ? "; slide decks are left out" : ""}).`,
+      "",
+    );
+  }
+
+  if (options.extra) {
+    lines.push(absolutiseLinks(options.extra.trim(), options.siteUrl), "");
+  }
+
+  for (const section of sectionise(sorted)) {
+    lines.push(`## ${section.heading}`, "");
+    for (const entry of section.entries) {
+      const url = `${root}${entry.url}`;
+      const marker = entry.draft ? " (draft)" : "";
+      if (entry.description) {
+        lines.push(`- [${entry.title}](${url})${marker}: ${entry.description}`);
+      } else {
+        lines.push(`- [${entry.title}](${url})${marker}`);
+      }
     }
+    lines.push("");
   }
 
-  lines.push("");
   return lines.join("\n");
 }
 
 export function generateLlmsFullTxt(options: LlmsTxtOptions, entries: LlmsEntry[]): string {
-  const sorted = [...entries].toSorted((a, b) => a.url.localeCompare(b.url));
-  const sections = sorted.map((entry) => {
-    const lines = [`# ${entry.title}`, ""];
-    if (entry.description) {
-      lines.push(`> ${entry.description}`, "");
-    }
-    if (entry.draft) {
-      lines.push(`_Draft: this page is published but not yet final._`, "");
-    }
-    lines.push(absolutiseLinks(entry.body.trim(), options.siteUrl), "");
-    return lines.join("\n");
-  });
-
-  return sections.join("\n---\n\n");
+  return entries
+    .filter((entry) => !entry.excludeFromFullText)
+    .toSorted(byUrl)
+    .map((entry) => renderEntryMarkdown(entry, options.siteUrl))
+    .join("\n---\n\n");
 }
 
 async function collectFiles(dir: string, skipUnderscored: boolean): Promise<string[]> {
@@ -221,11 +292,14 @@ export async function readSiteEntries(srcDir: string): Promise<LlmsEntry[]> {
  *  URLs with no matching page in dist — either directory format
  *  (`<url>/index.html`) or file format (`<url>.html`). */
 export function findUnroutedEntries(distPath: string, entries: LlmsEntry[]): string[] {
-  return entries
-    .filter((entry) => {
-      const rel = entry.url.replace(/^\//, "").replace(/\/$/, "");
-      if (existsSync(join(distPath, rel, "index.html"))) return false;
-      return !(rel && existsSync(join(distPath, `${rel}.html`)));
-    })
-    .map((entry) => entry.url);
+  return entries.filter((entry) => builtPagePath(distPath, entry) === null).map((e) => e.url);
+}
+
+/** The dist-relative HTML file an entry built to, in either directory format
+ *  (`<url>/index.html`) or file format (`<url>.html`), or null if neither. */
+export function builtPagePath(distPath: string, entry: LlmsEntry): string | null {
+  const rel = entry.url.replace(/^\//, "").replace(/\/$/, "");
+  const dirFormat = join(rel, "index.html");
+  if (existsSync(join(distPath, dirFormat))) return dirFormat;
+  return rel && existsSync(join(distPath, `${rel}.html`)) ? `${rel}.html` : null;
 }

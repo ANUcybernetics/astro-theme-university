@@ -1,5 +1,27 @@
 # Changelog
 
+## 0.22.0
+
+**Every indexed page gets a markdown twin.** With `llmsTxt` on, each page in
+llms.txt is also written as markdown beside its HTML (`/topics/x/` →
+`/topics/x/index.html.md`), and that page's `<link rel="alternate"
+type="text/markdown">` now points at its own twin instead of the site-wide
+llms.txt. Pages outside the index keep the llms.txt link.
+
+**llms.txt is sectioned and sized.** The page index is grouped into one `##`
+section per top-level path with more than one page, headed by the listing page's
+title; numbered URLs sort numerically (`week-10` after `week-9`); and a line
+near the top links llms-full.txt with its approximate token count. Root-relative
+links in `src/llms.md` are rewritten to absolute URLs under `site` and `base`.
+
+**Decks stay out of llms-full.txt.** They are still listed and still get a
+markdown twin, but their prose restates pages the full text already carries.
+Needs astromotion 0.36, whose text export drops background and widget markers.
+
+**`llmsTxt: { extra }`.** The object form takes a function returning markdown
+placed between the preamble and the page index, for context a site generates
+from its own data.
+
 ## 0.21.0
 
 **Pages in other languages.** BaseLayout takes `lang` for `<html lang>` (it was

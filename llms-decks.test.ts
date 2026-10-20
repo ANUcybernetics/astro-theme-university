@@ -40,7 +40,10 @@ async function generate(options: SiteOptions = {}) {
     write(join(root, "src/decks", path), source);
   }
   for (const url of options.built ?? []) {
-    write(join(root, "dist", url, "index.html"), "<html></html>");
+    write(
+      join(root, "dist", url, "index.html"),
+      '<html><head><link rel="alternate" type="text/markdown" href="/llms.txt" title="llms.txt" /></head></html>',
+    );
   }
   mkdirSync(join(root, "dist"), { recursive: true });
 
@@ -73,9 +76,12 @@ async function generate(options: SiteOptions = {}) {
     logger: { info: () => {}, warn: () => {}, error: () => {} },
   } as never);
 
+  const read = (path: string) => readFileSync(join(root, "dist", path), "utf-8");
   return {
-    index: readFileSync(join(root, "dist/llms.txt"), "utf-8"),
-    full: readFileSync(join(root, "dist/llms-full.txt"), "utf-8"),
+    index: read("llms.txt"),
+    full: read("llms-full.txt"),
+    twin: read,
+    html: read,
   };
 }
 
@@ -110,17 +116,33 @@ describe("decks in llms.txt", () => {
     );
   });
 
-  test("carries the deck's text, with notes but without authoring comments", async () => {
-    const { full } = await generate({
+  test("gives the deck a markdown twin, with notes but without authoring comments", async () => {
+    const { full, twin } = await generate({
       decks: { "week-1.deck.mdx": WEEK_1 },
       built: ["decks/week-1"],
       registerAstromotion: true,
     });
 
-    expect(full).toContain("# Week 1: Openings");
-    expect(full).toContain("Slide prose the audience reads.");
-    expect(full).toContain("what to say out loud");
-    expect(full).not.toContain("why this slide opens the deck");
+    const deck = twin("decks/week-1/index.html.md");
+    expect(deck).toContain("# Week 1: Openings");
+    expect(deck).toContain("Slide prose the audience reads.");
+    expect(deck).toContain("what to say out loud");
+    expect(deck).not.toContain("why this slide opens the deck");
+    // Deck prose restates pages, so it stays out of the one-file dump.
+    expect(full).not.toContain("Slide prose the audience reads.");
+  });
+
+  test("points the built page's head at its own markdown twin", async () => {
+    const { html } = await generate({
+      decks: { "week-1.deck.mdx": WEEK_1 },
+      built: ["decks/week-1"],
+      registerAstromotion: true,
+    });
+
+    expect(html("decks/week-1/index.html")).toContain(
+      '<link rel="alternate" type="text/markdown" href="/decks/week-1/index.html.md" title="Markdown">',
+    );
+    expect(html("decks/week-1/index.html")).not.toContain("llms.txt");
   });
 
   test("skips decks their frontmatter keeps out of the build or the indexes", async () => {

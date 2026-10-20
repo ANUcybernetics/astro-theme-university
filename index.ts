@@ -11,7 +11,7 @@ import mdx from "@astrojs/mdx";
 import icon from "astro-icon";
 import { execFile } from "node:child_process";
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
-import { join } from "node:path";
+import { join, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 import { promisify } from "node:util";
 import remarkDirective from "remark-directive";
@@ -29,11 +29,14 @@ import { checkA11y } from "./a11y-checker.js";
 import { checkTokens } from "./token-checker.js";
 import { checkBaseLinks } from "./link-checker.js";
 import {
+  builtPagePath,
   findUnroutedEntries,
   generateLlmsFullTxt,
   generateLlmsTxt,
   type LlmsEntry,
+  markdownPath,
   readSiteEntries,
+  renderEntryMarkdown,
 } from "./llms-txt.js";
 
 export type {
@@ -112,9 +115,11 @@ export interface ThemeOptions {
   /** Fail the build on `var(--at-*)` references to tokens nothing defines
    *  (default: true) */
   checkTokens?: boolean;
-  /** Generate /llms.txt and /llms-full.txt from content collections and
-   *  src/pages markdown (default: false) */
-  llmsTxt?: boolean;
+  /** Generate /llms.txt, /llms-full.txt and a markdown twin of every indexed
+   *  page from content collections and src/pages markdown (default: false).
+   *  The object form's `extra` returns markdown placed between the preamble
+   *  and the page index, for context the site generates from its own data. */
+  llmsTxt?: boolean | { extra?: () => string | undefined | Promise<string | undefined> };
   /** Auto-register the @astrojs/mdx integration (default: true) */
   mdx?: boolean;
   /** Auto-register the astro-icon integration so consumers can use <Icon> from
@@ -158,12 +163,17 @@ export interface ThemeOptions {
   extraRehypePlugins?: RehypePlugins;
 }
 
+/** The site-wide `<link rel="alternate">` BaseLayout emits for llms.txt. */
+const SITE_LLMS_LINK =
+  /<link rel="alternate" type="text\/markdown" href="[^"]*llms\.txt" title="llms\.txt"\s*\/?>/;
+
 export default function universityTheme(options: ThemeOptions = {}): AstroIntegration {
   const shouldSearch = options.search !== false;
   const shouldCheckLinks = options.checkLinks !== false;
   const shouldCheckA11y = options.checkA11y !== false;
   const shouldCheckTokens = options.checkTokens !== false;
-  const shouldGenerateLlmsTxt = options.llmsTxt === true;
+  const shouldGenerateLlmsTxt = Boolean(options.llmsTxt);
+  const llmsExtra = typeof options.llmsTxt === "object" ? options.llmsTxt.extra : undefined;
   const shouldAddMdx = options.mdx !== false;
   const shouldAddIcon = options.icon !== false;
   const shouldAddFonts = options.fonts !== false;
@@ -574,11 +584,12 @@ export default function universityTheme(options: ThemeOptions = {}): AstroIntegr
           // `unlisted: true` decks are already filtered out, the same keys the
           // content collector filters on.
           if (hasDecks && astromotionModule?.deckTextEntries && projectRootUrl) {
-            entries.push(
-              ...(await astromotionModule.deckTextEntries({
-                root: fileURLToPath(projectRootUrl),
-              })),
-            );
+            // A deck restates pages the full text already carries, so it is
+            // indexed and gets a markdown twin but stays out of llms-full.txt.
+            const decks = await astromotionModule.deckTextEntries({
+              root: fileURLToPath(projectRootUrl),
+            });
+            entries.push(...decks.map((deck) => ({ ...deck, excludeFromFullText: true })));
           }
 
           // Entry URLs come from source file paths, not the router — catch
@@ -592,6 +603,26 @@ export default function universityTheme(options: ThemeOptions = {}): AstroIntegr
             );
           }
 
+          // Each page's markdown twin sits beside its HTML, and the page's
+          // head points at it — so an agent handed one URL gets that page as
+          // markdown, not the whole-site index.
+          const pageBase = basePath.replace(/\/?$/, "/");
+          for (const entry of entries) {
+            const page = builtPagePath(distPath, entry);
+            if (!page) continue;
+            const twin = markdownPath(page);
+            writeFileSync(join(distPath, twin), renderEntryMarkdown(entry, siteUrl));
+            const htmlPath = join(distPath, page);
+            const html = readFileSync(htmlPath, "utf-8");
+            const link = `<link rel="alternate" type="text/markdown" href="${pageBase}${twin.split(sep).join("/")}" title="Markdown">`;
+            // The page's own twin supersedes the site-wide llms.txt link the
+            // layout emits; a page with no twin keeps that one.
+            const withLink = SITE_LLMS_LINK.test(html)
+              ? html.replace(SITE_LLMS_LINK, link)
+              : html.replace("</head>", `${link}</head>`);
+            writeFileSync(htmlPath, withLink);
+          }
+
           const preamblePath = join(srcDir, "llms.md");
           const preamble = existsSync(preamblePath)
             ? readFileSync(preamblePath, "utf-8")
@@ -600,11 +631,13 @@ export default function universityTheme(options: ThemeOptions = {}): AstroIntegr
             siteName: options.name || "Site",
             siteUrl,
             preamble,
+            extra: await llmsExtra?.(),
           };
-          writeFileSync(join(distPath, "llms.txt"), generateLlmsTxt(llmsTxtOptions, entries));
+          const fullText = generateLlmsFullTxt(llmsTxtOptions, entries);
+          writeFileSync(join(distPath, "llms-full.txt"), fullText);
           writeFileSync(
-            join(distPath, "llms-full.txt"),
-            generateLlmsFullTxt(llmsTxtOptions, entries),
+            join(distPath, "llms.txt"),
+            generateLlmsTxt({ ...llmsTxtOptions, fullTextLength: fullText.length }, entries),
           );
           logger.info(`Generated llms.txt and llms-full.txt (${entries.length} entries).`);
         }
