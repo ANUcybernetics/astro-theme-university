@@ -152,13 +152,30 @@ describe("decks in llms.txt", () => {
         "draft.deck.mdx": "---\ntitle: Draft\npublished: false\n---\n\n# Draft\n",
         "hidden.deck.mdx": "---\ntitle: Hidden\nunlisted: true\n---\n\n# Hidden\n",
       },
-      built: ["decks/shown"],
+      built: ["decks/shown", "decks/hidden"],
       registerAstromotion: true,
     });
 
     expect(index).toContain("https://example.com/decks/shown/");
     expect(index).not.toContain("Draft");
     expect(index).not.toContain("Hidden");
+  });
+
+  test("gives an unlisted deck a linked markdown twin, but no index entry", async () => {
+    const { index, full, twin, html } = await generate({
+      decks: {
+        "hidden.deck.mdx": "---\ntitle: Hidden\nunlisted: true\n---\n\n# Hidden\n\nhidden prose\n",
+      },
+      built: ["decks/hidden"],
+      registerAstromotion: true,
+    });
+
+    expect(twin("decks/hidden/index.html.md")).toContain("hidden prose");
+    expect(html("decks/hidden/index.html")).toContain(
+      '<link rel="alternate" type="text/markdown" href="/decks/hidden/index.html.md" title="Markdown">',
+    );
+    expect(index).not.toContain("Hidden");
+    expect(full).not.toContain("hidden prose");
   });
 
   test("leaves llms.txt alone on a site without decks", async () => {

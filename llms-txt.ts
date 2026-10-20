@@ -16,6 +16,9 @@ export interface LlmsEntry {
    *  llms-full.txt. Slide decks set it: their prose restates pages the full
    *  text already carries. */
   excludeFromFullText?: boolean;
+  /** Built at its URL and given its markdown twin, but kept out of llms.txt
+   *  and llms-full.txt, which are indexes. Unlisted decks set it. */
+  unlisted?: boolean;
 }
 
 export interface LlmsTxtOptions {
@@ -145,7 +148,8 @@ function sectionise(entries: LlmsEntry[]): { heading: string; entries: LlmsEntry
 
 export function generateLlmsTxt(options: LlmsTxtOptions, entries: LlmsEntry[]): string {
   const root = options.siteUrl.replace(/\/$/, "");
-  const sorted = [...entries].toSorted(byUrl);
+  const listed = entries.filter((entry) => !entry.unlisted);
+  const sorted = listed.toSorted(byUrl);
   const lines: string[] = [];
 
   if (options.preamble) {
@@ -159,7 +163,7 @@ export function generateLlmsTxt(options: LlmsTxtOptions, entries: LlmsEntry[]): 
 
   if (options.fullTextLength !== undefined) {
     const tokens = Math.round(options.fullTextLength / 4 / 1000);
-    const skipsDecks = entries.some((e) => e.excludeFromFullText);
+    const skipsDecks = listed.some((e) => e.excludeFromFullText);
     lines.push(
       `Every page below is also served as markdown at its HTML path plus \`.md\` ` +
         `(\`${root}/a/\` → \`${root}/a/index.html.md\`), linked from its head. ` +
@@ -192,7 +196,7 @@ export function generateLlmsTxt(options: LlmsTxtOptions, entries: LlmsEntry[]): 
 
 export function generateLlmsFullTxt(options: LlmsTxtOptions, entries: LlmsEntry[]): string {
   return entries
-    .filter((entry) => !entry.excludeFromFullText)
+    .filter((entry) => !entry.excludeFromFullText && !entry.unlisted)
     .toSorted(byUrl)
     .map((entry) => renderEntryMarkdown(entry, options.siteUrl))
     .join("\n---\n\n");

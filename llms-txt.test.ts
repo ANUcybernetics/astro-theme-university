@@ -296,6 +296,19 @@ describe("generateLlmsFullTxt excludes", () => {
     expect(result).toContain("kept body");
     expect(result).not.toContain("deck body");
   });
+
+  test("keeps unlisted entries out of both indexes", () => {
+    const entries: LlmsEntry[] = [
+      { url: "/a/", title: "Listed", body: "listed body" },
+      { url: "/b/", title: "Unlisted", body: "unlisted body", unlisted: true },
+    ];
+    const index = generateLlmsTxt(OPTIONS, entries);
+    const full = generateLlmsFullTxt(OPTIONS, entries);
+    expect(index).toContain("Listed");
+    expect(index).not.toContain("Unlisted");
+    expect(full).toContain("listed body");
+    expect(full).not.toContain("unlisted body");
+  });
 });
 
 describe("generateLlmsFullTxt", () => {

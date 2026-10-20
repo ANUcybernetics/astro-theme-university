@@ -68,7 +68,10 @@ interface AstromotionModule {
   deckRemarkPlugins: RemarkPlugins;
   /** astromotion ≥ 0.30; optional so an older pin still builds (without its
    *  decks in llms.txt) rather than failing the build. */
-  deckTextEntries?: (options?: { root?: string }) => Promise<LlmsEntry[]>;
+  deckTextEntries?: (options?: {
+    root?: string;
+    includeUnlisted?: boolean;
+  }) => Promise<LlmsEntry[]>;
 }
 
 // astromotion is an optional peer, resolved here at module load: Astro
@@ -580,14 +583,17 @@ export default function universityTheme(options: ThemeOptions = {}): AstroIntegr
 
           // Decks are injected routes fed from src/decks, so the content
           // collector cannot see them. astromotion pairs each deck's readable
-          // text with the URL it builds at; its `published: false` and
-          // `unlisted: true` decks are already filtered out, the same keys the
-          // content collector filters on.
+          // text with the URL it builds at and drops `published: false` decks.
+          // Unlisted decks come back flagged: they get a markdown twin, so an
+          // agent handed the deck's URL can read it, but stay out of llms.txt
+          // and llms-full.txt (astromotion ≥ 0.37; an older pin ignores the
+          // option and leaves them out entirely).
           if (hasDecks && astromotionModule?.deckTextEntries && projectRootUrl) {
             // A deck restates pages the full text already carries, so it is
             // indexed and gets a markdown twin but stays out of llms-full.txt.
             const decks = await astromotionModule.deckTextEntries({
               root: fileURLToPath(projectRootUrl),
+              includeUnlisted: true,
             });
             entries.push(...decks.map((deck) => ({ ...deck, excludeFromFullText: true })));
           }
