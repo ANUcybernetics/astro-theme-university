@@ -16,7 +16,7 @@
     "@iconify-json/iconoir": "^1.2.12",
     "astro": "^7.4.1",
     "astro-theme-university": "workspace:*",
-    "astromotion": "github:ANUcybernetics/astromotion#v0.37.0",
+    "astromotion": "github:ANUcybernetics/astromotion#v0.37.1",
     "sharp": "^0.35.5"
   },
   "devDependencies": {
