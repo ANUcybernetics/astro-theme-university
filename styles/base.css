@@ -304,10 +304,12 @@
   /* Quotes carry the callout/deck hairline language as a short accent dash
      overbar: cut down from a full-width rule (which reads as a section
      divider once the text sits flush left) so it reads as a quote mark. The
-     text keeps the full measure, set off by weight alone. */
+     text keeps the full measure, set off by weight alone. Dark mode takes full
+     --at-text: on a dark surface the light weight already thins the strokes,
+     and the secondary alpha on top of it washes the quote out. */
   blockquote {
     margin-inline: 0;
-    color: var(--at-text-secondary);
+    color: light-dark(var(--at-text-secondary), var(--at-text));
     font-weight: 300;
     hanging-punctuation: first last;
     text-wrap: pretty;

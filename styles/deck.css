@@ -31,8 +31,7 @@
      light scheme and render light-mode values on a dark deck. */
     color-scheme: dark;
 
-    /* Semantic tokens deck.css itself consumes (tables, blockquotes),
-     declared here so the standalone contract holds without tokens.css — the
+    /* Semantic tokens deck.css and deck authors consume, declared here so the standalone contract holds without tokens.css — the
      values mirror tokens.css's dark-arm derivations. */
     --at-divider: oklch(from var(--at-primary) 95% 0.005 h / 12%);
     --at-text-secondary: oklch(from var(--at-primary) 95% 0.005 h / 78%);
@@ -210,10 +209,10 @@ body.reveal-viewport {
      measure and set off by weight. Without this a bare blockquote falls
      back to the UA's 40px inline margins, which reads as a stray indent
      beside flush-left body copy. `.quote` slides draw their own wider rule
-     and opt out of the dash below. */
+     and opt out of the dash below. The text keeps the slide's own colour:
+     the light weight on a dark slide is contrast enough to spend. */
   blockquote {
     margin-inline: 0;
-    color: var(--at-text-secondary);
     font-weight: 300;
     hanging-punctuation: first last;
     text-wrap: pretty;
