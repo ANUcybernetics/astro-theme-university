@@ -15,9 +15,7 @@ allowBuilds:
 # package-name glob, so versioned entries are silently ignored.
 minimumReleaseAgeExclude:
   - astro
-  - "@astrojs/internal-helpers"
-  - "@astrojs/markdown-remark"
-  - "@astrojs/mdx"
+  - "@astrojs/*"
   - emdash
   - "@emdash-cms/*"
 
@@ -25,4 +23,7 @@ minimumReleaseAgeExclude:
 # tag — a floating ref here freezes at whatever commit main pointed to when
 # the lockfile entry was first resolved, then silently never moves.
 overrides:
-  astromotion: github:ANUcybernetics/astromotion#v0.37.1
+  astromotion: github:ANUcybernetics/astromotion#v0.37.2
+  # emdash and @emdash-cms/{auth,plugin-types} pin zod exactly at 4.5.4
+  # (GHSA-mrhx-c7xc-m3w5, fixed in 4.6.6). Drop once emdash lifts the pin.
+  zod: ^4.6.6

@@ -9,15 +9,15 @@
     "typecheck": "astro check"
   },
   "dependencies": {
-    "@astrojs/mdx": "^8.1.0",
+    "@astrojs/mdx": "^8.1.1",
     "@iconify-json/iconoir": "^1.2.12",
-    "astro": "^7.4.1",
+    "astro": "^7.4.2",
     "astro-theme-university": "git+https://github.com/ANUcybernetics/astro-theme-university.git#v0.23.1",
-    "astromotion": "github:ANUcybernetics/astromotion#v0.37.1",
+    "astromotion": "github:ANUcybernetics/astromotion#v0.37.2",
     "sharp": "^0.35.5"
   },
   "devDependencies": {
-    "@astrojs/check": "^0.9.11",
+    "@astrojs/check": "^0.9.12",
     "lightningcss": "^1.33.0",
     "pagefind": "^1.5.2",
     "typescript": "^6.0.3"
