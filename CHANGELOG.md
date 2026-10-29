@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.24.1
+
+A citation title that ends in punctuation no longer gets a second full stop.
+
 ## 0.24.0
 
 **Pages carry their citation.** A `CITATION.cff` at the project root (or named

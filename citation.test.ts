@@ -90,6 +90,14 @@ describe("formatCitation", () => {
       "One, A. M., Two, B., & Lab (n.d.). Joint. https://joint.example",
     );
   });
+
+  test("doesn't double the full stop after a title that ends in punctuation", () => {
+    const c = parseCitation({
+      title: "Build one yourself.",
+      authors: [{ "family-names": "One" }],
+    })!;
+    expect(formatCitation(c, (t) => `_${t}_`)).toBe("One (n.d.). _Build one yourself._");
+  });
 });
 
 test("licenceUrl maps CC licences to creativecommons.org and others to SPDX", () => {

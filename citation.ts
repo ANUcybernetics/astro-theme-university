@@ -122,7 +122,9 @@ export function formatCitation(
   emphasis: (title: string) => string = (t) => t,
 ): string {
   const parts = [`${authorList(c.authors)} (${c.year ?? "n.d."}).`];
-  parts.push(`${emphasis(c.title)}${c.medium ? ` [${c.medium}]` : ""}.`);
+  // a title that already ends in punctuation takes no second full stop
+  const end = c.medium ? ` [${c.medium}].` : /[.!?]$/.test(c.title) ? "" : ".";
+  parts.push(`${emphasis(c.title)}${end}`);
   if (c.institution) parts.push(`${c.institution}.`);
   const link = citationLink(c);
   if (link) parts.push(link);
