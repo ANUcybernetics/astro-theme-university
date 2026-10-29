@@ -334,6 +334,20 @@ describe("generateLlmsFullTxt", () => {
     expect(betaSection).not.toContain(">");
   });
 
+  test("ends every page with its source and citation when the site has one", () => {
+    const citation = {
+      title: "Test Site",
+      authors: [{ familyNames: "Lovelace", givenNames: "Ada" }],
+      year: 2026,
+      licence: "CC-BY-4.0",
+    };
+    const pages = generateLlmsFullTxt({ ...OPTIONS, citation }, entries).split("\n---\n");
+    expect(pages[0]).toContain("Source: <https://example.com/alpha/>");
+    expect(pages[1]).toContain("Source: <https://example.com/beta/>");
+    expect(pages[1]).toContain("Cite as: Lovelace, A. (2026). _Test Site_.");
+    expect(generateLlmsTxt({ ...OPTIONS, citation }, entries)).toContain("## Citing this site");
+  });
+
   test("includes body content", () => {
     const result = generateLlmsFullTxt(OPTIONS, entries);
     expect(result).toContain("Alpha content here.");

@@ -166,6 +166,49 @@ out, the same keys a content collection entry uses. This needs astromotion 0.36
 or newer, whether the theme registers it for you through `decks` or your site
 registers it itself.
 
+### Citation
+
+A `CITATION.cff` at the project root tells readers, human and machine, how to
+credit the site. When the file exists, every page's head carries schema.org
+JSON-LD (the page as part of the cited work, with its authors, ORCIDs, licence
+and DOI) and a `<link rel="cite-as">` to the DOI or URL. With `llmsTxt` on,
+`/llms.txt` gains a "Citing this site" block after its preamble, and every
+markdown twin and every page in `/llms-full.txt` ends with its source URL,
+licence and a formatted citation, so text copied out of context still names
+where it came from.
+
+Fields under `preferred-citation` win over the file's top level, which lets the
+citation name an issuing institution (`preferred-citation.institution`) apart
+from the authors' own affiliations --- a course taught by one school and written
+by someone employed at another, say:
+
+```yaml
+cff-version: 1.2.0
+title: "Example Course (course materials)"
+authors:
+  - family-names: Example
+    given-names: Alex
+    affiliation: "School of Design"
+    orcid: "https://orcid.org/0000-0000-0000-0000"
+doi: 10.5281/zenodo.1234567
+license: CC-BY-4.0
+preferred-citation:
+  type: generic
+  title: "Example Course"
+  medium: "Course materials"
+  authors:
+    - family-names: Example
+      given-names: Alex
+  institution:
+    name: "School of Computing"
+  doi: 10.5281/zenodo.1234567
+  year: 2026
+```
+
+A file elsewhere (the repository root above a `website/` directory, say) is
+named with `citation: "../CITATION.cff"`, which fails the build if the file is
+missing; `citation: false` turns the feature off.
+
 ## Site config {#site-config}
 
 Rather than repeating the same props on every page, create a central config file

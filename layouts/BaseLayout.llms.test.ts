@@ -5,6 +5,7 @@ import { expect, test, vi } from "vitest";
 // llmsTxt: true case, where the integration supplies a real href.
 vi.mock("virtual:astro-theme-university/llms", () => ({
   llmsTxtHref: "/docs/llms.txt",
+  citation: null,
 }));
 
 test("advertises llms.txt in the head when the integration supplies an href", async () => {

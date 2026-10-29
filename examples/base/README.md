@@ -23,6 +23,9 @@ pnpm typecheck
   schema in `src/content.config.ts`), rendered at `/<slug>/` by
   `src/pages/[...slug].astro`.
 - `src/llms.md` --- the hand-written preamble for the generated `/llms.txt`.
+- `CITATION.cff` --- how the site should be cited. The theme puts it in every
+  page head (schema.org JSON-LD, a `cite-as` link) and at the foot of every page
+  the llms outputs carry. Delete it to opt out.
 - `src/decks/example.deck.mdx` --- a slide deck, built at `/decks/example/` by
   [astromotion](https://github.com/ANUcybernetics/astromotion) (`decks: true` in
   `astro.config.ts`). Delete the file and the option together if the site

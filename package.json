@@ -34,6 +34,7 @@
     "token-checker.ts",
     "contrast.ts",
     "llms-txt.ts",
+    "citation.ts",
     "url.ts",
     "rehype-base-links.ts",
     "rehype-table-wrap.ts",

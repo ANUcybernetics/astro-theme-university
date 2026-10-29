@@ -23,8 +23,9 @@ export default getViteConfig(
           return null;
         },
       },
-      // Likewise stub the llms virtual module. null href matches an
-      // llmsTxt: false setup, so BaseLayout emits no llms.txt <link>.
+      // Likewise stub the llms virtual module. null href and citation match
+      // an llmsTxt: false site with no CITATION.cff, so BaseLayout emits no
+      // llms.txt <link> and no citation metadata.
       {
         name: "test:astro-theme-university-llms-stub",
         resolveId(id: string) {
@@ -35,7 +36,7 @@ export default getViteConfig(
         },
         load(id: string) {
           if (id === "\0virtual:astro-theme-university/llms") {
-            return "export const llmsTxtHref = null;\n";
+            return "export const llmsTxtHref = null;\nexport const citation = null;\n";
           }
           return null;
         },

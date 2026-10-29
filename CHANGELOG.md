@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.24.0
+
+**Pages carry their citation.** A `CITATION.cff` at the project root (or named
+by the new `citation` option) puts schema.org JSON-LD and a
+`<link rel="cite-as">` in every page head. With `llmsTxt` on, llms.txt gains a
+"Citing this site" block, and every markdown twin and every page in
+llms-full.txt ends with its source URL, licence and a formatted citation.
+`preferred-citation` fields win over the top level, so a citation can name an
+issuing institution apart from the authors' affiliations. A site without the
+file is unchanged.
+
 ## 0.22.0
 
 **Every indexed page gets a markdown twin.** With `llmsTxt` on, each page in

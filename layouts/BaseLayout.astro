@@ -3,7 +3,8 @@ import type { HTMLAttributes } from "astro/types";
 import { Font } from "astro:assets";
 import { ClientRouter } from "astro:transitions";
 import { fontVariables, preloadFontVariables } from "virtual:astro-theme-university/fonts";
-import { llmsTxtHref } from "virtual:astro-theme-university/llms";
+import { citation, llmsTxtHref } from "virtual:astro-theme-university/llms";
+import { citationJsonLd, citationLink } from "../citation.js";
 import Nav from "../components/Nav.astro";
 import Hero from "../components/Hero.astro";
 import Footer from "../components/Footer.astro";
@@ -159,6 +160,8 @@ const { class: mainClass, ...mainRest } = mainAttrs;
 const labels = resolveLabels(labelOverrides);
 const resolvedHeroImage = resolveHeroImage(heroImage);
 const resolvedSocialImage = resolveSocialImage(socialImage);
+const pageUrl = Astro.site ? new URL(Astro.url.pathname, Astro.site).href : undefined;
+const citeAs = citation ? citationLink(citation) : undefined;
 ---
 
 <!doctype html>
@@ -209,6 +212,14 @@ const resolvedSocialImage = resolveSocialImage(socialImage);
     {llmsTxtHref && (
       <link rel="alternate" type="text/markdown" href={llmsTxtHref} title="llms.txt" />
     )}
+    {citation && (
+      <script
+        is:inline
+        type="application/ld+json"
+        set:html={JSON.stringify(citationJsonLd(citation, { url: pageUrl, name: title })).replaceAll("<", "\\u003c")}
+      />
+    )}
+    {citeAs && <link rel="cite-as" href={citeAs} />}
     {clientRouter && <ClientRouter />}
     {colorScheme === "auto" && (
       <script is:inline data-astro-rerun>

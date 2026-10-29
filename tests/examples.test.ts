@@ -202,6 +202,18 @@ describe("base-path builds", () => {
         const distDir = join(tempDir, "dist");
         expect(existsSync(distDir)).toBe(true);
 
+        // The example's CITATION.cff reaches both audiences: JSON-LD naming
+        // the page at its deployed URL, and a source footer on its markdown twin.
+        const aboutHtml = readFileSync(join(distDir, "about", "index.html"), "utf-8");
+        const ld = JSON.parse(
+          aboutHtml.match(/<script type="application\/ld\+json">(.*?)<\/script>/s)?.[1] ?? "{}",
+        );
+        expect(ld.url).toBe(`https://example.com${BASE_PATH}/about/`);
+        expect(ld.isPartOf.author[0].name).toBe("Alex Example");
+        const twin = readFileSync(join(distDir, "about", "index.html.md"), "utf-8");
+        expect(twin).toContain(`Source: <https://example.com${BASE_PATH}/about/>`);
+        expect(readFileSync(join(distDir, "llms.txt"), "utf-8")).toContain("## Citing this site");
+
         const violations = findUnprefixedInternalLinks(distDir, BASE_PATH);
         expect(violations, `Found un-prefixed internal links:\n${violations.join("\n")}`).toEqual(
           [],

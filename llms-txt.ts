@@ -2,6 +2,7 @@ import { existsSync } from "node:fs";
 import { readdir, readFile } from "node:fs/promises";
 import { basename, extname, join, relative } from "node:path";
 import { parse as parseYaml } from "yaml";
+import { type Citation, citationFooter, citationLlmsBlock } from "./citation.js";
 
 export interface LlmsEntry {
   url: string;
@@ -33,6 +34,9 @@ export interface LlmsTxtOptions {
   /** Character length of llms-full.txt, so the index can say what fetching
    *  it costs. */
   fullTextLength?: number;
+  /** The site's citation: a "Citing this site" block in llms.txt and a
+   *  source footer on every page in llms-full.txt. */
+  citation?: Citation | null;
 }
 
 /** URL order with numeric collation: `/week-10/` sorts after `/week-9/`. */
@@ -108,8 +112,13 @@ export function absolutiseLinks(body: string, siteUrl: string): string {
     .join("\n");
 }
 
-/** One page as standalone markdown: the body every llms output shares. */
-export function renderEntryMarkdown(entry: LlmsEntry, siteUrl: string): string {
+/** One page as standalone markdown: the body every llms output shares, ending
+ *  with the citation footer when the site has a citation. */
+export function renderEntryMarkdown(
+  entry: LlmsEntry,
+  siteUrl: string,
+  citation?: Citation | null,
+): string {
   const lines = [`# ${entry.title}`, ""];
   if (entry.description) {
     lines.push(`> ${entry.description}`, "");
@@ -118,6 +127,9 @@ export function renderEntryMarkdown(entry: LlmsEntry, siteUrl: string): string {
     lines.push(`_Draft: this page is published but not yet final._`, "");
   }
   lines.push(absolutiseLinks(entry.body.trim(), siteUrl), "");
+  if (citation) {
+    lines.push(citationFooter(citation, `${siteUrl.replace(/\/$/, "")}${entry.url}`));
+  }
   return lines.join("\n");
 }
 
@@ -173,6 +185,10 @@ export function generateLlmsTxt(options: LlmsTxtOptions, entries: LlmsEntry[]): 
     );
   }
 
+  if (options.citation) {
+    lines.push(citationLlmsBlock(options.citation));
+  }
+
   if (options.extra) {
     lines.push(absolutiseLinks(options.extra.trim(), options.siteUrl), "");
   }
@@ -198,7 +214,7 @@ export function generateLlmsFullTxt(options: LlmsTxtOptions, entries: LlmsEntry[
   return entries
     .filter((entry) => !entry.excludeFromFullText && !entry.unlisted)
     .toSorted(byUrl)
-    .map((entry) => renderEntryMarkdown(entry, options.siteUrl))
+    .map((entry) => renderEntryMarkdown(entry, options.siteUrl, options.citation))
     .join("\n---\n\n");
 }
 

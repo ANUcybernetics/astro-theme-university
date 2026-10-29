@@ -14,4 +14,6 @@ declare module "virtual:astro-theme-university/images" {
 declare module "virtual:astro-theme-university/llms" {
   /** Href of the generated llms.txt, or null when llmsTxt generation is off. */
   export const llmsTxtHref: string | null;
+  /** The site's CITATION.cff, normalised, or null when it has none. */
+  export const citation: import("./citation.js").Citation | null;
 }

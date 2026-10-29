@@ -18,6 +18,7 @@ import remarkDirective from "remark-directive";
 import remarkSmartypants from "remark-smartypants";
 import remarkCustomHeadingId from "remark-custom-heading-id";
 import yamlGrammar from "shiki/langs/yaml.mjs";
+import { parse as parseYaml } from "yaml";
 // @ts-expect-error astro-broken-links-checker ships no type declarations
 import astroBrokenLinksChecker from "astro-broken-links-checker";
 import remarkCallout from "./remark-callout.js";
@@ -28,6 +29,7 @@ import rehypeTableWrap from "./rehype-table-wrap.js";
 import { checkA11y } from "./a11y-checker.js";
 import { checkTokens } from "./token-checker.js";
 import { checkBaseLinks } from "./link-checker.js";
+import { type Citation, parseCitation } from "./citation.js";
 import {
   builtPagePath,
   findUnroutedEntries,
@@ -123,6 +125,13 @@ export interface ThemeOptions {
    *  The object form's `extra` returns markdown placed between the preamble
    *  and the page index, for context the site generates from its own data. */
   llmsTxt?: boolean | { extra?: () => string | undefined | Promise<string | undefined> };
+  /** CITATION.cff the site is cited from, relative to the project root
+   *  (default: "CITATION.cff"; false turns citation off). When the file
+   *  exists, every page's head carries schema.org JSON-LD and a `cite-as`
+   *  link, and the llms outputs carry a "Citing this site" block and a
+   *  source/licence/cite-as footer on each page. `preferred-citation`
+   *  fields win over the top-level ones. */
+  citation?: string | false;
   /** Auto-register the @astrojs/mdx integration (default: true) */
   mdx?: boolean;
   /** Auto-register the astro-icon integration so consumers can use <Icon> from
@@ -194,6 +203,7 @@ export default function universityTheme(options: ThemeOptions = {}): AstroIntegr
   // Whether decks are in the build at all — registered by `decks` or by the
   // site itself. Only then are there deck routes for llms.txt to list.
   let hasDecks = false;
+  let citation: Citation | null = null;
 
   return {
     name: "astro-theme-university",
@@ -204,6 +214,16 @@ export default function universityTheme(options: ThemeOptions = {}): AstroIntegr
         projectRootUrl = config.root;
         // Deployed page URLs live under config.base, not at the site root.
         siteUrl = new URL(config.base, config.site || "https://example.com").href;
+
+        if (options.citation !== false) {
+          const cffPath = fileURLToPath(new URL(options.citation ?? "CITATION.cff", config.root));
+          if (existsSync(cffPath)) {
+            citation = parseCitation(parseYaml(readFileSync(cffPath, "utf-8")) ?? {});
+            if (!citation) throw new Error(`${cffPath} needs a title and at least one author`);
+          } else if (options.citation) {
+            throw new Error(`citation: ${cffPath} does not exist`);
+          }
+        }
 
         for (const spec of [options.brandCss ?? []].flat()) {
           injectScript("page-ssr", `import ${JSON.stringify(spec)};`);
@@ -435,7 +455,10 @@ export default function universityTheme(options: ThemeOptions = {}): AstroIntegr
                     const llmsTxtHref = shouldGenerateLlmsTxt
                       ? `${basePath.replace(/\/?$/, "/")}llms.txt`
                       : null;
-                    return `export const llmsTxtHref = ${JSON.stringify(llmsTxtHref)};\n`;
+                    return (
+                      `export const llmsTxtHref = ${JSON.stringify(llmsTxtHref)};\n` +
+                      `export const citation = ${JSON.stringify(citation)};\n`
+                    );
                   }
                   return null;
                 },
@@ -617,7 +640,7 @@ export default function universityTheme(options: ThemeOptions = {}): AstroIntegr
             const page = builtPagePath(distPath, entry);
             if (!page) continue;
             const twin = markdownPath(page);
-            writeFileSync(join(distPath, twin), renderEntryMarkdown(entry, siteUrl));
+            writeFileSync(join(distPath, twin), renderEntryMarkdown(entry, siteUrl, citation));
             const htmlPath = join(distPath, page);
             const html = readFileSync(htmlPath, "utf-8");
             const link = `<link rel="alternate" type="text/markdown" href="${pageBase}${twin.split(sep).join("/")}" title="Markdown">`;
@@ -638,6 +661,7 @@ export default function universityTheme(options: ThemeOptions = {}): AstroIntegr
             siteUrl,
             preamble,
             extra: await llmsExtra?.(),
+            citation,
           };
           const fullText = generateLlmsFullTxt(llmsTxtOptions, entries);
           writeFileSync(join(distPath, "llms-full.txt"), fullText);
