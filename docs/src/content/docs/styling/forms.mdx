@@ -123,10 +123,8 @@ Group related fields with `<fieldset>` and `<legend>`.
     <legend>Contact details</legend>
     <label for="demo-email">Email</label>
     <input type="email" id="demo-email" placeholder="jane@example.edu" />
-    <div style="margin-block-start: var(--at-spacing-md);">
-      <label for="demo-phone">Phone</label>
-      <input type="tel" id="demo-phone" placeholder="+61 2 6125 5111" />
-    </div>
+    <label for="demo-phone">Phone</label>
+    <input type="tel" id="demo-phone" placeholder="+61 2 6125 5111" />
   </fieldset>
 </Example>
 
@@ -145,22 +143,16 @@ Add the `disabled` attribute to any form element.
   <form onsubmit="event.preventDefault()">
     <label for="demo-full-name">Name</label>
     <input type="text" id="demo-full-name" placeholder="Jane Smith" />
-    <div style="margin-block-start: var(--at-spacing-md);">
-      <label for="demo-full-email">Email</label>
-      <input type="email" id="demo-full-email" placeholder="jane@example.edu" />
-    </div>
-    <div style="margin-block-start: var(--at-spacing-md);">
-      <label for="demo-full-topic">Topic</label>
-      <select id="demo-full-topic">
-        <option>General enquiry</option>
-        <option>Admissions</option>
-        <option>Research</option>
-      </select>
-    </div>
-    <div style="margin-block-start: var(--at-spacing-md);">
-      <label for="demo-full-message">Message</label>
-      <textarea id="demo-full-message" placeholder="Your message..."></textarea>
-    </div>
+    <label for="demo-full-email">Email</label>
+    <input type="email" id="demo-full-email" placeholder="jane@example.edu" />
+    <label for="demo-full-topic">Topic</label>
+    <select id="demo-full-topic">
+      <option>General enquiry</option>
+      <option>Admissions</option>
+      <option>Research</option>
+    </select>
+    <label for="demo-full-message">Message</label>
+    <textarea id="demo-full-message" placeholder="Your message..."></textarea>
     <div style="margin-block-start: var(--at-spacing-md); display: flex; gap: 1rem;">
       <button class="at-button" type="submit">
         Submit
@@ -178,6 +170,40 @@ Form styles live in the `at.base` layer, so they apply to all form elements
 without extra markup. They're intentionally minimal --- a consistent, accessible
 foundation you can extend with your own CSS in a higher-priority layer.
 
+A label that follows a field gets a top margin, so stacked fields need no
+wrappers: each label sits closer to its own field than to the field above.
+
 Labels are `display: block` and bold by default. For inline labels (e.g. next to
 checkboxes), override with `display: flex` and `font-weight: normal` as shown in
 the checkbox examples above.
+
+## Label–value lists
+
+A `<dl>` with no class lays its terms and descriptions out as two columns: terms
+right-aligned against their values, the longest term setting the column width.
+Pairs sit further apart than a term sits from its value, so each reads as one
+group, and translated labels need no fixed width or breakpoint.
+
+```html
+<dl>
+  <dt>Duration</dt>
+  <dd>One semester</dd>
+  <dt>Delivery mode</dt>
+  <dd>In person</dd>
+</dl>
+```
+
+<Example label="Label–value list">
+  <dl>
+    <dt>Duration</dt>
+    <dd>One semester</dd>
+    <dt>Intended audience</dt>
+    <dd>Third-year undergraduates</dd>
+    <dt>Delivery mode</dt>
+    <dd>In person</dd>
+  </dl>
+</Example>
+
+Wrapping each pair in a `<div>` (valid inside `<dl>`) keeps the same columns:
+each wrapper is a subgrid spanning both. Give the `<dl>` a class to opt out and
+lay it out yourself.

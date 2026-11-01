@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.25.0
+
+**Label–value lists lay themselves out.** A `<dl>` with no class is a two-column
+grid: terms right-aligned against their values, the longest term sizing the
+column, pairs spaced further apart than a term sits from its value. A `<div>`
+around each pair joins the columns through subgrid. Give the list a class to opt
+out. The footer's contact details use it, so `.at-footer-contact-details` is
+gone.
+
+**Stacked fields space themselves.** A label that follows an input, select or
+textarea gets a top margin, so a plain run of labels and fields needs no wrapper
+elements.
+
 ## 0.24.1
 
 A citation title that ends in punctuation no longer gets a second full stop.

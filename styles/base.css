@@ -394,11 +394,47 @@
     margin-block: var(--at-spacing-xl);
   }
 
+  /* Label–value pairs. Proximity groups each label with its own value: the
+     gap across a pair is smaller than the gap between pairs, and labels sit
+     flush against their values. The longest label sizes the column, so
+     translated labels need no fixed width and no breakpoint. A `<div>`
+     wrapping each pair (valid HTML) joins the columns through subgrid.
+     Classed lists are left alone: they carry their own layout. */
+  dl:where(:not([class])) {
+    display: grid;
+    grid-template-columns: max-content minmax(0, 1fr);
+    gap: var(--at-spacing-sm);
+  }
+
+  dl:where(:not([class])) > div {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: subgrid;
+  }
+
+  dl:where(:not([class])) dt {
+    grid-column: 1;
+    font-weight: 600;
+    color: var(--at-text-secondary);
+    text-align: end;
+  }
+
+  dl:where(:not([class])) dd {
+    grid-column: 2;
+    margin: 0;
+    overflow-wrap: anywhere;
+  }
+
   /* Forms */
   label {
     display: block;
     font-weight: 600;
     margin-block-end: var(--at-spacing-xs);
+  }
+
+  /* A stacked field sits closer to its own label than to the next field. */
+  :is(input:not([type="checkbox"], [type="radio"]), select, textarea) + label {
+    margin-block-start: var(--at-spacing-md);
   }
 
   input:not([type="checkbox"], [type="radio"]),

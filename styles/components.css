@@ -356,20 +356,8 @@
     margin-block-end: var(--at-spacing-2xl);
   }
 
-  .at-footer-contact-details {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: var(--at-spacing-xs) var(--at-spacing-md);
-    margin: 0;
-  }
-
-  .at-footer-contact-details dt {
-    font-weight: 600;
-    color: var(--at-text-secondary);
-  }
-
-  .at-footer-contact-details dd {
-    margin: 0;
+  .at-footer-contact dl {
+    margin-block-end: 0;
   }
 
   .at-footer-socials {
