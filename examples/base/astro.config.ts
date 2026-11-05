@@ -2,6 +2,7 @@ import { defineConfig, fontProviders } from "astro/config";
 import universityTheme from "astro-theme-university";
 
 export default defineConfig({
+  compressHTML: true,
   site: process.env.SITE_URL,
   base: process.env.BASE_PATH,
   // Fonts registered here are emitted alongside the theme's own pair (Public

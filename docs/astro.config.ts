@@ -10,6 +10,7 @@ const themeDark = JSON.parse(
 );
 
 export default defineConfig({
+  compressHTML: true,
   site: process.env.SITE_URL,
   base: process.env.BASE_PATH,
   integrations: [
