@@ -27,3 +27,7 @@ overrides:
   # emdash and @emdash-cms/{auth,plugin-types} pin zod exactly at 4.5.4
   # (GHSA-mrhx-c7xc-m3w5, fixed in 4.6.6). Drop once emdash lifts the pin.
   zod: ^4.6.6
+  # eslint, @eslint/config-array and @ts-morph/common (via @e18e/eslint-plugin
+  # and ts-morph) cap minimatch below 11 (GHSA-g3hv-75wg-m249, fixed in
+  # 11.0.1). Drop once they allow >=11.0.1.
+  minimatch: ^11.0.1
