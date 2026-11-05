@@ -28,25 +28,21 @@ import heroComponents from "../assets/images/hero/abstract-03.svg";
     slot="hero"
   />
   <p>
-    A modern <a href="https://astro.build">Astro 7</a> theme for university-style
-    sites: neutral defaults, re-brandable with a handful of CSS custom properties
-    and data-only branding props, and no client-framework runtime.
+    A modern <a href="https://astro.build">Astro 7</a> theme for university-style sites: neutral
+    defaults, re-brandable with a handful of CSS custom properties and data-only branding props, and
+    no client-framework runtime.
   </p>
 
   <Callout>
-    <p>
-      This theme is in early development. The API may change between minor
-      versions.
-    </p>
+    <p>This theme is in early development. The API may change between minor versions.</p>
   </Callout>
 
   <h2>Quick start</h2>
 
   <p>
-    Install the theme from its latest <a
-      href="https://github.com/ANUcybernetics/astro-theme-university/tags"
-      >release tag</a
-    > alongside its peer dependencies:
+    Install the theme from its latest
+    <a href="https://github.com/ANUcybernetics/astro-theme-university/tags">release tag</a>
+    alongside its peer dependencies:
   </p>
   <Code
     code={`pnpm add astro "git+https://github.com/ANUcybernetics/astro-theme-university.git#vX.Y.Z" @astrojs/mdx sharp pagefind lightningcss @iconify-json/iconoir`}
@@ -66,70 +62,33 @@ export default defineConfig({
 
   <h2>Features</h2>
   <CardGrid>
-    <Card
-      title="Re-brandable"
-      href="/docs/styling/design-tokens/"
-      image={heroTokens}
-    >
+    <Card title="Re-brandable" href="/docs/styling/design-tokens/" image={heroTokens}>
       <p>
-        Teal-accented defaults, Public Sans typography, and a palette-driven
-        token system. Override one custom property to re-brand the whole
-        theme.
+        Teal-accented defaults, Public Sans typography, and a palette-driven token system. Override
+        one custom property to re-brand the whole theme.
       </p>
     </Card>
-    <Card
-      title="Dark mode"
-      href="/docs/styling/dark-mode/"
-      image={heroDark}
-    >
+    <Card title="Dark mode" href="/docs/styling/dark-mode/" image={heroDark}>
       <p>
-        Light and dark themes with <code>localStorage</code> persistence and system
-        preference detection.
+        Light and dark themes with <code>localStorage</code> persistence and system preference
+        detection.
       </p>
     </Card>
-    <Card
-      title="Accessible"
-      href="/docs/components/callout/"
-      image={heroA11y}
-    >
-      <p>
-        Skip links, focus indicators, reduced motion support, and WCAG AA
-        contrast throughout.
-      </p>
+    <Card title="Accessible" href="/docs/components/callout/" image={heroA11y}>
+      <p>Skip links, focus indicators, reduced motion support, and WCAG AA contrast throughout.</p>
     </Card>
-    <Card
-      title="Build checks"
-      href="/docs/getting-started/configuration/"
-      image={heroChecks}
-    >
-      <p>
-        Automatic broken link detection and accessibility auditing at build time
-        via axe-core.
-      </p>
+    <Card title="Build checks" href="/docs/getting-started/configuration/" image={heroChecks}>
+      <p>Automatic broken link detection and accessibility auditing at build time via axe-core.</p>
     </Card>
-    <Card
-      title="Modern CSS"
-      href="/docs/styling/css-layers/"
-      image={heroCss}
-    >
-      <p>
-        CSS layers, grid, subgrid, and custom properties, with no Tailwind or
-        preprocessors.
-      </p>
+    <Card title="Modern CSS" href="/docs/styling/css-layers/" image={heroCss}>
+      <p>CSS layers, grid, subgrid, and custom properties, with no Tailwind or preprocessors.</p>
     </Card>
-    <Card
-      title="Components"
-      href="/docs/components/callout/"
-      image={heroComponents}
-    >
-      <p>
-        Callouts, cards, video embeds, navigation, and footer, all themed and
-        accessible.
-      </p>
+    <Card title="Components" href="/docs/components/callout/" image={heroComponents}>
+      <p>Callouts, cards, video embeds, navigation, and footer, all themed and accessible.</p>
     </Card>
   </CardGrid>
 
-  <p style="margin-block-start: var(--at-spacing-xl);">
+  <p style="margin-block-start: var(--at-spacing-xl)">
     <a href={withBase("/docs/")} class="at-button">Browse the full documentation &rarr;</a>
   </p>
 </BaseLayout>

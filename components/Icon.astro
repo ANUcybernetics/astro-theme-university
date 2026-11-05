@@ -18,13 +18,7 @@ export interface IconProps {
 
 type Props = IconProps;
 
-const {
-  name,
-  size = "1em",
-  class: className,
-  style,
-  "aria-label": ariaLabel,
-} = Astro.props;
+const { name, size = "1em", class: className, style, "aria-label": ariaLabel } = Astro.props;
 
 const labelled = ariaLabel !== undefined;
 ---

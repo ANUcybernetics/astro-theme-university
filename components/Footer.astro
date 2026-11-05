@@ -1,10 +1,5 @@
 ---
-import type {
-  SocialLink,
-  ContactInfo,
-  PartnershipLink,
-  AcknowledgementInfo,
-} from "../types.js";
+import type { SocialLink, ContactInfo, PartnershipLink, AcknowledgementInfo } from "../types.js";
 import { type ThemeLabels, resolveLabels } from "../labels.js";
 
 export type { PartnershipLink, AcknowledgementInfo };
@@ -90,118 +85,98 @@ const licenceInfo = licence ? licenceMap[licence] : undefined;
 // content was passed at the top level. Astro 6.2 returns `undefined` for
 // absent slots, so coalesce before trimming.
 const legalSlotHtml = ((await Astro.slots.render("footer-legal")) ?? "").trim();
-const hasLegalRow =
-  legalLinks.length > 0 || colorScheme === "auto" || legalSlotHtml.length > 0;
+const hasLegalRow = legalLinks.length > 0 || colorScheme === "auto" || legalSlotHtml.length > 0;
 
 import Icon from "./Icon.astro";
 ---
 
 <footer class="at-footer">
-  {
-    (contact || (socials && socials.length > 0)) && (
-      <div class="at-footer-inner">
-        {contact && (
-          <section class="at-footer-contact">
-            <h2>{labels.contactUs}</h2>
-            {contact.description && <p>{contact.description}</p>}
-            <dl>
-              {contact.address && (
-                <>
-                  <dt>{labels.mailingAddress}</dt>
-                  <dd>{contact.address}</dd>
-                </>
-              )}
-              {contact.email && (
-                <>
-                  <dt>{labels.email}</dt>
-                  <dd>
-                    <a href={`mailto:${contact.email}`}>{contact.email}</a>
-                  </dd>
-                </>
-              )}
-              {contact.phone && (
-                <>
-                  <dt>{labels.phone}</dt>
-                  <dd>
-                    <a href={`tel:${contact.phone.replace(/\s/g, "")}`}>
-                      {contact.phone}
-                    </a>
-                  </dd>
-                </>
-              )}
-            </dl>
-          </section>
+  {(contact || (socials && socials.length > 0)) && <div class="at-footer-inner">
+    {contact && <section class="at-footer-contact">
+      <h2>{labels.contactUs}</h2>
+      {contact.description && <p>{contact.description}</p>}
+      <dl>
+        {contact.address && (
+          <>
+            <dt>{labels.mailingAddress}</dt>
+            <dd>{contact.address}</dd>
+          </>
         )}
-
-        {socials && socials.length > 0 && (
-          <nav aria-label={labels.socialLinks} class="at-footer-socials">
-            {socials.map((s) => (
-              <a href={s.url} aria-label={s.platform}>
-                <Icon name={s.platform} />
+        {contact.email && (
+          <>
+            <dt>{labels.email}</dt>
+            <dd>
+              <a href={`mailto:${contact.email}`}>{contact.email}</a>
+            </dd>
+          </>
+        )}
+        {contact.phone && (
+          <>
+            <dt>{labels.phone}</dt>
+            <dd>
+              <a href={`tel:${contact.phone.replace(/\s/g, "")}`}>
+                {contact.phone}
               </a>
-            ))}
-          </nav>
+            </dd>
+          </>
         )}
-      </div>
-    )
-  }
+      </dl>
+    </section>}
 
-  {showBand && (
-    <div class="at-footer-band">
-      <div class="at-footer-band-inner">
-        {acknowledgement?.logo && (
-          <img
-            src={acknowledgement.logo.src}
-            width={acknowledgement.logo.width}
-            height={acknowledgement.logo.height}
-            alt={acknowledgement.logoAlt ?? ""}
-            class="at-footer-band-logo"
-          />
-        )}
-        <div class="at-footer-partners">
-          {
-            partnershipLinks.map((p) => (
-              <a href={p.href} aria-label={p.text}>
-                <img src={p.logo} alt="" />
-              </a>
-            ))
-          }
-        </div>
+    {socials && socials.length > 0 && <nav
+      aria-label={labels.socialLinks}
+      class="at-footer-socials"
+    >
+      {socials.map((s) => <a href={s.url} aria-label={s.platform}>
+        <Icon name={s.platform} />
+      </a>)}
+    </nav>}
+  </div>}
+
+  {showBand && <div class="at-footer-band">
+    <div class="at-footer-band-inner">
+      {acknowledgement?.logo && (
+        <img
+          src={acknowledgement.logo.src}
+          width={acknowledgement.logo.width}
+          height={acknowledgement.logo.height}
+          alt={acknowledgement.logoAlt ?? ""}
+          class="at-footer-band-logo"
+        />
+      )}
+      <div class="at-footer-partners">
+        {partnershipLinks.map((p) => <a href={p.href} aria-label={p.text}>
+          <img src={p.logo} alt="" />
+        </a>)}
       </div>
     </div>
-  )}
+  </div>}
 
   <div class="at-footer-inner at-footer-bottom">
-    {acknowledgement && (
-      <div class="at-footer-acknowledgement">
-        <h2>{acknowledgement.title ?? labels.acknowledgement}</h2>
-        <p>{acknowledgement.text}</p>
-      </div>
-    )}
+    {acknowledgement && <div class="at-footer-acknowledgement">
+      <h2>{acknowledgement.title ?? labels.acknowledgement}</h2>
+      <p>{acknowledgement.text}</p>
+    </div>}
 
-    {
-      licenceInfo && (
-        <>
-          <hr />
-          <p class="at-footer-licence">
-            {licenceBefore}<a href={licenceInfo.url} rel="license">{licenceInfo.name}</a>{licenceAfter}
-          </p>
-        </>
-      )
-    }
+    {licenceInfo && (
+      <>
+        <hr />
+        <p class="at-footer-licence">
+          {licenceBefore}<a href={licenceInfo.url} rel="license">{licenceInfo.name}</a
+          >{licenceAfter}
+        </p>
+      </>
+    )}
 
     {hasLegalRow && <hr />}
 
-    {hasLegalRow && (
-    <nav aria-label={labels.legal} class="at-footer-legal">
-      {
-        legalLinks.map((link, i) => (
-          <>
-            {i > 0 && <span aria-hidden="true">|</span>}
-            <a href={link.href}>{link.text}</a>
-          </>
-        ))
-      }
+    {hasLegalRow && <nav aria-label={labels.legal} class="at-footer-legal">
+      {legalLinks.map((link, i) => (
+        <>
+          {i > 0 && <span aria-hidden="true">|</span>}
+          <a href={link.href}>{link.text}</a>
+        </>
+      ))}
       <Fragment set:html={legalSlotHtml} />
       {colorScheme === "auto" && (
         <>
@@ -218,8 +193,7 @@ import Icon from "./Icon.astro";
           </button>
         </>
       )}
-    </nav>
-    )}
+    </nav>}
 
     {metaLines.map((line) => (
       <p class="at-footer-meta" set:html={line} />

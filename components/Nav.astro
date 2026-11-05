@@ -71,76 +71,64 @@ const currentPath = Astro.url.pathname;
               />
             )}
           </span>
-          {logoCompact && (
-            <span class="at-nav-logo-compact">
+          {logoCompact && <span class="at-nav-logo-compact">
+            <img
+              src={logoCompact.src}
+              width={logoCompact.width}
+              height={logoCompact.height}
+              alt={name}
+              class:list={["at-nav-logo", { "at-nav-logo--has-dark": !!logoCompactDark }]}
+            />
+            {logoCompactDark && (
               <img
-                src={logoCompact.src}
-                width={logoCompact.width}
-                height={logoCompact.height}
+                src={logoCompactDark.src}
+                width={logoCompactDark.width}
+                height={logoCompactDark.height}
                 alt={name}
-                class:list={["at-nav-logo", { "at-nav-logo--has-dark": !!logoCompactDark }]}
+                class="at-nav-logo at-nav-logo--dark"
               />
-              {logoCompactDark && (
-                <img
-                  src={logoCompactDark.src}
-                  width={logoCompactDark.width}
-                  height={logoCompactDark.height}
-                  alt={name}
-                  class="at-nav-logo at-nav-logo--dark"
-                />
-              )}
-            </span>
-          )}
+            )}
+          </span>}
         </>
       ) : (
         <span class="at-nav-wordmark">{name}</span>
       )}
     </a>
-    {
-      links.length > 0 && (
-        <>
-          <button
-            class="at-icon-button at-nav-toggle"
-            aria-expanded="false"
-            aria-controls="at-nav-menu"
-            aria-label={labels.menu}
-          >
-            <Icon name="menu" size={20} class="at-nav-icon-open" />
-            <Icon name="xmark" size={20} class="at-nav-icon-close" />
-          </button>
-          <div class="at-nav-links-wrapper" inert>
-            <ul class="at-nav-links" id="at-nav-menu" role="list">
-              {links.map((link) => {
-                const resolved = withBase(link.href);
-                const isActive = currentPath === resolved || (resolved !== "/" && currentPath.startsWith(resolved));
-                return (
-                  <li>
-                    <a
-                      href={resolved}
-                      aria-current={isActive ? "page" : undefined}
-                    >
-                      {link.text}
-                    </a>
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
-        </>
-      )
-    }
-    {
-      search && (
+    {links.length > 0 && (
+      <>
         <button
-          class="at-icon-button at-search-trigger"
-          aria-label={labels.searchButton}
-          title={labels.searchButton}
-          data-search-trigger
+          class="at-icon-button at-nav-toggle"
+          aria-expanded="false"
+          aria-controls="at-nav-menu"
+          aria-label={labels.menu}
         >
-          <Icon name="search" size={20} />
+          <Icon name="menu" size={20} class="at-nav-icon-open" />
+          <Icon name="xmark" size={20} class="at-nav-icon-close" />
         </button>
-      )
-    }
+        <div class="at-nav-links-wrapper" inert>
+          <ul class="at-nav-links" id="at-nav-menu" role="list">
+            {links.map((link) => {
+              const resolved = withBase(link.href);
+              const isActive =
+                currentPath === resolved || (resolved !== "/" && currentPath.startsWith(resolved));
+              return <li>
+                <a href={resolved} aria-current={isActive ? "page" : undefined}>
+                  {link.text}
+                </a>
+              </li>;
+            })}
+          </ul>
+        </div>
+      </>
+    )}
+    {search && <button
+      class="at-icon-button at-search-trigger"
+      aria-label={labels.searchButton}
+      title={labels.searchButton}
+      data-search-trigger
+    >
+      <Icon name="search" size={20} />
+    </button>}
   </div>
   {search && <SearchDialog basePath={import.meta.env.BASE_URL} labels={labels} />}
 </nav>

@@ -13,8 +13,4 @@ type Props = CodeProps;
 const props = Astro.props;
 ---
 
-<AstroCode
-  {...props}
-  themes={{ light: themeLight, dark: themeDark }}
-  defaultColor={false}
-/>
+<AstroCode {...props} themes={{ light: themeLight, dark: themeDark }} defaultColor={false} />

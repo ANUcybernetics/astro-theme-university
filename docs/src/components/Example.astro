@@ -6,13 +6,9 @@ interface Props {
 const { label } = Astro.props;
 ---
 
-{
-  label && (
-    <p>
-      <strong>{label}</strong>
-    </p>
-  )
-}
+{label && <p>
+  <strong>{label}</strong>
+</p>}
 <div class="example-preview">
   <slot />
 </div>

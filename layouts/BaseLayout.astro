@@ -177,16 +177,15 @@ const citeAs = citation ? citationLink(citation) : undefined;
         component styles (duplicated nav logo, misplaced sidebar). This inline
         statement pins the canonical order so rendering no longer depends on
         emission order. Keep in sync if new at.* layers are added. */}
-    <style is:inline>@layer at.tokens, at.base, at.components;</style>
+    <style is:inline>
+      @layer at.tokens, at.base, at.components;
+    </style>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     {/* dark-mode guide: declares supported colour schemes before the
         stylesheet loads, so the browser can theme its own UI (scrollbars,
         form controls, the initial canvas) without waiting on CSS. Kept in
         sync with the resolved theme by the scripts below. */}
-    <meta
-      name="color-scheme"
-      content={colorScheme === "auto" ? "light dark" : colorScheme}
-    />
+    <meta name="color-scheme" content={colorScheme === "auto" ? "light dark" : colorScheme} />
     {/* Emit @font-face for every registered font (the theme pair plus any the
         site registers itself). Preloads default to the body font only — the
         mono font is code-only and may never be used on a given page; sites
@@ -208,7 +207,13 @@ const citeAs = citation ? citationLink(citation) : undefined;
       />
     )}
     <meta name="generator" content={Astro.generator} />
-    {favicon && <link rel="icon" type={favicon.format === "svg" ? "image/svg+xml" : undefined} href={favicon.src} />}
+    {favicon && (
+      <link
+        rel="icon"
+        type={favicon.format === "svg" ? "image/svg+xml" : undefined}
+        href={favicon.src}
+      />
+    )}
     {llmsTxtHref && (
       <link rel="alternate" type="text/markdown" href={llmsTxtHref} title="llms.txt" />
     )}
@@ -216,30 +221,28 @@ const citeAs = citation ? citationLink(citation) : undefined;
       <script
         is:inline
         type="application/ld+json"
-        set:html={JSON.stringify(citationJsonLd(citation, { url: pageUrl, name: title })).replaceAll("<", "\\u003c")}
+        set:html={JSON.stringify(
+          citationJsonLd(citation, { url: pageUrl, name: title }),
+        ).replaceAll("<", "\\u003c")}
       />
     )}
     {citeAs && <link rel="cite-as" href={citeAs} />}
     {clientRouter && <ClientRouter />}
-    {colorScheme === "auto" && (
-      <script is:inline data-astro-rerun>
-        (function () {
-          var t =
-            localStorage.getItem("at-theme") ||
-            (matchMedia("(prefers-color-scheme: dark)").matches
-              ? "dark"
-              : "light");
-          document.documentElement.dataset.theme = t;
-          var schemeMeta = document.querySelector('meta[name="color-scheme"]');
-          if (schemeMeta) schemeMeta.content = t;
-          document.querySelectorAll(".at-footer-theme-toggle").forEach(function (btn) {
-            var label = t === "dark" ? btn.dataset.labelLight : btn.dataset.labelDark;
-            btn.setAttribute("aria-label", label);
-            btn.setAttribute("title", label);
-          });
-        })();
-      </script>
-    )}
+    {colorScheme === "auto" && <script is:inline data-astro-rerun>
+      (function () {
+        var t =
+          localStorage.getItem("at-theme") ||
+          (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+        document.documentElement.dataset.theme = t;
+        var schemeMeta = document.querySelector('meta[name="color-scheme"]');
+        if (schemeMeta) schemeMeta.content = t;
+        document.querySelectorAll(".at-footer-theme-toggle").forEach(function (btn) {
+          var label = t === "dark" ? btn.dataset.labelLight : btn.dataset.labelDark;
+          btn.setAttribute("aria-label", label);
+          btn.setAttribute("title", label);
+        });
+      })();
+    </script>}
     <slot name="head" />
   </head>
   <body data-pagefind-ignore={unlisted ? "all" : undefined}>
@@ -263,7 +266,17 @@ const citeAs = citation ? citationLink(citation) : undefined;
     <main id="main" class:list={["at-main", mainClass]} {...mainRest}>
       <slot />
     </main>
-    <Footer contact={contact} socials={socials} licence={licence} colorScheme={colorScheme} acknowledgement={acknowledgement} legalLinks={legalLinks} partnerships={partnerships} meta={meta} labels={labels}>
+    <Footer
+      contact={contact}
+      socials={socials}
+      licence={licence}
+      colorScheme={colorScheme}
+      acknowledgement={acknowledgement}
+      legalLinks={legalLinks}
+      partnerships={partnerships}
+      meta={meta}
+      labels={labels}
+    >
       <slot name="footer-legal" slot="footer-legal" />
     </Footer>
     <slot name="body-end" />

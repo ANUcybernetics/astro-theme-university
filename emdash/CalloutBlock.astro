@@ -14,21 +14,17 @@ const paragraphs = (node.text ?? "")
 ---
 
 <Callout type={node.tone}>
-  {
-    paragraphs.map((segments) => (
-      <p>
-        {segments.map((segment) =>
-          segment.type === "link" ? (
-            <a href={segment.href}>{segment.text}</a>
-          ) : segment.type === "strong" ? (
-            <strong>{segment.text}</strong>
-          ) : segment.type === "em" ? (
-            <em>{segment.text}</em>
-          ) : (
-            segment.text
-          ),
-        )}
-      </p>
-    ))
-  }
+  {paragraphs.map((segments) => <p>
+    {segments.map((segment) =>
+      segment.type === "link" ? (
+        <a href={segment.href}>{segment.text}</a>
+      ) : segment.type === "strong" ? (
+        <strong>{segment.text}</strong>
+      ) : segment.type === "em" ? (
+        <em>{segment.text}</em>
+      ) : (
+        segment.text
+      ),
+    )}
+  </p>)}
 </Callout>

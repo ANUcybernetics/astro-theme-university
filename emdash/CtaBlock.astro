@@ -9,12 +9,8 @@ const { node } = Astro.props;
 const href = safeHref(node.url);
 ---
 
-{
-  node.text && href && (
-    <p>
-      <a class:list={["at-button", node.variant === "outline" && "at-button--outline"]} href={href}>
-        {node.text}
-      </a>
-    </p>
-  )
-}
+{node.text && href && <p>
+  <a class:list={["at-button", node.variant === "outline" && "at-button--outline"]} href={href}>
+    {node.text}
+  </a>
+</p>}

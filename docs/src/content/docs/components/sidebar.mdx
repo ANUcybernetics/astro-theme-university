@@ -19,7 +19,9 @@ also use it directly inside any BaseLayout-wrapped page that needs a sidebar.
 ```astro
 ---
 import BaseLayout from "astro-theme-university/layouts/BaseLayout.astro";
-import Sidebar, { type SidebarSection } from "astro-theme-university/components/Sidebar.astro";
+import Sidebar, {
+  type SidebarSection,
+} from "astro-theme-university/components/Sidebar.astro";
 
 const sections: SidebarSection[] = [
   {
@@ -31,9 +33,7 @@ const sections: SidebarSection[] = [
   },
   {
     title: "Guides",
-    items: [
-      { label: "Deploying", href: "/docs/guides/deploying/" },
-    ],
+    items: [{ label: "Deploying", href: "/docs/guides/deploying/" }],
   },
 ];
 ---

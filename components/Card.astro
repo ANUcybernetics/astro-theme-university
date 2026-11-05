@@ -63,9 +63,7 @@ const cardFallbackWidth = localImage
 // source, and skips the srcset — see Hero.astro for both.
 const isVector = localImage?.format === "svg";
 const resolvedFormat = isVector ? "svg" : imageFormat;
-const sizing = isVector
-  ? {}
-  : { widths: cardWidths, sizes: imageSizes, width: cardFallbackWidth };
+const sizing = isVector ? {} : { widths: cardWidths, sizes: imageSizes, width: cardFallbackWidth };
 const href = rawHref ? withBase(rawHref) : undefined;
 // A card carrying actions can't also be one big anchor: a <button> inside an
 // <a> is invalid, and nesting one swallows the action's click. So a linked card
@@ -84,51 +82,39 @@ const transitionName = href
 
 {/* href only where it means something: on a stretched card it belongs to the
     title's anchor, not to the div the card became. */}
-<Tag class="at-card" {...Tag === "a" ? { href } : {}}>
-  {
-    localImage && (
-      <div class="at-card-image-frame">
-        <Image
-          src={localImage}
-          alt={resolvedImageAlt}
-          {...sizing}
-          format={resolvedFormat}
-          class="at-card-image"
-          loading="lazy"
-        />
-      </div>
-    )
-  }
-  {
-    remoteImage && (
-      <div class="at-card-image-frame">
-        {/* Already encoded elsewhere: a plain img, no build-time pipeline.
+<Tag class="at-card" {...(Tag === "a" ? { href } : {})}>
+  {localImage && <div class="at-card-image-frame">
+    <Image
+      src={localImage}
+      alt={resolvedImageAlt}
+      {...sizing}
+      format={resolvedFormat}
+      class="at-card-image"
+      loading="lazy"
+    />
+  </div>}
+  {remoteImage && <div class="at-card-image-frame">
+    {/* Already encoded elsewhere: a plain img, no build-time pipeline.
             `sizes` only means anything alongside a srcset, and the frame's CSS
             (aspect-ratio + object-fit) pins layout even without dimensions. */}
-        <img
-          src={remoteImage.src}
-          srcset={remoteImage.srcset}
-          sizes={remoteImage.srcset ? (remoteImage.sizes ?? imageSizes) : undefined}
-          width={remoteImage.width}
-          height={remoteImage.height}
-          alt={resolvedImageAlt}
-          class="at-card-image"
-          loading="lazy"
-        />
-      </div>
-    )
-  }
+    <img
+      src={remoteImage.src}
+      srcset={remoteImage.srcset}
+      sizes={remoteImage.srcset ? (remoteImage.sizes ?? imageSizes) : undefined}
+      width={remoteImage.width}
+      height={remoteImage.height}
+      alt={resolvedImageAlt}
+      class="at-card-image"
+      loading="lazy"
+    />
+  </div>}
   <div class="at-card-body">
     <Heading class="at-card-title" transition:name={transitionName}>
       {stretched ? <a class="at-card-title-link" href={href}>{title}</a> : title}
     </Heading>
     <slot />
   </div>
-  {
-    hasActions && (
-      <div class="at-card-actions">
-        <slot name="actions" />
-      </div>
-    )
-  }
+  {hasActions && <div class="at-card-actions">
+    <slot name="actions" />
+  </div>}
 </Tag>

@@ -16,12 +16,7 @@ import heroStyling from "../../assets/images/hero/abstract-02.svg";
   description="astro-theme-university documentation"
   {...siteConfig}
 >
-  <Hero
-    title="Documentation"
-    image={heroMain}
-    imageAlt="Abstract gradient shapes"
-    slot="hero"
-  />
+  <Hero title="Documentation" image={heroMain} imageAlt="Abstract gradient shapes" slot="hero" />
   <p>Everything you need to build sites with astro-theme-university.</p>
 
   <h2>Sections</h2>
@@ -33,32 +28,16 @@ import heroStyling from "../../assets/images/hero/abstract-02.svg";
     >
       <p>Install the theme, configure your project, and start building.</p>
     </Card>
-    <Card
-      title="Components"
-      href="/docs/components/callout/"
-      image={heroComponents}
-    >
+    <Card title="Components" href="/docs/components/callout/" image={heroComponents}>
       <p>Callouts, cards, video embeds, and more, ready to use.</p>
     </Card>
-    <Card
-      title="Layouts"
-      href="/docs/layouts/base-layout/"
-      image={heroLayouts}
-    >
+    <Card title="Layouts" href="/docs/layouts/base-layout/" image={heroLayouts}>
       <p>The BaseLayout and how to structure your pages.</p>
     </Card>
-    <Card
-      title="Styling"
-      href="/docs/styling/design-tokens/"
-      image={heroStyling}
-    >
+    <Card title="Styling" href="/docs/styling/design-tokens/" image={heroStyling}>
       <p>Design tokens, dark mode, customisation, and CSS layers.</p>
     </Card>
-    <Card
-      title="Guides"
-      href="/docs/guides/brand-packages/"
-      image={heroGettingStarted}
-    >
+    <Card title="Guides" href="/docs/guides/brand-packages/" image={heroGettingStarted}>
       <p>Brand packages and course sites, deploying, content collections, and lecture decks.</p>
     </Card>
   </CardGrid>

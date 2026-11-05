@@ -24,30 +24,21 @@ const { sections, currentPath, label = "Page sections" } = Astro.props;
 <div class="at-sidebar" transition:animate="none">
   <nav aria-label={label}>
     <ul>
-      {
-        sections
-          .filter((s) => s.items.length > 0)
-          .map((section) => (
-            <li class="at-sidebar-section">
-              <div class="at-sidebar-section-title">{section.title}</div>
-              <ul>
-                {section.items.map((item) => {
-                  const resolved = withBase(item.href);
-                  return (
-                    <li>
-                      <a
-                        href={resolved}
-                        aria-current={currentPath === resolved ? "page" : undefined}
-                      >
-                        {item.label}
-                      </a>
-                    </li>
-                  );
-                })}
-              </ul>
-            </li>
-          ))
-      }
+      {sections
+        .filter((s) => s.items.length > 0)
+        .map((section) => <li class="at-sidebar-section">
+          <div class="at-sidebar-section-title">{section.title}</div>
+          <ul>
+            {section.items.map((item) => {
+              const resolved = withBase(item.href);
+              return <li>
+                <a href={resolved} aria-current={currentPath === resolved ? "page" : undefined}>
+                  {item.label}
+                </a>
+              </li>;
+            })}
+          </ul>
+        </li>)}
     </ul>
   </nav>
 </div>

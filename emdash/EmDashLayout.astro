@@ -4,8 +4,10 @@ import { createPublicPageContext } from "emdash/page";
 import { EmDashBodyEnd, EmDashBodyStart, EmDashHead } from "emdash/ui";
 import BaseLayout, { type BaseLayoutProps } from "../layouts/BaseLayout.astro";
 
-export interface EmDashLayoutProps
-  extends Omit<BaseLayoutProps, "name" | "links" | "search" | "seoMeta"> {
+export interface EmDashLayoutProps extends Omit<
+  BaseLayoutProps,
+  "name" | "links" | "search" | "seoMeta"
+> {
   /** Page description; falls back to the site tagline. */
   description?: string | null;
   /** Title for Open Graph and plugin contributions, when it differs from `title`. */

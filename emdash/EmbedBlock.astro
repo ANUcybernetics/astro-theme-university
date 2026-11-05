@@ -16,18 +16,16 @@ const youtubeId =
   )?.[1];
 ---
 
-{
-  youtubeId && node.caption ? (
-    <figure>
-      <YouTubeEmbed id={youtubeId} title={node.caption} />
-      <figcaption>{node.caption}</figcaption>
-    </figure>
-  ) : youtubeId ? (
-    <YouTubeEmbed id={youtubeId} />
-  ) : (
-    <Embed node={node} />
-  )
-}
+{youtubeId && node.caption ? (
+  <figure>
+    <YouTubeEmbed id={youtubeId} title={node.caption} />
+    <figcaption>{node.caption}</figcaption>
+  </figure>
+) : youtubeId ? (
+  <YouTubeEmbed id={youtubeId} />
+) : (
+  <Embed node={node} />
+)}
 
 <style>
   /* The browser default indents a figure; an embed sits flush with the text. */

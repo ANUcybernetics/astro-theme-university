@@ -67,7 +67,8 @@ function stableHash(value: string): string {
   return (hash >>> 0).toString(36);
 }
 
-const resultsId = id ?? `at-card-filter-${stableHash(`${label}|${items.map((item) => item.href).join("|")}`)}`;
+const resultsId =
+  id ?? `at-card-filter-${stableHash(`${label}|${items.map((item) => item.href).join("|")}`)}`;
 const Heading = headingLevel;
 ---
 
@@ -112,34 +113,28 @@ const Heading = headingLevel;
   </p>
 
   <div id={resultsId} class={`at-card-grid at-card-grid--${columns}`} data-at-card-filter-results>
-    {
-      items.map((item) => (
-        <a class="at-card" href={withBase(item.href)} data-at-card-search={cardSearchText(item)}>
-          {item.image && (
-            <div class="at-card-image-frame">
-              <Image
-                src={item.image}
-                alt={item.imageAlt ?? item.title}
-                {...sizing(item.image)}
-                class="at-card-image"
-                loading="lazy"
-              />
-            </div>
-          )}
-          <div class="at-card-body">
-            <Heading class="at-card-title">{item.title}</Heading>
-            {item.badges && item.badges.length > 0 && (
-              <p class="at-card-badges">
-                {item.badges.map((badge) => (
-                  <span class="at-card-badge">{badge}</span>
-                ))}
-              </p>
-            )}
-            {item.description && <p>{item.description}</p>}
-          </div>
-        </a>
-      ))
-    }
+    {items.map((item) => <a
+      class="at-card"
+      href={withBase(item.href)}
+      data-at-card-search={cardSearchText(item)}
+    >
+      {item.image && <div class="at-card-image-frame">
+        <Image
+          src={item.image}
+          alt={item.imageAlt ?? item.title}
+          {...sizing(item.image)}
+          class="at-card-image"
+          loading="lazy"
+        />
+      </div>}
+      <div class="at-card-body">
+        <Heading class="at-card-title">{item.title}</Heading>
+        {item.badges && item.badges.length > 0 && <p class="at-card-badges">
+          {item.badges.map((badge) => <span class="at-card-badge">{badge}</span>)}
+        </p>}
+        {item.description && <p>{item.description}</p>}
+      </div>
+    </a>)}
   </div>
   <p class="at-card-filter-empty" data-at-card-filter-empty hidden></p>
 </div>
@@ -184,9 +179,9 @@ const Heading = headingLevel;
   }
 
   function initializeCardFilters() {
-    document.querySelectorAll<HTMLElement>("[data-at-card-filter]").forEach((root) =>
-      initializeCardFilter(root),
-    );
+    document
+      .querySelectorAll<HTMLElement>("[data-at-card-filter]")
+      .forEach((root) => initializeCardFilter(root));
   }
 
   if (document.documentElement.dataset.atCardFilterGlobalInitialized !== "true") {
@@ -195,8 +190,9 @@ const Heading = headingLevel;
       if (event.key !== "/" || event.metaKey || event.ctrlKey || event.altKey) return;
       const target = event.target as HTMLElement | null;
       if (target?.matches("input, textarea, [contenteditable=true]")) return;
-      const input = [...document.querySelectorAll<HTMLInputElement>("[data-at-card-filter-input]")]
-        .find((candidate) => candidate.getClientRects().length > 0);
+      const input = [
+        ...document.querySelectorAll<HTMLInputElement>("[data-at-card-filter-input]"),
+      ].find((candidate) => candidate.getClientRects().length > 0);
       if (!input) return;
       event.preventDefault();
       input.focus();

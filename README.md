@@ -121,7 +121,9 @@ and so on), spreading the brand object ahead of them:
 ```astro
 ---
 // src/layouts/Base.astro
-import EmDashLayout, { type EmDashLayoutProps } from "astro-theme-university/emdash/EmDashLayout.astro";
+import EmDashLayout, {
+  type EmDashLayoutProps,
+} from "astro-theme-university/emdash/EmDashLayout.astro";
 import { myBranding } from "my-brand-package";
 
 type Props = EmDashLayoutProps;

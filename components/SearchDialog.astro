@@ -181,7 +181,8 @@ const pagefindBase = basePath.endsWith("/") ? basePath : `${basePath}/`;
       const response = await api.search(trimmed);
       const found = await Promise.all(response.results.slice(0, 10).map((hit) => hit.data()));
       if (sequence !== searchSequence) return;
-      if (found.length === 0) showStatus(dialog.dataset.labelNoResults!.replace("{query}", trimmed));
+      if (found.length === 0)
+        showStatus(dialog.dataset.labelNoResults!.replace("{query}", trimmed));
       else render(found);
     }
 
@@ -225,9 +226,9 @@ const pagefindBase = basePath.endsWith("/") ? basePath : `${basePath}/`;
   }
 
   function initializeSearchDialogs() {
-    document.querySelectorAll<HTMLDialogElement>("[data-at-search-dialog]").forEach((dialog) =>
-      initializeSearchDialog(dialog),
-    );
+    document
+      .querySelectorAll<HTMLDialogElement>("[data-at-search-dialog]")
+      .forEach((dialog) => initializeSearchDialog(dialog));
   }
 
   function activeSearchDialog(): HTMLDialogElement | null {

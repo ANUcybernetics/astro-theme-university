@@ -17,25 +17,11 @@ const { page } = Astro.props;
 ---
 
 <nav class="at-pagination" aria-label="Pagination">
-  {
-    page.url.prev ? (
-      <a href={page.url.prev} class="at-pagination-link">
-        &larr; Previous
-      </a>
-    ) : (
-      <span />
-    )
-  }
-  <span class="at-pagination-status">
-    Page {page.currentPage} of {page.lastPage}
-  </span>
-  {
-    page.url.next ? (
-      <a href={page.url.next} class="at-pagination-link">
-        Next &rarr;
-      </a>
-    ) : (
-      <span />
-    )
-  }
+  {page.url.prev ? (
+    <a href={page.url.prev} class="at-pagination-link"> &larr; Previous </a>
+  ) : (
+    <span />
+  )}
+  <span class="at-pagination-status"> Page {page.currentPage} of {page.lastPage} </span>
+  {page.url.next ? <a href={page.url.next} class="at-pagination-link"> Next &rarr; </a> : <span />}
 </nav>
