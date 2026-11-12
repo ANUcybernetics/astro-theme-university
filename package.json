@@ -122,7 +122,7 @@
     "mdast-util-directive": "^3.2.0",
     "mdast-util-to-hast": "^13.2.1",
     "oxfmt": "^0.76.0",
-    "oxlint": "^1.91.0",
+    "oxlint": "^1.93.0",
     "rehype-stringify": "^10.0.1",
     "remark": "^15.0.1",
     "remark-gfm": "^4.0.1",
