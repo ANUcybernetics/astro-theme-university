@@ -39,7 +39,6 @@ and changes for EmDash must stay additive for static sites. A block type's
 - `pnpm test` --- every vitest suite, including the slow fresh-consumer example
   builds; `pnpm test:examples` narrows to `tests/`
 - `pnpm typecheck` --- `tsconfig.typecheck.json` plus the docs `astro check`
-- `pnpm lint` / `pnpm lint:css` / `pnpm format`
 - `pnpm dev` / `pnpm build` --- docs site
 - `scripts/release.sh <patch|minor|major|x.y.z> [reason]`
 
