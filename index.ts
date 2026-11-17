@@ -338,6 +338,7 @@ export default function universityTheme(options: ThemeOptions = {}): AstroIntegr
                 ...(options.extraRemarkPluginsBefore ?? []),
                 remarkCustomHeadingId,
                 remarkDirective,
+                // oxlint-disable-next-line typescript/no-unsafe-type-assertion -- remark-smartypants' unified Plugin type isn't assignable to Astro's RemarkPlugin (distinct unified copies)
                 [remarkSmartypants as RemarkPlugin, { dashes: "oldschool" }],
                 remarkCallout,
                 ...(options.defaultLayout
@@ -522,7 +523,7 @@ export default function universityTheme(options: ThemeOptions = {}): AstroIntegr
         try {
           distPath = dir instanceof URL ? fileURLToPath(dir) : String(dir);
         } catch (e) {
-          logger.error(`Post-build checks failed: ${e}`);
+          logger.error(`Post-build checks failed: ${e instanceof Error ? e.message : String(e)}`);
           return;
         }
 

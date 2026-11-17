@@ -38,18 +38,21 @@ export function oklchToSrgb(L: number, C: number, H: number): Rgb {
     -0.0041960863 * l - 0.7034186147 * m + 1.707614701 * s,
   ];
 
-  return linear.map((u) => {
-    const c = Math.min(1, Math.max(0, u));
-    return c <= 0.0031308 ? 12.92 * c : 1.055 * c ** (1 / 2.4) - 0.055;
-  }) as Rgb;
+  return [encode(linear[0]), encode(linear[1]), encode(linear[2])];
 }
+
+const encode = (u: number): number => {
+  const c = Math.min(1, Math.max(0, u));
+  return c <= 0.0031308 ? 12.92 * c : 1.055 * c ** (1 / 2.4) - 0.055;
+};
 
 /**
  * Composite a translucent colour over an opaque background. CSS alpha blending
  * happens in gamma-encoded space, so this deliberately does not linearise.
  */
 export function compositeOver(fg: Rgb, alpha: number, bg: Rgb): Rgb {
-  return fg.map((c, i) => c * alpha + bg[i] * (1 - alpha)) as Rgb;
+  const mix = (i: 0 | 1 | 2): number => fg[i] * alpha + bg[i] * (1 - alpha);
+  return [mix(0), mix(1), mix(2)];
 }
 
 const srgbChannelToLinear = (c: number): number =>

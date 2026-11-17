@@ -21,8 +21,8 @@ describe("Nav", () => {
     const html = await container.renderToString(Nav, {
       props: {
         name: "Test",
-        logo: { src: "/light.svg", width: 100, height: 30, format: "svg" } as ImageMetadata,
-        logoDark: { src: "/dark.svg", width: 100, height: 30, format: "svg" } as ImageMetadata,
+        logo: { src: "/light.svg", width: 100, height: 30, format: "svg" },
+        logoDark: { src: "/dark.svg", width: 100, height: 30, format: "svg" },
       },
     });
     expect(html).toContain('src="/light.svg"');
@@ -36,7 +36,7 @@ describe("Nav", () => {
     const html = await container.renderToString(Nav, {
       props: {
         name: "Test",
-        logo: { src: "/light.svg", width: 100, height: 30, format: "svg" } as ImageMetadata,
+        logo: { src: "/light.svg", width: 100, height: 30, format: "svg" },
       },
     });
     expect(html).toContain('src="/light.svg"');

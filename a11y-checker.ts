@@ -42,13 +42,24 @@ const CACHE_SCHEMA_VERSION = 1;
 
 const axeVersion: string = createRequire(import.meta.url)("axe-core/package.json").version;
 
+const isPlainObject = (value: unknown): value is Record<string, unknown> =>
+  typeof value === "object" && value !== null && !Array.isArray(value);
+
+const isA11yCache = (value: unknown): value is A11yCache =>
+  isPlainObject(value) &&
+  typeof value.version === "number" &&
+  typeof value.axeVersion === "string" &&
+  isPlainObject(value.entries) &&
+  Object.values(value.entries).every(isPlainObject);
+
 async function readCache(cachePath: string): Promise<Record<string, CachedPageResult>> {
   // A missing, corrupt, or outdated cache all mean the same thing: scan
   // everything and rebuild it. Never fail the build over cache state.
   try {
-    const parsed = JSON.parse(await readFile(cachePath, "utf-8")) as A11yCache;
+    const parsed: unknown = JSON.parse(await readFile(cachePath, "utf-8"));
+    if (!isA11yCache(parsed)) return {};
     if (parsed.version !== CACHE_SCHEMA_VERSION || parsed.axeVersion !== axeVersion) return {};
-    return parsed.entries ?? {};
+    return parsed.entries;
   } catch {
     return {};
   }

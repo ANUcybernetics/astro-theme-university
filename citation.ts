@@ -32,8 +32,10 @@ type CffRecord = Record<string, unknown>;
 const str = (value: unknown): string | undefined =>
   typeof value === "string" && value.trim() !== "" ? value.trim() : undefined;
 
-const record = (value: unknown): CffRecord | undefined =>
-  value && typeof value === "object" && !Array.isArray(value) ? (value as CffRecord) : undefined;
+const isRecord = (value: unknown): value is CffRecord =>
+  typeof value === "object" && value !== null && !Array.isArray(value);
+
+const record = (value: unknown): CffRecord | undefined => (isRecord(value) ? value : undefined);
 
 function parseAuthors(value: unknown): CitationAuthor[] {
   if (!Array.isArray(value)) return [];

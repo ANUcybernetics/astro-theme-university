@@ -1,6 +1,6 @@
 import type { Element, Root } from "hast";
 import type { Plugin } from "unified";
-import { visit } from "unist-util-visit";
+import { CONTINUE, visit } from "unist-util-visit";
 
 // Markdown tables render full-width (styles/base.css sets `table { width:
 // 100% }`, matching the deck stylesheet), but overflow is ignored on table
@@ -18,8 +18,8 @@ const isWrapper = (node: Root["children"][number] | Element): boolean =>
 const rehypeTableWrap: Plugin<[], Root> = () => {
   return (tree) => {
     visit(tree, "element", (node, index, parent) => {
-      if (node.tagName !== "table" || parent === undefined || index === undefined) return;
-      if (parent.type === "element" && isWrapper(parent)) return;
+      if (node.tagName !== "table" || parent === undefined || index === undefined) return CONTINUE;
+      if (parent.type === "element" && isWrapper(parent)) return CONTINUE;
       const wrapper: Element = {
         type: "element",
         tagName: "div",

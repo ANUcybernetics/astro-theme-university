@@ -4,6 +4,7 @@ import { dirname, join } from "node:path";
 import { pathToFileURL } from "node:url";
 import { afterAll, describe, expect, test } from "vitest";
 import universityTheme from "./index.js";
+import { hookParams } from "./test-utils.js";
 
 // Decks are injected routes fed from src/decks, so the llms.txt collector
 // cannot see them on its own — astromotion supplies them. These drive the
@@ -54,27 +55,39 @@ async function generate(options: SiteOptions = {}) {
     checkLinks: false,
     checkA11y: false,
   });
-  const hooks = integration.hooks as Record<string, (args: unknown) => unknown>;
+  const setup = integration.hooks["astro:config:setup"];
+  const done = integration.hooks["astro:build:done"];
+  if (!setup || !done) throw new Error("theme hooks missing");
 
-  await hooks["astro:config:setup"]({
-    config: {
-      integrations: options.registerAstromotion ? [{ name: "astromotion" }] : [],
-      root: pathToFileURL(`${root}/`),
-      srcDir: pathToFileURL(`${root}/src/`),
-      site: "https://example.com",
-      base: "/",
-      fonts: [],
-    },
-    updateConfig: () => {},
-    injectRoute: () => {},
-    injectScript: () => {},
-    logger: { info: () => {}, warn: () => {}, error: () => {} },
-  } as never);
+  await setup(
+    hookParams(
+      {
+        config: {
+          integrations: options.registerAstromotion ? [{ name: "astromotion" }] : [],
+          root: pathToFileURL(`${root}/`),
+          srcDir: pathToFileURL(`${root}/src/`),
+          site: "https://example.com",
+          base: "/",
+          fonts: [],
+        },
+        updateConfig: () => {},
+        injectRoute: () => {},
+        injectScript: () => {},
+        logger: { info: () => {}, warn: () => {}, error: () => {} },
+      },
+      "astro:config:setup",
+    ),
+  );
 
-  await hooks["astro:build:done"]({
-    dir: pathToFileURL(`${join(root, "dist")}/`),
-    logger: { info: () => {}, warn: () => {}, error: () => {} },
-  } as never);
+  await done(
+    hookParams(
+      {
+        dir: pathToFileURL(`${join(root, "dist")}/`),
+        logger: { info: () => {}, warn: () => {}, error: () => {} },
+      },
+      "astro:build:done",
+    ),
+  );
 
   const read = (path: string) => readFileSync(join(root, "dist", path), "utf-8");
   return {

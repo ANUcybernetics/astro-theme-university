@@ -24,6 +24,11 @@ const ALIASES: Record<string, string> = { danger: "error", caution: "warning" };
 // silently eating the rest of the text. We only use *container* directives
 // (`:::info`) for callouts, so any text/leaf directive left without an hName is
 // an accidental colon: restore it to the literal source it was parsed from.
+// mdast-util-directive flags a container's `[…]` label paragraph this way but
+// doesn't add the field to mdast's ParagraphData.
+const isDirectiveLabel = (data: object | undefined): boolean =>
+  data !== undefined && "directiveLabel" in data && data.directiveLabel === true;
+
 const remarkCallout: Plugin<[], Root> = () => {
   return (tree, file) => {
     visit(tree, "containerDirective", (node) => {
@@ -33,11 +38,7 @@ const remarkCallout: Plugin<[], Root> = () => {
       // paragraph flagged `directiveLabel`. We repurpose it — as the <summary>
       // of a `:::details`, or as a callout's title.
       const first = node.children[0];
-      const label =
-        first?.type === "paragraph" &&
-        (first.data as { directiveLabel?: boolean } | undefined)?.directiveLabel === true
-          ? first
-          : null;
+      const label = first?.type === "paragraph" && isDirectiveLabel(first.data) ? first : null;
 
       // `:::details[summary]` renders a native disclosure widget.
       if (name === "details") {

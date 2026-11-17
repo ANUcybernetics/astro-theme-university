@@ -123,6 +123,7 @@
     "mdast-util-to-hast": "^13.2.1",
     "oxfmt": "^0.78.0",
     "oxlint": "^1.93.0",
+    "oxlint-tsgolint": "^7.0.2007",
     "rehype-stringify": "^10.0.1",
     "remark": "^15.0.1",
     "remark-gfm": "^4.0.1",

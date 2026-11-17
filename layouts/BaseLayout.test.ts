@@ -25,7 +25,7 @@ describe("BaseLayout", () => {
           width: 32,
           height: 32,
           format: "svg",
-        } as ImageMetadata,
+        },
       },
     });
     expect(html).toContain('href="/custom-favicon.svg"');

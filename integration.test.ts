@@ -1,5 +1,6 @@
 import { describe, expect, test } from "vitest";
 import universityTheme from "./index.js";
+import { hookParams } from "./test-utils.js";
 
 describe("universityTheme integration", () => {
   test("astro:config:setup registers astro-icon and mdx", async () => {
@@ -13,18 +14,23 @@ describe("universityTheme integration", () => {
     const setup = integration.hooks["astro:config:setup"];
     if (!setup) throw new Error("astro:config:setup hook missing");
 
-    await setup({
-      updateConfig: fakeUpdateConfig,
-      config: {
-        integrations: [],
-        root: new URL("file:///tmp/"),
-        srcDir: new URL("file:///tmp/src/"),
-        site: "https://example.com",
-        fonts: [],
-      },
-      injectRoute: () => {},
-      logger: { info: () => {}, warn: () => {}, error: () => {} },
-    } as never);
+    await setup(
+      hookParams(
+        {
+          updateConfig: fakeUpdateConfig,
+          config: {
+            integrations: [],
+            root: new URL("file:///tmp/"),
+            srcDir: new URL("file:///tmp/src/"),
+            site: "https://example.com",
+            fonts: [],
+          },
+          injectRoute: () => {},
+          logger: { info: () => {}, warn: () => {}, error: () => {} },
+        },
+        "astro:config:setup",
+      ),
+    );
 
     expect(addedIntegrations).toContain("astro-icon");
     expect(addedIntegrations).toContain("@astrojs/mdx");
@@ -39,25 +45,30 @@ function run(options: Parameters<typeof universityTheme>[0], preRegistered: stri
   let remarkPluginCount = 0;
   const setup = integration.hooks["astro:config:setup"];
   if (!setup) throw new Error("astro:config:setup hook missing");
-  const done = setup({
-    updateConfig: (cfg: {
-      integrations?: { name: string }[];
-      markdown?: { processor?: { remarkPlugins?: unknown[] } };
-    }) => {
-      for (const i of cfg.integrations ?? []) added.push(i.name);
-    },
-    config: {
-      integrations: preRegistered.map((name) => ({ name })),
-      root: new URL("file:///tmp/"),
-      srcDir: new URL("file:///tmp/src/"),
-      site: "https://example.com",
-      base: "/",
-      fonts: [],
-    },
-    injectRoute: () => {},
-    injectScript: () => {},
-    logger: { info: () => {}, warn: (m: string) => warnings.push(m), error: () => {} },
-  } as never);
+  const done = setup(
+    hookParams(
+      {
+        updateConfig: (cfg: {
+          integrations?: { name: string }[];
+          markdown?: { processor?: { remarkPlugins?: unknown[] } };
+        }) => {
+          for (const i of cfg.integrations ?? []) added.push(i.name);
+        },
+        config: {
+          integrations: preRegistered.map((name) => ({ name })),
+          root: new URL("file:///tmp/"),
+          srcDir: new URL("file:///tmp/src/"),
+          site: "https://example.com",
+          base: "/",
+          fonts: [],
+        },
+        injectRoute: () => {},
+        injectScript: () => {},
+        logger: { info: () => {}, warn: (m: string) => warnings.push(m), error: () => {} },
+      },
+      "astro:config:setup",
+    ),
+  );
   return { added, warnings, remarkPluginCount, done };
 }
 describe("decks option", () => {
