@@ -12,9 +12,9 @@
     "typecheck": "astro check"
   },
   "dependencies": {
-    "@astrojs/mdx": "^8.1.5",
+    "@astrojs/mdx": "^8.1.6",
     "@iconify-json/iconoir": "^1.2.12",
-    "astro": "^7.4.11",
+    "astro": "^7.4.13",
     "astro-theme-university": "workspace:*",
     "astromotion": "github:ANUcybernetics/astromotion#v0.39.3",
     "sharp": "^0.35.5"
